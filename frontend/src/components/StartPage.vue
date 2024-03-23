@@ -7,6 +7,10 @@ function goToLogIn() {
   router.push("/login");
 }
 
+function goToSignUp() {
+  router.push("/signup");
+}
+
 </script>
 
 <template>
@@ -16,7 +20,7 @@ function goToLogIn() {
    </div>
    <div class="top-row-buttons">
      <button class="login-button" @click="goToLogIn">Log in</button>
-      <button class="sign-up-button">Sign up</button>
+      <button class="sign-up-button" @click="goToSignUp">Sign up</button>
    </div>
    <div class="text-and-sign-up">
      <div class="start-page-text">
@@ -26,7 +30,7 @@ function goToLogIn() {
        </p>
    </div>
      <div class="sign-up-today-button">
-       <button>Sign up today!</button>
+       <button @click="goToSignUp">Sign up today!</button>
      </div>
     </div>
    <div class="big-logo">
