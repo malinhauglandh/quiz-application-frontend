@@ -1,4 +1,11 @@
 <script setup>
+import {useRouter} from "vue-router";
+
+const router = useRouter();
+
+function goToLogIn() {
+  router.push("/login");
+}
 
 </script>
 
@@ -8,7 +15,7 @@
      <img src="../assets/logo.png" alt="logo" />
    </div>
    <div class="top-row-buttons">
-     <button class="login-button">Log in</button>
+     <button class="login-button" @click="goToLogIn">Log in</button>
       <button class="sign-up-button">Sign up</button>
    </div>
    <div class="text-and-sign-up">
