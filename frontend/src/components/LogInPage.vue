@@ -28,7 +28,7 @@ export default {
         </div>
         <button class="log-in-button">Log in</button>
       </form>
-      <p class="sign-up-text">If you don't have a user, click <a href="#">here</a> to sign up</p>
+      <p class="sign-up-text">If you don't have a user, click <a @click="goToSignUp">here</a> to sign up</p>
       <div class="error-message" v-if="showError">
         <p> {{ errorMessage }}</p>
       </div>
@@ -105,3 +105,14 @@ input {
 }
 
 </style>
+
+<script setup>
+import { useRouter } from "vue-router";
+
+const router = useRouter();
+
+const goToSignUp = () => {
+  router.push("/signup");
+};
+
+</script>
