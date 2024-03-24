@@ -7,17 +7,10 @@
     </div>
 </template>
 
-<script>
+<script setup>
 import NavbarComponent from '@/components/NavBarComponent.vue';
 import CreateQuizComponent from "@/components/CreateQuizComponent.vue";
 
-export default {
-    name: 'CreateQuizView',
-    components: {
-        CreateQuizComponent,
-        NavbarComponent,
-    },
-}
 </script>
 
 <style scoped>

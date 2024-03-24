@@ -4,10 +4,7 @@
     </div>
 </template>
 
-<script>
-export default {
-    name: 'CreateQuizComponent'
-}
+<script setup>
 </script>
 
 <style scoped>

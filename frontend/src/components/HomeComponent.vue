@@ -4,10 +4,7 @@
     </div>
 </template>
 
-<script>
-export default {
-    name: 'HomeComponent'
-}
+<script setup>
 </script>
 
 <style scoped>

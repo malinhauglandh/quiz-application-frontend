@@ -4,10 +4,7 @@
     </div>
 </template>
 
-<script>
-export default {
-    name: 'SearchComponent'
-}
+<script setup>
 </script>
 
 <style scoped>

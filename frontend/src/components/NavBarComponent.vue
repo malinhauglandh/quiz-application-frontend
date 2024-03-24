@@ -1,7 +1,7 @@
 <template>
     <nav class="navbar">
         <router-link to="/">
-            <img src="../assets/logo.png" alt="Logo" class="navbar-logo">
+            <img src="../assets/logo.png" alt="Logo" class="navbar-logo" @click="navigateToHome">
         </router-link>
         <ul class="navbar-list">
             <li><router-link to="/">HOME</router-link></li>
@@ -18,26 +18,28 @@
     </nav>
 </template>
 
-<script>
-export default {
-    name: 'NavbarComponent',
-    data() {
-        return {
-            showDropdown: false
-        };
-    },
-    methods: {
-        toggleDropdown() {
-            this.showDropdown = !this.showDropdown;
-        },
-        handleSettings() {
-            // Handle settings click
-        },
-        handleLogout() {
-            // Handle logout click
-        }
-    }
-}
+<script setup>
+import { ref } from 'vue';
+import { useRouter } from 'vue-router';
+
+const showDropdown = ref(false);
+const router = useRouter();
+
+const toggleDropdown = () => {
+    showDropdown.value = !showDropdown.value;
+};
+
+const handleSettings = () => {
+    // Handle settings click
+};
+
+const handleLogout = () => {
+    // Handle logout click
+};
+
+const navigateToHome = () => {
+    router.push('/');
+};
 </script>
 
 <style scoped>
