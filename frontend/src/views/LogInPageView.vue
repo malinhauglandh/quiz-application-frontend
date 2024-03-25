@@ -5,9 +5,3 @@
 <template>
   <LogInPage />
 </template>
-
-<script>
-export default {
-  name: "LogInPage",
-};
-</script>
