@@ -5,9 +5,3 @@
 <template>
   <SignUpPage />
 </template>
-
-<script>
-export default {
-  name: "SignUpPage",
-};
-</script>
