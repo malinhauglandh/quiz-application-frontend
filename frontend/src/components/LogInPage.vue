@@ -1,13 +1,15 @@
-<script>
-export default {
-  data() {
-    return {
-      errorMessage: "oops! something went wrong!",
-      showError: false
-    };
-  },
-};
+<script setup>
+import { ref } from 'vue';
+import { useRouter } from 'vue-router';
 
+const errorMessage = ref("oops! something went wrong!");
+const showError = ref(false);
+
+const router = useRouter();
+
+const goToSignUp = () => {
+  router.push("/signup");
+};
 </script>
 
 <template>
@@ -102,17 +104,7 @@ input {
   text-decoration: none;
   color: black;
   font-weight: bolder;
+  cursor: pointer;
 }
 
 </style>
-
-<script setup>
-import { useRouter } from "vue-router";
-
-const router = useRouter();
-
-const goToSignUp = () => {
-  router.push("/signup");
-};
-
-</script>
