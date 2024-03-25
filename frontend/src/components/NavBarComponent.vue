@@ -9,10 +9,15 @@
             <li><router-link to="/search">SEARCH</router-link></li>
         </ul>
         <div class="navbar-settings-container">
-            <img src="../assets/settings.png" alt="Settings" class="navbar-settings" @click="toggleDropdown">
-            <div v-if="showDropdown" class="dropdown-menu" ref="dropdownMenu">
-                <button @click="handleSettings">Settings</button>
+            <img src="../assets/settings.png" alt="Settings" class="navbar-settings" @click="toggleSettingsDropdown">
+            <div v-if="showSettingsDropdown" class="dropdown-menu" ref="dropdownMenu">
+                <button @click="toggleSettings">Settings</button>
                 <button @click="handleLogout">Log out</button>
+            </div>
+            <div v-if="showProfileDropdown" class="dropdown-menu" ref="dropdownMenu">
+                <button @click="handleProfile">Profile</button>
+                <button @click="handleColorMode">Lightmode / darkmode</button>
+                <button @click="toggleSettings" class="back-button">Back</button>
             </div>
         </div>
     </nav>
@@ -22,19 +27,26 @@
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 
-const showDropdown = ref(false);
+const showSettingsDropdown = ref(false);
+const showProfileDropdown = ref(false);
 const router = useRouter();
 
-const toggleDropdown = () => {
-    showDropdown.value = !showDropdown.value;
+const toggleSettingsDropdown = () => {
+    showSettingsDropdown.value = !showSettingsDropdown.value;
+    showProfileDropdown.value = false;
 };
 
-const handleSettings = () => {
-    // Handle settings click
+const toggleSettings = () => {
+    showProfileDropdown.value = !showProfileDropdown.value;
+};
+
+const handleProfile = () => {
+};
+
+const handleColorMode = () => {
 };
 
 const handleLogout = () => {
-    // Handle logout click
 };
 
 const navigateToHome = () => {
@@ -95,10 +107,11 @@ const navigateToHome = () => {
     position: absolute;
     top: calc(100% + 5px);
     right: 0;
-    background-color: #f7567C;
+    background-color: #ef8354;
     border: 1px solid #6320EE;
     z-index: 1;
     border-radius: 8px;
+    width: 200px;
 }
 
 .dropdown-menu button {
@@ -106,15 +119,22 @@ const navigateToHome = () => {
     width: 100%;
     text-align: left;
     padding: 12px;
+    margin: 0;
     font-size: 16px;
     color: white;
     border: none;
     background-color: transparent;
     cursor: pointer;
+    white-space: nowrap;
 }
 
 .dropdown-menu button:hover {
-    background-color: #f3899e;
+    background-color: #EF9C76FF;
     border-radius: 8px;
+}
+
+.back-button {
+    font-weight: bolder;
+    color: #6320EE !important;
 }
 </style>
