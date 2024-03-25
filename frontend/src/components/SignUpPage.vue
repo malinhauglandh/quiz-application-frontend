@@ -1,13 +1,15 @@
-<script>
-export default {
-  data() {
-    return {
-      errorMessage: "oops! something went wrong!",
-      showError: false
-    };
-  },
-};
+<script setup>
+import { ref } from 'vue';
+import { useRouter } from 'vue-router';
 
+const errorMessage = ref("oops! something went wrong!");
+const showError = ref(false);
+
+const router = useRouter();
+
+const goToLogIn = () => {
+  router.push("/login");
+};
 </script>
 
 <template>
@@ -106,17 +108,31 @@ input {
   text-decoration: none;
   color: black;
   font-weight: bolder;
+  cursor: pointer;
+}
+
+@media only screen and (max-width: 600px) {
+  .logo img {
+    width: 100px;
+  }
+
+  h1 {
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+  }
+
+  .username-input, .password-input, .email-input{
+    width: 100%;
+    max-width: 280px;
+  }
+
+  input, .sign-up-button {
+    padding: 12px;
+  }
+
+  .log-in-text {
+    margin-top: 20px;
+  }
 }
 
 </style>
-
-<script setup>
-
-import { useRouter} from "vue-router";
-
-const router = useRouter();
-
-function goToLogIn() {
-  router.push("/login");
-}
-</script>
