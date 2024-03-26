@@ -2,14 +2,17 @@
     <div class="create-quiz-view">
         <navbar-component></navbar-component>
         <div class="content">
-            <CreateQuizComponent />
+            <router-view v-if="!showAddQuestions"></router-view>
+            <router-view v-else></router-view>
         </div>
     </div>
 </template>
 
 <script setup>
 import NavbarComponent from '@/components/NavBarComponent.vue';
-import CreateQuizComponent from "@/components/CreateQuizComponent.vue";
+import { ref } from 'vue';
+
+const showAddQuestions = ref(false);
 
 </script>
 
