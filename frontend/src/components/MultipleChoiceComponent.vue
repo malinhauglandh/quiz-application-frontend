@@ -12,8 +12,8 @@
             <input type="radio" :id="'correct-' + (index + 1)" name="correct" v-model="correctAnswer" :value="index">
         </div>
         <div class="button-container">
-            <button class="button" @click="cancelQuestion">CANCEL</button>
-            <button class="button" @click="saveQuestion">SAVE AND GO BACK</button>
+            <button class="button cancel-button" @click="cancelQuestion">CANCEL</button>
+            <button class="button save-button" @click="saveQuestion">SAVE AND GO BACK</button>
         </div>
     </div>
 </template>
@@ -87,10 +87,8 @@ h3 {
 
 .button-container {
     display: flex;
-    justify-content: space-between;
-    margin-top: 50px;
-    margin-right: 480px;
-    margin-left: 450px;
+    justify-content: center;
+    margin-top: 20px;
 }
 
 .button {
@@ -105,5 +103,13 @@ h3 {
 
 .button:hover {
     background-color: #7E41FDFF;
+}
+
+.cancel-button {
+    margin-right: 80px;
+}
+
+.save-button {
+    margin-left: 80px;
 }
 </style>

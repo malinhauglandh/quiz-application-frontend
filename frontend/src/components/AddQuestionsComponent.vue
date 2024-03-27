@@ -14,8 +14,8 @@
             </div>
         </div>
         <div class="nav-buttons">
-            <button class="nav-button" @click="goBack">BACK</button>
-            <button class="nav-button" @click="goToNextPage">NEXT</button>
+            <button class="nav-button back-button" @click="goBack">BACK</button>
+            <button class="nav-button next-button" @click="goToNextPage">NEXT</button>
         </div>
     </div>
 </template>
@@ -122,11 +122,18 @@ h1 {
     border-radius: 20px;
     cursor: pointer;
     font-size: 22px;
-    margin: 0 170px;
     margin-top: 390px;
 }
 
 .nav-button:hover {
     background-color: #7E41FDFF;
+}
+
+.back-button {
+    margin-right: 80px;
+}
+
+.next-button {
+    margin-left: 80px;
 }
 </style>
