@@ -10,33 +10,39 @@ const router = useRouter();
 const goToLogIn = () => {
   router.push("/login");
 };
+
+const goBack = () => {
+  router.push("/");
+};
 </script>
 
 <template>
   <div class="sign-up-page">
     <div class="logo">
-      <img src="../assets/logo.png" alt="logo" />
+      <img src="../assets/logo.png" alt="logo" @click="goBack" />
     </div>
-    <h1>Sign up</h1>
-    <div class="sign-up-form">
-      <form>
-        <div class="email-input">
-          <label for="email">Email:</label>
-          <input type="email" id="email" name="email" />
+    <div class="sign-up-box">
+      <h1>Sign up</h1>
+      <div class="sign-up-form">
+        <form>
+          <div class="email-input">
+            <div class="box" />
+            <input type="email" id="email" name="email" placeholder="email" />
+          </div>
+          <div class="username-input">
+            <div class="box" />
+            <input type="text" id="username" name="username" placeholder="username" />
+          </div>
+          <div class="password-input">
+            <div class="box" />
+            <input type="password" id="password" name="password" placeholder="password" />
+          </div>
+          <button class="sign-up-button">Sign up</button>
+        </form>
+        <p class="log-in-text">If you already have a user, click <a @click="goToLogIn">here</a> to log in</p>
+        <div class="error-message" v-if="showError">
+          <p> {{ errorMessage }}</p>
         </div>
-        <div class="username-input">
-          <label for="username">Username:</label>
-          <input type="text" id="username" name="username" />
-        </div>
-        <div class="password-input">
-          <label for="password">Password:</label>
-          <input type="password" id="password" name="password" />
-        </div>
-        <button class="sign-up-button">Sign up</button>
-      </form>
-      <p class="log-in-text">If you already have a user, click <a @click="goToLogIn">here</a> to log in</p>
-      <div class="error-message" v-if="showError">
-        <p> {{ errorMessage }}</p>
       </div>
     </div>
   </div>
@@ -64,6 +70,24 @@ const goToLogIn = () => {
   width: 130px;
 }
 
+.sign-up-box {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(255, 255, 255, 0.3);
+  padding: 20px;
+  border-radius: 35px;
+  box-shadow: 0 0 25px rgba(0, 0, 0, 0.4);
+  color: white;
+}
+
+.sign-up-form {
+  margin-bottom: -20px;
+  position: relative;
+}
+
 h1 {
   margin-bottom: 30px;
   font-size: 4rem;
@@ -71,68 +95,72 @@ h1 {
 
 .username-input, .password-input, .email-input {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   margin-bottom: 20px;
+  height: 35px;
 }
 
-label {
-  font-size: 1.2rem;
+.box {
+  background-color: #f7567c;
+  width: 35px;
+  height: 35px;
   margin-bottom: 5px;
+  border: none;
 }
 
-input {
+.username-input input, .password-input input, .email-input input {
   padding: 8px;
   font-size: 1rem;
-  width: 280px;
-  border-radius: 5px;
-  border: none;
+  width: 255px;
+  background-color: rgba(255, 255, 255, 0);
+  border-bottom: 1px solid white;
+  border-left: none;
+  border-right: none;
+  border-top: none;
+  color: white;
+}
+
+.username-input input:focus, .password-input input:focus, .email-input input:focus {
+  outline: none;
+  border-bottom: 1px solid #f7567c;
+}
+
+.username-input input::placeholder, .password-input input::placeholder, .email-input input::placeholder {
+  color: white;
 }
 
 .sign-up-button {
+  position: absolute;
+  bottom: -59px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(255, 255, 255, 0.3);
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.4);
+  border: none;
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
+  width: 280px;
+  padding: 20px 20px;
+  font-size: 1rem;
+  color: white;
+}
+
+.sign-up-button:hover {
   background-color: #6320EE;
   color: white;
-  border: none;
-  border-radius: 10px;
-  padding: 10px 20px;
   cursor: pointer;
-  width: 300px;
-  margin-top: 20px;
-  font-size: 0.8rem;
 }
 
 .log-in-text {
   margin-top: 30px;
+  margin-bottom: 40px;
 }
 
 .log-in-text a {
-  text-decoration: none;
-  color: black;
+  text-decoration: underline;
+  color: white;
   font-weight: bolder;
   cursor: pointer;
-}
-
-@media only screen and (max-width: 600px) {
-  .logo img {
-    width: 100px;
-  }
-
-  h1 {
-    font-size: 2.5rem;
-    margin-bottom: 20px;
-  }
-
-  .username-input, .password-input, .email-input{
-    width: 100%;
-    max-width: 280px;
-  }
-
-  input, .sign-up-button {
-    padding: 12px;
-  }
-
-  .log-in-text {
-    margin-top: 20px;
-  }
 }
 
 </style>
