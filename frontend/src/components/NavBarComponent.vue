@@ -1,10 +1,10 @@
 <template>
     <nav class="navbar">
-        <router-link to="/">
+        <router-link to="/home">
             <img src="../assets/logo.png" alt="Logo" class="navbar-logo" @click="navigateToHome">
         </router-link>
         <ul class="navbar-list">
-            <li><router-link to="/">HOME</router-link></li>
+            <li><router-link to="/home">HOME</router-link></li>
             <li><router-link to="/createquiz">CREATE NEW QUIZ</router-link></li>
             <li><router-link to="/search">SEARCH</router-link></li>
         </ul>

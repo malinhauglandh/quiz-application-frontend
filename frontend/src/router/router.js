@@ -7,9 +7,27 @@ import CreateQuizDetailsComponent from "@/components/CreateQuizDetailsComponent.
 import MultipleChoiceComponent from "@/components/MultipleChoiceComponent.vue";
 import TrueFalseComponent from "@/components/TrueOrFalseComponent.vue";
 import FillInTheBlankComponent from "@/components/FillInTheBlankComponent.vue";
+import StartPageView from "../view/StartPageView.vue";
+import LogInPageView from "../view/LogInPageView.vue";
+import SignUpPageView from "../view/SignUpPageView.vue";
 
 const routes = [
-    { path: '/', component: HomeView },
+    {
+        path: '/',
+        name: 'StartPage',
+        component: StartPageView
+    },
+    {
+        path: '/login',
+        name: 'LogInPage',
+        component: LogInPageView
+    },
+    {
+        path: '/signup',
+        name: 'SignUpPage',
+        component: SignUpPageView
+    },
+    { path: '/home', component: HomeView },
     { path: '/search', component: SearchView },
     {
         path: '/createquiz',
