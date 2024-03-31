@@ -47,6 +47,8 @@ const handleColorMode = () => {
 };
 
 const handleLogout = () => {
+    localStorage.removeItem('token');
+    router.push('/');
 };
 
 const navigateToHome = () => {
