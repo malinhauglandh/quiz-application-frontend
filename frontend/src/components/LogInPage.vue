@@ -14,6 +14,10 @@ const goToSignUp = () => {
 const goBack = () => {
   router.push("/");
 };
+
+const goToHome = () => {
+  router.push("/home");
+};
 </script>
 
 <template>
@@ -37,7 +41,7 @@ const goBack = () => {
           <div class="error-message" v-if="showError">
             <p> {{ errorMessage }}</p>
           </div>
-          <button class="log-in-button">Log in</button>
+          <button class="log-in-button" @click="goToHome">Log in</button>
         </form>
       </div>
     </div>

@@ -14,6 +14,11 @@ const goToLogIn = () => {
 const goBack = () => {
   router.push("/");
 };
+
+const goToHome = () => {
+  router.push("/home");
+};
+
 </script>
 
 <template>
@@ -37,7 +42,7 @@ const goBack = () => {
             <div class="box" />
             <input type="password" id="password" name="password" placeholder="password" />
           </div>
-          <button class="sign-up-button">Sign up</button>
+          <button class="sign-up-button" @click="goToHome">Sign up</button>
         </form>
         <p class="log-in-text">If you already have a user, click <a @click="goToLogIn">here</a> to log in</p>
         <div class="error-message" v-if="showError">
