@@ -2,7 +2,7 @@
     <div class="search-component">
         <div class="search-bar-container">
             <input type="text" v-model="searchQuery" placeholder="Search among all quizzes" class="search-bar">
-            <img src="../assets/search.png" alt="Search" class="search-image" @click="searchQuizzes">
+            <font-awesome-icon :icon="search" class="search-image" @click="searchQuizzes" />
         </div>
     </div>
 </template>
@@ -36,11 +36,5 @@ const searchQuizzes = () => {
     border: 1px solid #ccc;
     margin-right: 10px;
     font-size: 16px;
-}
-
-.search-image {
-    width: 32px;
-    height: auto;
-    cursor: pointer;
 }
 </style>
