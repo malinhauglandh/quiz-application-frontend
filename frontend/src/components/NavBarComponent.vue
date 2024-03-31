@@ -4,9 +4,12 @@
             <img src="../assets/logo.png" alt="Logo" class="navbar-logo" @click="navigateToHome">
         </router-link>
         <ul class="navbar-list">
-            <li><router-link to="/home">HOME</router-link></li>
-            <li><router-link to="/createquiz">CREATE NEW QUIZ</router-link></li>
-            <li><router-link to="/search">SEARCH</router-link></li>
+            <li><router-link to="/home">
+                <font-awesome-icon icon="home" />HOME</router-link></li>
+            <li><router-link to="/createquiz">
+                <font-awesome-icon icon="plus" />CREATE NEW QUIZ</router-link></li>
+            <li><router-link to="/search">
+                <font-awesome-icon icon="search" />SEARCH</router-link></li>
         </ul>
         <div class="navbar-settings-container">
             <img src="../assets/settings.png" alt="Settings" class="navbar-settings" @click="toggleSettingsDropdown">

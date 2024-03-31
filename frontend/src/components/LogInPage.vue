@@ -30,11 +30,11 @@ const goToHome = () => {
       <div class="log-in-form">
         <form>
           <div class="username-input">
-            <div class="box" />
+            <font-awesome-icon icon="user" id="user" />
             <input type="text" id="username" name="username" placeholder="username" />
           </div>
           <div class="password-input">
-            <div class="box" />
+            <font-awesome-icon icon="lock" id="password" />
             <input type="password" id="password" name="password" placeholder="password" />
           </div>
           <p class="sign-up-text">If you don't have a user, click <a @click="goToSignUp">here</a> to sign up</p>
@@ -161,6 +161,14 @@ h1 {
   color: white;
   font-weight: bolder;
   cursor: pointer;
+}
+
+#user {
+  padding: 10px
+}
+
+#password {
+  padding: 10px
 }
 
 </style>
