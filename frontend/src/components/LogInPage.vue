@@ -1,8 +1,11 @@
 <script setup>
 import {onBeforeUnmount, onMounted, ref} from 'vue';
 import { useRouter } from 'vue-router';
+import axios from 'axios';
 
-const errorMessage = ref("oops! something went wrong!");
+const username = ref('');
+const password = ref('');
+const errorMessage = ref("Oops! Something went wrong!");
 const showError = ref(false);
 
 onMounted(() => {
@@ -16,15 +19,35 @@ onBeforeUnmount(() => {
 const router = useRouter();
 
 const goToSignUp = () => {
-  router.push("/signup");
+    router.push("/signup");
 };
 
 const goBack = () => {
-  router.push("/");
+    router.push("/");
 };
 
-const goToHome = () => {
-  router.push("/home");
+const login = async (e) => {
+    e.preventDefault();
+
+    showError.value = false;
+
+    try {
+        const response = await axios.post('http://localhost:8080/api/login', {
+            username: username.value,
+            password: password.value
+        });
+
+        localStorage.setItem('token', response.data);
+
+        router.push("/home");
+    } catch (error) {
+        if (error.response && error.response.status === 401) {
+            errorMessage.value = "Login failed: Incorrect username or password.";
+        } else {
+            errorMessage.value = "An error occurred. Please try again later.";
+        }
+        showError.value = true;
+    }
 };
 </script>
 

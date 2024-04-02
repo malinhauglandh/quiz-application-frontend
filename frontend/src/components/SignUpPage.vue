@@ -26,11 +26,10 @@ const goBack = () => {
 const goToHome = () => {
   router.push("/home");
 };
-
 </script>
 
 <template>
-  <body class="signup">
+<body class="signup">
     <div class="sign-up-page">
       <div class="logo">
         <img src="../assets/logo.png" alt="logo" @click="goBack" />
@@ -69,119 +68,118 @@ const goToHome = () => {
 }
 
 .sign-up-page {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-  position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    position: relative;
 }
 
 .logo {
-  position: absolute;
-  top: -10px;
-  left: -20px;
+    position: absolute;
+    top: -10px;
+    left: -20px;
 }
 
 .logo img {
-  width: 130px;
+    width: 130px;
 }
 
 .sign-up-box {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  background-color: rgba(255, 255, 255, 0.3);
-  padding: 20px;
-  border-radius: 35px;
-  box-shadow: 0 0 25px rgba(0, 0, 0, 0.4);
-  color: white;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(255, 255, 255, 0.3);
+    padding: 20px;
+    border-radius: 35px;
+    box-shadow: 0 0 25px rgba(0, 0, 0, 0.4);
+    color: white;
 }
 
 .sign-up-form {
-  margin-bottom: -20px;
-  position: relative;
+    margin-bottom: -20px;
+    position: relative;
 }
 
 h1 {
-  margin-bottom: 30px;
-  font-size: 4rem;
+    margin-bottom: 30px;
+    font-size: 4rem;
 }
 
 .username-input, .password-input, .email-input {
-  display: flex;
-  flex-direction: row;
-  margin-bottom: 20px;
-  height: 35px;
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 20px;
+    height: 35px;
 }
 
 .box {
-  background-color: #f7567c;
-  width: 35px;
-  height: 35px;
-  margin-bottom: 5px;
-  border: none;
+    background-color: #f7567c;
+    width: 35px;
+    height: 35px;
+    margin-bottom: 5px;
+    border: none;
 }
 
 .username-input input, .password-input input, .email-input input {
-  padding: 8px;
-  font-size: 1rem;
-  width: 255px;
-  background-color: rgba(255, 255, 255, 0);
-  border-bottom: 1px solid white;
-  border-left: none;
-  border-right: none;
-  border-top: none;
-  color: white;
+    padding: 8px;
+    font-size: 1rem;
+    width: 255px;
+    background-color: rgba(255, 255, 255, 0);
+    border-bottom: 1px solid white;
+    border-left: none;
+    border-right: none;
+    border-top: none;
+    color: white;
 }
 
 .username-input input:focus, .password-input input:focus, .email-input input:focus {
-  outline: none;
-  border-bottom: 1px solid #f7567c;
+    outline: none;
+    border-bottom: 1px solid #f7567c;
 }
 
 .username-input input::placeholder, .password-input input::placeholder, .email-input input::placeholder {
-  color: white;
+    color: white;
 }
 
 .sign-up-button {
-  position: absolute;
-  bottom: -59px;
-  left: 50%;
-  transform: translateX(-50%);
-  background-color: rgba(255, 255, 255, 0.3);
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.4);
-  border: none;
-  border-bottom-left-radius: 20px;
-  border-bottom-right-radius: 20px;
-  width: 280px;
-  padding: 20px 20px;
-  font-size: 1rem;
-  color: white;
+    position: absolute;
+    bottom: -59px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(255, 255, 255, 0.3);
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.4);
+    border: none;
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+    width: 280px;
+    padding: 20px 20px;
+    font-size: 1rem;
+    color: white;
 }
 
 .sign-up-button:hover {
-  background-color: #6320EE;
-  color: white;
-  cursor: pointer;
+    background-color: #6320EE;
+    color: white;
+    cursor: pointer;
 }
 
 .log-in-text {
-  margin-top: 30px;
-  margin-bottom: 40px;
+    margin-top: 30px;
+    margin-bottom: 40px;
 }
 
 .log-in-text a {
-  text-decoration: underline;
-  color: white;
-  font-weight: bolder;
-  cursor: pointer;
+    text-decoration: underline;
+    color: white;
+    font-weight: bolder;
+    cursor: pointer;
 }
 
 #user, #at, #password {
   padding: 10px
 }
-
 </style>

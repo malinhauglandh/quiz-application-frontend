@@ -62,6 +62,11 @@ const showSettingsDropdown = ref(false);
 const showProfileDropdown = ref(false);
 const router = useRouter();
 
+const showMobileMenu = ref(false);
+const showSettingsDropdown = ref(false);
+const showProfileDropdown = ref(false);
+const router = useRouter();
+
 const toggleSettingsDropdown = () => {
   showSettingsDropdown.value = !showSettingsDropdown.value;
   showProfileDropdown.value = false;
@@ -273,5 +278,4 @@ onUnmounted(() => {
   color: white;
   cursor: pointer;
 }
-
 </style>
