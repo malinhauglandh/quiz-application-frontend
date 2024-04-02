@@ -2,6 +2,7 @@
 import {onBeforeUnmount, onMounted, ref} from 'vue';
 import { useRouter } from 'vue-router';
 import axios from 'axios';
+import { useStore } from '../store/store.js';
 
 const username = ref('');
 const password = ref('');
@@ -17,6 +18,7 @@ onBeforeUnmount(() => {
 });
 
 const router = useRouter();
+const store = useStore();
 
 const goToSignUp = () => {
     router.push("/signup");
@@ -31,15 +33,22 @@ const login = async (e) => {
 
     showError.value = false;
 
+    if (username.value.trim() === '' || password.value.trim() === '') {
+        errorMessage.value = "Username and password are required.";
+        showError.value = true;
+        return;
+    }
+
     try {
         const response = await axios.post('http://localhost:8080/api/login', {
             username: username.value,
             password: password.value
         });
 
-        localStorage.setItem('token', response.data);
+        store.saveToken(username.value, response.data);
 
         router.push("/home");
+        console.log("Logged in!");
     } catch (error) {
         if (error.response && error.response.status === 401) {
             errorMessage.value = "Login failed: Incorrect username or password.";
@@ -54,29 +63,29 @@ const login = async (e) => {
 <template>
   <body class="login">
     <div class="log-in-page">
-      <div class="logo">
-        <img src="../assets/logo.png" alt="logo" @click="goBack" />
-      </div>
-      <div class="log-in-box">
-        <h1>Login</h1>
-        <div class="log-in-form">
-          <form>
-            <div class="username-input">
-              <font-awesome-icon icon="user" id="user" />
-              <input type="text" id="username" name="username" placeholder="username" />
-            </div>
-            <div class="password-input">
-              <font-awesome-icon icon="lock" id="password" />
-              <input type="password" id="password" name="password" placeholder="password" />
-            </div>
-            <p class="sign-up-text">If you don't have a user, click <a @click="goToSignUp">here</a> to sign up</p>
-            <div class="error-message" v-if="showError">
-              <p> {{ errorMessage }}</p>
-            </div>
-            <button class="log-in-button" @click="goToHome">Log in</button>
-          </form>
+        <div class="logo">
+            <img src="../assets/logo.png" alt="logo" @click="goBack" />
         </div>
-      </div>
+        <div class="log-in-box">
+            <h1>Login</h1>
+            <div class="log-in-form">
+                <form @submit.prevent="login">
+                    <div class="username-input">
+                        <font-awesome-icon icon="user" id="input-icon" />
+                        <input type="text" id="username" name="username" placeholder="username" v-model="username" />
+                    </div>
+                    <div class="password-input">
+                        <font-awesome-icon icon="lock" id="input-icon" />
+                        <input type="password" id="password-field" name="password" placeholder="password" v-model="password" />
+                    </div>
+                    <p class="sign-up-text">If you don't have a user, click <a @click="goToSignUp">here</a> to sign up</p>
+                    <div class="error-message" v-if="showError">
+                        <p>{{ errorMessage }}</p>
+                    </div>
+                    <button type="submit" class="log-in-button">Log in</button>
+                </form>
+            </div>
+        </div>
     </div>
 </body>
 </template>
@@ -132,19 +141,22 @@ h1 {
 .username-input, .password-input {
   display: flex;
   flex-direction: row;
+  align-items: center;
   margin-bottom: 20px;
   height: 35px;
 }
 
 .username-input input, .password-input input {
+  flex: 1;
   padding: 8px;
   font-size: 1rem;
-  width: 255px;
   background-color: rgba(255, 255, 255, 0);
+  border: none;
   border-bottom: 1px solid white;
-  border-left: none;
-  border-right: none;
-  border-top: none;
+  margin-left: 10px;
+}
+
+.username-input input::placeholder, .password-input input::placeholder {
   color: white;
 }
 
@@ -155,6 +167,14 @@ h1 {
 
 .username-input input::placeholder, .password-input input::placeholder {
   color: white;
+}
+
+.username-input .box, .password-input .box {
+  background-color: #f7567c;
+  width: 35px;
+  height: 35px;
+  margin-bottom: 5px;
+  border: none;
 }
 
 .log-in-button {
@@ -186,13 +206,21 @@ h1 {
 
 .sign-up-text a {
   text-decoration: underline;
+  background-color: rgba(255, 255, 255, 0.3);
   color: white;
   font-weight: bolder;
   cursor: pointer;
 }
 
-#user, #password {
-  padding: 10px
+.input-icon {
+  color: white;
+  margin-right: 10px;
+}
+
+.error-message {
+  color: red;
+  font-weight: bold;
+  font-size: 12px;
 }
 
 </style>

@@ -5,11 +5,11 @@
     </router-link>
     <ul class="navbar-list" v-if="!showMobileMenu">
       <li><router-link to="/home">
-        <font-awesome-icon class="icon" icon="home" />HOME</router-link></li>
+        <font-awesome-icon class="icon" icon="house" />HOME</router-link></li>
       <li><router-link to="/createquiz">
         <font-awesome-icon class="icon" icon="plus" />CREATE NEW QUIZ</router-link></li>
       <li><router-link to="/search">
-        <font-awesome-icon class="icon" icon="search" />SEARCH</router-link></li>
+        <font-awesome-icon class="icon" icon="magnifying-glass" />SEARCH</router-link></li>
     </ul>
     <div class="navbar-settings-container" v-if="!showMobileMenu">
       <font-awesome-icon icon="cog" class="navbar-settings" @click="toggleSettingsDropdown" />
@@ -55,17 +55,13 @@
 <script setup>
 import {onMounted, onUnmounted, ref} from 'vue';
 import { useRouter } from 'vue-router';
-import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
+import { useStore } from '../store/store.js';
 
 const showMobileMenu = ref(false);
 const showSettingsDropdown = ref(false);
 const showProfileDropdown = ref(false);
 const router = useRouter();
-
-const showMobileMenu = ref(false);
-const showSettingsDropdown = ref(false);
-const showProfileDropdown = ref(false);
-const router = useRouter();
+const store = useStore();
 
 const toggleSettingsDropdown = () => {
   showSettingsDropdown.value = !showSettingsDropdown.value;
@@ -83,8 +79,9 @@ const handleColorMode = () => {
 };
 
 const handleLogout = () => {
-  localStorage.removeItem('token');
-  router.push('/');
+    console.log("Logging out...");
+    store.clearToken();
+    router.push('/login');
 };
 
 const navigateToHome = () => {
