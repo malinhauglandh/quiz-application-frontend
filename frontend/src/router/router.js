@@ -1,4 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import { useStore } from '../store/store.js'
+
 import HomeView from '../view/HomeView.vue'
 import CreateQuizView from '../view/CreateQuizView.vue'
 import SearchView from '../view/SearchView.vue'
@@ -20,12 +22,14 @@ const routes = [
     {
         path: '/login',
         name: 'LogInPage',
-        component: LogInPageView
+        component: LogInPageView,
+        meta: { public: true }
     },
     {
         path: '/signup',
         name: 'SignUpPage',
-        component: SignUpPageView
+        component: SignUpPageView,
+        meta: { public: true }
     },
     { path: '/home', component: HomeView },
     { path: '/search', component: SearchView },
@@ -61,5 +65,14 @@ const router = createRouter({
     history: createWebHistory(),
     routes
 })
+
+router.beforeEach((to, from, next) => {
+    const store = useStore();
+    if (!store.jwtToken && !to.meta.public) {
+      next({ name: 'LogInPage' });
+    } else {
+      next();
+    }
+  });
 
 export default router

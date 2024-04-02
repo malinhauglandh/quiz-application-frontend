@@ -2,6 +2,7 @@
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import axios from 'axios';
+import { useStore } from '../store/store.js';
 
 const email = ref('');
 const username = ref('');
@@ -10,6 +11,7 @@ const errorMessage = ref("Oops! Something went wrong!");
 const showError = ref(false);
 
 const router = useRouter();
+const store = useStore();
 
 const goToLogIn = () => {
     router.push("/login");
@@ -22,17 +24,27 @@ const goBack = () => {
 const signUp = async (e) => {
     e.preventDefault();
 
+    if (email.value.trim() === '' || username.value.trim() === '' || password.value.trim() === '') {
+        errorMessage.value = "Username, email, and password are required.";
+        showError.value = true;
+        return;
+    }
+
     try {
-        await axios.post('http://localhost:8080/api/createUser', {
+        const response = await axios.post('http://localhost:8080/api/createUser', {
             email: email.value,
             username: username.value,
             password: password.value
         });
+        store.saveToken(username.value, response.data.token);
 
         router.push("/login");
     } catch (error) {
         if (error.response && error.response.status === 409) {
             errorMessage.value = "Sign up failed: Username or email already in use.";
+        } 
+        if (error.response && error.response.status === 500) {
+            errorMessage.value = "Login failed: User aldready exists.";
         } else {
             errorMessage.value = "An error occurred. Please try again later.";
         }
@@ -51,15 +63,15 @@ const signUp = async (e) => {
             <div class="sign-up-form">
                 <form @submit.prevent="signUp">
                     <div class="email-input">
-                        <div class="box"></div>
+                        <font-awesome-icon icon="envelope" id="envelope-icon" />
                         <input type="email" id="email" name="email" placeholder="email" v-model="email" />
                     </div>
                     <div class="username-input">
-                        <div class="box"></div>
+                        <font-awesome-icon icon="user" id="user-icon" />
                         <input type="text" id="username" name="username" placeholder="username" v-model="username" />
                     </div>
                     <div class="password-input">
-                        <div class="box"></div>
+                        <font-awesome-icon icon="lock" id="lock-icon" />
                         <input type="password" id="password" name="password" placeholder="password" v-model="password" />
                     </div>
                     <button type="submit" class="sign-up-button">Sign up</button>
@@ -116,40 +128,36 @@ h1 {
     font-size: 4rem;
 }
 
-.username-input, .password-input, .email-input {
-    display: flex;
-    flex-direction: row;
-    margin-bottom: 20px;
-    height: 35px;
+.email-input, .username-input, .password-input {
+  display: flex;
+  align-items: center; 
+  margin-bottom: 20px;
 }
 
-.box {
-    background-color: #f7567c;
-    width: 35px;
-    height: 35px;
-    margin-bottom: 5px;
-    border: none;
+
+#envelope-icon, #user-icon, #lock-icon {
+  margin-right: 10px;
+  color: white; 
 }
 
-.username-input input, .password-input input, .email-input input {
-    padding: 8px;
-    font-size: 1rem;
-    width: 255px;
-    background-color: rgba(255, 255, 255, 0);
-    border-bottom: 1px solid white;
-    border-left: none;
-    border-right: none;
-    border-top: none;
-    color: white;
+
+.email-input input, .username-input input, .password-input input {
+  flex-grow: 1;
+  padding: 8px;
+  font-size: 1rem;
+  background-color: rgba(255, 255, 255, 0);
+  border: none;
+  border-bottom: 1px solid white;
+  margin-left: 5px; 
 }
 
-.username-input input:focus, .password-input input:focus, .email-input input:focus {
-    outline: none;
-    border-bottom: 1px solid #f7567c;
+.email-input input::placeholder, .username-input input::placeholder, .password-input input::placeholder {
+  color: white;
 }
 
-.username-input input::placeholder, .password-input input::placeholder, .email-input input::placeholder {
-    color: white;
+.email-input input:focus, .username-input input:focus, .password-input input:focus {
+  outline: none;
+  border-bottom: 1px solid #f7567c;
 }
 
 .sign-up-button {
@@ -188,5 +196,7 @@ h1 {
 
 .error-message {
     color: #ff3860;
+    font-weight: bold;
+    font-size: 12px;
 }
 </style>
