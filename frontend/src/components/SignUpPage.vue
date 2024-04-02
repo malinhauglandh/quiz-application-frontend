@@ -1,6 +1,14 @@
 <script setup>
-import { ref } from 'vue';
+import {onBeforeUnmount, onMounted, ref} from 'vue';
 import { useRouter } from 'vue-router';
+
+onMounted(() => {
+  document.body.classList.add('signup');
+});
+
+onBeforeUnmount(() => {
+  document.body.classList.remove('signup');
+});
 
 const errorMessage = ref("oops! something went wrong!");
 const showError = ref(false);
@@ -22,39 +30,43 @@ const goToHome = () => {
 </script>
 
 <template>
-  <div class="sign-up-page">
-    <div class="logo">
-      <img src="../assets/logo.png" alt="logo" @click="goBack" />
-    </div>
-    <div class="sign-up-box">
-      <h1>Sign up</h1>
-      <div class="sign-up-form">
-        <form>
-          <div class="email-input">
-            <div class="box" />
-            <input type="email" id="email" name="email" placeholder="email" />
+  <body class="signup">
+    <div class="sign-up-page">
+      <div class="logo">
+        <img src="../assets/logo.png" alt="logo" @click="goBack" />
+      </div>
+      <div class="sign-up-box">
+        <h1>Sign up</h1>
+        <div class="sign-up-form">
+          <form>
+            <div class="email-input">
+              <font-awesome-icon icon="at" id="at" />
+              <input type="email" id="email" name="email" placeholder="email" />
+            </div>
+            <div class="username-input">
+              <font-awesome-icon icon="user" id="user" />
+              <input type="text" id="username" name="username" placeholder="username" />
+            </div>
+            <div class="password-input">
+              <font-awesome-icon icon="lock" id="password" />
+              <input type="password" id="password" name="password" placeholder="password" />
+            </div>
+            <button class="sign-up-button" @click="goToHome">Sign up</button>
+          </form>
+          <p class="log-in-text">If you already have a user, click <a @click="goToLogIn">here</a> to log in</p>
+          <div class="error-message" v-if="showError">
+            <p> {{ errorMessage }}</p>
           </div>
-          <div class="username-input">
-            <div class="box" />
-            <input type="text" id="username" name="username" placeholder="username" />
-          </div>
-          <div class="password-input">
-            <div class="box" />
-            <input type="password" id="password" name="password" placeholder="password" />
-          </div>
-          <button class="sign-up-button" @click="goToHome">Sign up</button>
-        </form>
-        <p class="log-in-text">If you already have a user, click <a @click="goToLogIn">here</a> to log in</p>
-        <div class="error-message" v-if="showError">
-          <p> {{ errorMessage }}</p>
         </div>
       </div>
     </div>
-  </div>
-
+  </body>
 </template>
 
 <style scoped>
+.signup {
+  background-image: linear-gradient(120deg, #bcb6ff 20%, #6320EE 80%);
+}
 
 .sign-up-page {
   display: flex;
@@ -166,6 +178,10 @@ h1 {
   color: white;
   font-weight: bolder;
   cursor: pointer;
+}
+
+#user, #at, #password {
+  padding: 10px
 }
 
 </style>
