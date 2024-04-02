@@ -18,8 +18,6 @@ defineComponent({
 body, html {
   margin: 0;
   padding: 0;
-  /*background-image: linear-gradient(120deg, #bcb6ff 20%, #6320EE 80%);*/
-  background-color: #BCB6FF;
 }
 
 body {
