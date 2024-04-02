@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue';
+import {onBeforeUnmount, onMounted, ref} from 'vue';
 import { useRouter } from 'vue-router';
 import axios from 'axios';
 
@@ -7,6 +7,14 @@ const username = ref('');
 const password = ref('');
 const errorMessage = ref("Oops! Something went wrong!");
 const showError = ref(false);
+
+onMounted(() => {
+  document.body.classList.add('login');
+});
+
+onBeforeUnmount(() => {
+  document.body.classList.remove('login');
+});
 
 const router = useRouter();
 
@@ -44,34 +52,40 @@ const login = async (e) => {
 </script>
 
 <template>
+  <body class="login">
     <div class="log-in-page">
-        <div class="logo">
-            <img src="../assets/logo.png" alt="logo" @click="goBack" />
-        </div>
-        <div class="log-in-box">
-            <h1>Login</h1>
-            <div class="log-in-form">
-                <form @submit.prevent="login">
-                    <div class="username-input">
-                        <font-awesome-icon icon="user" id="user-icon" />
-                        <input type="text" id="username" name="username" placeholder="username" v-model="username" />
-                    </div>
-                    <div class="password-input">
-                        <font-awesome-icon icon="lock" id="password-icon" />
-                        <input type="password" id="password-field" name="password" placeholder="password" v-model="password" />
-                    </div>
-                    <p class="sign-up-text">If you don't have a user, click <a @click="goToSignUp">here</a> to sign up</p>
-                    <div class="error-message" v-if="showError">
-                        <p>{{ errorMessage }}</p>
-                    </div>
-                    <button type="submit" class="log-in-button">Log in</button>
-                </form>
+      <div class="logo">
+        <img src="../assets/logo.png" alt="logo" @click="goBack" />
+      </div>
+      <div class="log-in-box">
+        <h1>Login</h1>
+        <div class="log-in-form">
+          <form>
+            <div class="username-input">
+              <font-awesome-icon icon="user" id="user" />
+              <input type="text" id="username" name="username" placeholder="username" />
             </div>
+            <div class="password-input">
+              <font-awesome-icon icon="lock" id="password" />
+              <input type="password" id="password" name="password" placeholder="password" />
+            </div>
+            <p class="sign-up-text">If you don't have a user, click <a @click="goToSignUp">here</a> to sign up</p>
+            <div class="error-message" v-if="showError">
+              <p> {{ errorMessage }}</p>
+            </div>
+            <button class="log-in-button" @click="goToHome">Log in</button>
+          </form>
         </div>
+      </div>
     </div>
+</body>
 </template>
 
 <style scoped>
+.login {
+  background-image: linear-gradient(120deg, #bcb6ff 20%, #6320EE 80%);
+
+}
 
 .log-in-page {
   display: flex;
@@ -143,14 +157,6 @@ h1 {
   color: white;
 }
 
-.username-input .box, .password-input .box {
-  background-color: #f7567c;
-  width: 35px;
-  height: 35px;
-  margin-bottom: 5px;
-  border: none;
-}
-
 .log-in-button {
   position: absolute;
   bottom: -59px;
@@ -185,11 +191,7 @@ h1 {
   cursor: pointer;
 }
 
-#user {
-  padding: 10px
-}
-
-#password {
+#user, #password {
   padding: 10px
 }
 

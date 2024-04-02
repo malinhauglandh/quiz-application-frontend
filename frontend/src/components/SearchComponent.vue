@@ -2,13 +2,14 @@
     <div class="search-component">
         <div class="search-bar-container">
             <input type="text" v-model="searchQuery" placeholder="Search among all quizzes" class="search-bar">
-            <font-awesome-icon :icon="search" class="search-image" @click="searchQuizzes" />
+            <font-awesome-icon icon="search" class="search-image" @click="searchQuizzes" />
         </div>
     </div>
 </template>
 
 <script setup>
 import {ref} from "vue";
+import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
 
 const searchQuery = ref('');
 
@@ -36,5 +37,17 @@ const searchQuizzes = () => {
     border: 1px solid #ccc;
     margin-right: 10px;
     font-size: 16px;
+}
+
+.search-image {
+    cursor: pointer;
+    color: white;
+  font-size: 30px;
+}
+
+@media screen and (max-width: 600px) {
+    .search-bar {
+        width: 70%;
+    }
 }
 </style>
