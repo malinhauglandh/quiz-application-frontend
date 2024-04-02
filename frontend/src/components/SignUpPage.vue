@@ -30,20 +30,29 @@ const goBack = () => {
   router.push("/");
 };
 
-const signUp = async (e) => {
+async (e) => { 
     e.preventDefault();
 
+    if(email.value.trim() === '' || username.value.trim() === '' || password.value.trim() === '') {
+        errorMessage.value = "Email, username, and password are required.";
+        showError.value = true;
+        return;
+    }
+
     try {
-        await axios.post('http://localhost:8080/api/createUser', {
+        const response = await axios.post('http://localhost:8080/api/createUser', {
             email: email.value,
             username: username.value,
             password: password.value
         });
-
-        router.push("/login");
+        store.saveToken(username.value, response.data);
+        router.push("/home");
     } catch (error) {
         if (error.response && error.response.status === 409) {
             errorMessage.value = "Sign up failed: Username or email already in use.";
+        }
+        if(error.response && error.response.status === 500) {
+            errorMessage.value = "User already exists.";
         } else {
             errorMessage.value = "An error occurred. Please try again later.";
         }
