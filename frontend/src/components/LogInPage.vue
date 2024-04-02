@@ -1,14 +1,24 @@
 <script setup>
-import { ref } from 'vue';
+import {onBeforeUnmount, onMounted, ref} from 'vue';
 import { useRouter } from 'vue-router';
 import axios from 'axios';
+import { useStore } from '../store/store.js';
 
 const username = ref('');
 const password = ref('');
 const errorMessage = ref("Oops! Something went wrong!");
 const showError = ref(false);
 
+onMounted(() => {
+  document.body.classList.add('login');
+});
+
+onBeforeUnmount(() => {
+  document.body.classList.remove('login');
+});
+
 const router = useRouter();
+const store = useStore();
 
 const goToSignUp = () => {
     router.push("/signup");
@@ -23,15 +33,22 @@ const login = async (e) => {
 
     showError.value = false;
 
+    if (username.value.trim() === '' || password.value.trim() === '') {
+        errorMessage.value = "Username and password are required.";
+        showError.value = true;
+        return;
+    }
+
     try {
         const response = await axios.post('http://localhost:8080/api/login', {
             username: username.value,
             password: password.value
         });
 
-        localStorage.setItem('token', response.data);
+        store.saveToken(username.value, response.data);
 
         router.push("/home");
+        console.log("Logged in!");
     } catch (error) {
         if (error.response && error.response.status === 401) {
             errorMessage.value = "Login failed: Incorrect username or password.";
@@ -44,6 +61,7 @@ const login = async (e) => {
 </script>
 
 <template>
+  <body class="login">
     <div class="log-in-page">
         <div class="logo">
             <img src="../assets/logo.png" alt="logo" @click="goBack" />
@@ -53,11 +71,11 @@ const login = async (e) => {
             <div class="log-in-form">
                 <form @submit.prevent="login">
                     <div class="username-input">
-                        <font-awesome-icon icon="user" id="user-icon" />
+                        <font-awesome-icon icon="user" id="input-icon" />
                         <input type="text" id="username" name="username" placeholder="username" v-model="username" />
                     </div>
                     <div class="password-input">
-                        <font-awesome-icon icon="lock" id="password-icon" />
+                        <font-awesome-icon icon="lock" id="input-icon" />
                         <input type="password" id="password-field" name="password" placeholder="password" v-model="password" />
                     </div>
                     <p class="sign-up-text">If you don't have a user, click <a @click="goToSignUp">here</a> to sign up</p>
@@ -69,9 +87,14 @@ const login = async (e) => {
             </div>
         </div>
     </div>
+</body>
 </template>
 
 <style scoped>
+.login {
+  background-image: linear-gradient(120deg, #bcb6ff 20%, #6320EE 80%);
+
+}
 
 .log-in-page {
   display: flex;
@@ -118,19 +141,22 @@ h1 {
 .username-input, .password-input {
   display: flex;
   flex-direction: row;
+  align-items: center;
   margin-bottom: 20px;
   height: 35px;
 }
 
 .username-input input, .password-input input {
+  flex: 1;
   padding: 8px;
   font-size: 1rem;
-  width: 255px;
   background-color: rgba(255, 255, 255, 0);
+  border: none;
   border-bottom: 1px solid white;
-  border-left: none;
-  border-right: none;
-  border-top: none;
+  margin-left: 10px;
+}
+
+.username-input input::placeholder, .password-input input::placeholder {
   color: white;
 }
 
@@ -180,17 +206,21 @@ h1 {
 
 .sign-up-text a {
   text-decoration: underline;
+  background-color: rgba(255, 255, 255, 0.3);
   color: white;
   font-weight: bolder;
   cursor: pointer;
 }
 
-#user {
-  padding: 10px
+.input-icon {
+  color: white;
+  margin-right: 10px;
 }
 
-#password {
-  padding: 10px
+.error-message {
+  color: red;
+  font-weight: bold;
+  font-size: 12px;
 }
 
 </style>
