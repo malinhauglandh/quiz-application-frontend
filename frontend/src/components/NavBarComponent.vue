@@ -5,14 +5,14 @@
         </router-link>
         <ul class="navbar-list">
             <li><router-link to="/home">
-                <font-awesome-icon icon="home" />HOME</router-link></li>
+                <font-awesome-icon class="icon" icon="home" />HOME</router-link></li>
             <li><router-link to="/createquiz">
-                <font-awesome-icon icon="plus" />CREATE NEW QUIZ</router-link></li>
+                <font-awesome-icon class="icon" icon="plus" />CREATE NEW QUIZ</router-link></li>
             <li><router-link to="/search">
-                <font-awesome-icon icon="search" />SEARCH</router-link></li>
+                <font-awesome-icon class="icon" icon="search" />SEARCH</router-link></li>
         </ul>
         <div class="navbar-settings-container">
-            <img src="../assets/settings.png" alt="Settings" class="navbar-settings" @click="toggleSettingsDropdown">
+            <font-awesome-icon icon="cog" class="navbar-settings" @click="toggleSettingsDropdown" />
             <div v-if="showSettingsDropdown" class="dropdown-menu" ref="dropdownMenu">
                 <button @click="toggleSettings">Settings</button>
                 <button @click="handleLogout">Log out</button>
@@ -29,6 +29,11 @@
 <script setup>
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
+import { faCog } from '@fortawesome/free-solid-svg-icons';
+import { library } from '@fortawesome/fontawesome-svg-core';
+import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
+library.add(faCog);
+
 
 const showSettingsDropdown = ref(false);
 const showProfileDropdown = ref(false);
@@ -66,13 +71,19 @@ const navigateToHome = () => {
     padding: 10px 20px;
     display: flex;
     align-items: center;
+    height: 60px;
 }
 
 .navbar-logo {
-    width: 40px;
-    height: auto;
-    margin-right: 20px;
+    width: 130px;
+    margin-left: -40px;
     cursor: pointer;
+    transform: translateY(20px);
+}
+
+.navbar-logo img {
+    max-height: 100%;
+    vertical-align: middle;
 }
 
 .navbar-settings {
@@ -83,9 +94,18 @@ const navigateToHome = () => {
 
 .navbar-list {
     list-style-type: none;
-    margin: 0;
     padding: 0;
     margin-right: auto;
+}
+
+.icon {
+    margin-right: 7px;
+}
+
+.navbar-settings {
+    font-size: 40px;
+    color: white;
+    cursor: pointer;
 }
 
 .navbar-list li {
