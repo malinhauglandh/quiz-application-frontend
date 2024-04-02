@@ -1,3 +1,37 @@
+<template>
+  <body class="signup">
+  <div class="sign-up-page">
+    <div class="logo">
+      <img src="../assets/logo.png" alt="logo" @click="goBack" />
+    </div>
+    <div class="sign-up-box">
+      <h1>Sign up</h1>
+      <div class="sign-up-form">
+        <form>
+          <div class="email-input">
+            <font-awesome-icon icon="at" id="at" />
+            <input type="email" id="email" name="email" placeholder="email" />
+          </div>
+          <div class="username-input">
+            <font-awesome-icon icon="user" id="user" />
+            <input type="text" id="username" name="username" placeholder="username" />
+          </div>
+          <div class="password-input">
+            <font-awesome-icon icon="lock" id="password" />
+            <input type="password" id="password" name="password" placeholder="password" />
+          </div>
+          <button class="sign-up-button" @click="goToHome">Sign up</button>
+        </form>
+        <p class="log-in-text">If you already have a user, click <a @click="goToLogIn">here</a> to log in</p>
+        <div class="error-message" v-if="showError">
+          <p> {{ errorMessage }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  </body>
+</template>
+
 <script setup>
 import {onBeforeUnmount, onMounted, ref} from 'vue';
 import { useRouter } from 'vue-router';
@@ -27,40 +61,6 @@ const goToHome = () => {
   router.push("/home");
 };
 </script>
-
-<template>
-<body class="signup">
-    <div class="sign-up-page">
-      <div class="logo">
-        <img src="../assets/logo.png" alt="logo" @click="goBack" />
-      </div>
-      <div class="sign-up-box">
-        <h1>Sign up</h1>
-        <div class="sign-up-form">
-          <form>
-            <div class="email-input">
-              <font-awesome-icon icon="at" id="at" />
-              <input type="email" id="email" name="email" placeholder="email" />
-            </div>
-            <div class="username-input">
-              <font-awesome-icon icon="user" id="user" />
-              <input type="text" id="username" name="username" placeholder="username" />
-            </div>
-            <div class="password-input">
-              <font-awesome-icon icon="lock" id="password" />
-              <input type="password" id="password" name="password" placeholder="password" />
-            </div>
-            <button class="sign-up-button" @click="goToHome">Sign up</button>
-          </form>
-          <p class="log-in-text">If you already have a user, click <a @click="goToLogIn">here</a> to log in</p>
-          <div class="error-message" v-if="showError">
-            <p> {{ errorMessage }}</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </body>
-</template>
 
 <style scoped>
 .signup {

@@ -1,3 +1,31 @@
+<template>
+  <div class="start-page">
+    <div class="logo">
+      <img src="../assets/logo.png" alt="logo" />
+    </div>
+    <div class="top-row-buttons">
+      <button class="login-button" @click="goToLogIn">Log in</button>
+      <button class="sign-up-button" @click="goToSignUp">Sign up</button>
+    </div>
+    <div class="text-and-sign-up">
+      <div class="start-page-text">
+        <h1>Welcome!</h1>
+        <p>
+          Test your knowledge with our quizzes and have fun while learning something new!
+          Our quizzes are created by users like you, so feel free to create your own quiz and share it with the world.
+          If you don't have an account yet, sign up today and start creating!
+        </p>
+      </div>
+      <div class="sign-up-today-button">
+        <button @click="goToSignUp">Sign up today!</button>
+      </div>
+    </div>
+    <div class="big-logo">
+      <img src="../assets/logo.png" alt="big-logo" />
+    </div>
+  </div>
+</template>
+
 <script setup>
 import {useRouter} from "vue-router";
 
@@ -12,34 +40,6 @@ function goToSignUp() {
 }
 
 </script>
-
-<template>
- <div class="start-page">
-   <div class="logo">
-     <img src="../assets/logo.png" alt="logo" />
-   </div>
-   <div class="top-row-buttons">
-     <button class="login-button" @click="goToLogIn">Log in</button>
-      <button class="sign-up-button" @click="goToSignUp">Sign up</button>
-   </div>
-   <div class="text-and-sign-up">
-     <div class="start-page-text">
-       <h1>Welcome!</h1>
-       <p>
-         Test your knowledge with our quizzes and have fun while learning something new!
-         Our quizzes are created by users like you, so feel free to create your own quiz and share it with the world.
-         If you don't have an account yet, sign up today and start creating!
-       </p>
-   </div>
-     <div class="sign-up-today-button">
-       <button @click="goToSignUp">Sign up today!</button>
-     </div>
-    </div>
-   <div class="big-logo">
-     <img src="../assets/logo.png" alt="big-logo" />
- </div>
-</div>
-</template>
 
 <style scoped>
 .start-page {
