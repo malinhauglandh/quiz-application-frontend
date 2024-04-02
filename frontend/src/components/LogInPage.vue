@@ -39,7 +39,7 @@ const login = async (e) => {
 
         localStorage.setItem('token', response.data);
 
-        router.push("/home");
+        await router.push("/home");
     } catch (error) {
         if (error.response && error.response.status === 401) {
             errorMessage.value = "Login failed: Incorrect username or password.";
@@ -73,7 +73,7 @@ const login = async (e) => {
             <div class="error-message" v-if="showError">
               <p> {{ errorMessage }}</p>
             </div>
-            <button class="log-in-button" @click="goToHome">Log in</button>
+            <button class="log-in-button" @click="login">Log in</button>
           </form>
         </div>
       </div>
