@@ -116,14 +116,6 @@ h1 {
     height: 35px;
 }
 
-.box {
-    background-color: #f7567c;
-    width: 35px;
-    height: 35px;
-    margin-bottom: 5px;
-    border: none;
-}
-
 .username-input input, .password-input input, .email-input input {
     padding: 8px;
     font-size: 1rem;
