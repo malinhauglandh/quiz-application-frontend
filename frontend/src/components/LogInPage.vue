@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue';
+import {onBeforeUnmount, onMounted, ref} from 'vue';
 import { useRouter } from 'vue-router';
 import axios from 'axios';
 import { useStore } from '../store/store.js';
@@ -8,6 +8,14 @@ const username = ref('');
 const password = ref('');
 const errorMessage = ref("Oops! Something went wrong!");
 const showError = ref(false);
+
+onMounted(() => {
+  document.body.classList.add('login');
+});
+
+onBeforeUnmount(() => {
+  document.body.classList.remove('login');
+});
 
 const router = useRouter();
 const store = useStore();
@@ -53,6 +61,7 @@ const login = async (e) => {
 </script>
 
 <template>
+  <body class="login">
     <div class="log-in-page">
         <div class="logo">
             <img src="../assets/logo.png" alt="logo" @click="goBack" />
@@ -78,9 +87,14 @@ const login = async (e) => {
             </div>
         </div>
     </div>
+</body>
 </template>
 
 <style scoped>
+.login {
+  background-image: linear-gradient(120deg, #bcb6ff 20%, #6320EE 80%);
+
+}
 
 .log-in-page {
   display: flex;
@@ -149,6 +163,18 @@ h1 {
 .username-input input:focus, .password-input input:focus {
   outline: none;
   border-bottom: 1px solid #f7567c;
+}
+
+.username-input input::placeholder, .password-input input::placeholder {
+  color: white;
+}
+
+.username-input .box, .password-input .box {
+  background-color: #f7567c;
+  width: 35px;
+  height: 35px;
+  margin-bottom: 5px;
+  border: none;
 }
 
 .log-in-button {

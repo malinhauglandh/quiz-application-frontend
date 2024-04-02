@@ -9,6 +9,7 @@
 
 <script setup>
 import {ref} from "vue";
+import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
 
 const searchQuery = ref('');
 
@@ -36,5 +37,17 @@ const searchQuizzes = () => {
     border: 1px solid #ccc;
     margin-right: 10px;
     font-size: 16px;
+}
+
+.search-image {
+    cursor: pointer;
+    color: white;
+  font-size: 30px;
+}
+
+@media screen and (max-width: 600px) {
+    .search-bar {
+        width: 70%;
+    }
 }
 </style>
