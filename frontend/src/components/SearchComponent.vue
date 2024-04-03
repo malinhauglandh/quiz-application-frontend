@@ -2,7 +2,7 @@
     <div class="search-component">
         <div class="search-bar-container">
             <input type="text" v-model="searchQuery" placeholder="Search among all quizzes" class="search-bar">
-            <font-awesome-icon icon="search" class="search-image" @click="searchQuizzes" />
+            <font-awesome-icon :icon="magnifying-glass" class="search-image" @click="searchQuizzes" />
         </div>
     </div>
 </template>
