@@ -203,7 +203,7 @@ h1 {
     cursor: pointer;
 }
 
-#user, #at, #password, #passwordRepeat {
+#user, #email, #password, #passwordRepeat {
   padding: 10px
 }
 </style>
