@@ -9,15 +9,15 @@
       <div class="sign-up-form">
         <form>
           <div class="email-input">
-            <font-awesome-icon icon="envelope-icon" id="at" />
-            <input type="email" id="envelope-icon" name="email" placeholder="email" />
+            <font-awesome-icon icon="at" id="at" />
+            <input type="email" id="envelope-icon" v-model="email" placeholder="email" />
           </div>
           <div class="username-input">
-            <font-awesome-icon icon="user-icon" id="user" />
-            <input type="text" id="user-icon" name="username" placeholder="username" />
+            <font-awesome-icon icon="user" id="user" />
+            <input type="text" id="user-icon" v-model="username" placeholder="username" />
           </div>
           <div class="password-input">
-            <font-awesome-icon icon="lock-icon" id="password" />
+            <font-awesome-icon icon="lock" id="password" />
             <input type="password" id="lock-icon" name="password" v-model="password" placeholder="password" />
           </div>
           <div class="password-input">
@@ -90,7 +90,7 @@ const signUp = async (event) => {
         password: password.value
       });
       store.saveToken(username.value, response.data);
-      await router.push("/home");
+      await goToLogIn();
     } catch (error) {
       if (error.response && error.response.status === 409) {
         errorMessage.value = "Sign up failed: Username or email already in use.";
@@ -182,7 +182,6 @@ h1 {
 .username-input input:focus, .password-input input:focus, .email-input input:focus {
     outline: none;
     border-bottom: 1px solid #f7567c;
-    color: #f7567c;
 }
 
 #envelope-icon, #user-icon, #lock-icon {
@@ -203,13 +202,6 @@ h1 {
 
 .email-input input::placeholder, .username-input input::placeholder, .password-input input::placeholder {
   color: white;
-}
-
-.error-message {
-  color: #ff3860;
-  font-size: 0.875rem;
-  margin-top: -15px;
-  margin-bottom: 10px;
 }
 
 .sign-up-button {
