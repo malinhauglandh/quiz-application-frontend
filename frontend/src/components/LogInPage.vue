@@ -10,11 +10,11 @@
         <form>
           <div class="username-input">
             <font-awesome-icon icon="user" id="user" />
-            <input type="text" id="username" name="username" placeholder="username" />
+            <input type="text" id="username" v-model="username" placeholder="username" />
           </div>
           <div class="password-input">
             <font-awesome-icon icon="lock" id="password" />
-            <input type="password" id="password" name="password" placeholder="password" />
+            <input type="password" id="password" v-model="password" placeholder="password" />
           </div>
           <p class="sign-up-text">If you don't have a user, click <a @click="goToSignUp">here</a> to sign up</p>
           <div class="error-message" v-if="showError">
@@ -32,7 +32,7 @@
 import {onBeforeUnmount, onMounted, ref} from 'vue';
 import { useRouter } from 'vue-router';
 import axios from 'axios';
-import { useStore } from '../store/store.js';
+import { useStore } from '@/store/store.js';
 
 const username = ref('');
 const password = ref('');
@@ -63,9 +63,12 @@ const login = async (e) => {
 
     showError.value = false;
 
+    console.log("Attempting to log in with: ", username.value , password.value);
+
     if (username.value.trim() === '' || password.value.trim() === '') {
         errorMessage.value = "Username and password are required.";
         showError.value = true;
+        console.error(errorMessage.value);
         return;
     }
 
@@ -75,12 +78,14 @@ const login = async (e) => {
             password: password.value
         });
 
+        console.log('Login response:', response.data);
         store.saveToken(username.value, response.data);
 
-        router.push("/home");
+        await router.push("/home");
         console.log("Logged in!");
 
     } catch (error) {
+        console.error('Login error:', error);
         if (error.response && error.response.status === 401) {
             errorMessage.value = "Login failed: Incorrect username or password.";
         } else {
@@ -155,6 +160,7 @@ h1 {
   border: none;
   border-bottom: 1px solid white;
   margin-left: 10px;
+  color: white;
 }
 
 .username-input input::placeholder, .password-input input::placeholder {
@@ -164,18 +170,11 @@ h1 {
 .username-input input:focus, .password-input input:focus {
   outline: none;
   border-bottom: 1px solid #f7567c;
+  color: white;
 }
 
 .username-input input::placeholder, .password-input input::placeholder {
   color: white;
-}
-
-.username-input .box, .password-input .box {
-  background-color: #f7567c;
-  width: 35px;
-  height: 35px;
-  margin-bottom: 5px;
-  border: none;
 }
 
 .log-in-button {
@@ -207,15 +206,9 @@ h1 {
 
 .sign-up-text a {
   text-decoration: underline;
-  background-color: rgba(255, 255, 255, 0.3);
   color: white;
   font-weight: bolder;
   cursor: pointer;
-}
-
-.input-icon {
-  color: white;
-  margin-right: 10px;
 }
 
 .error-message {
