@@ -9,16 +9,16 @@
       <div class="sign-up-form">
         <form>
           <div class="email-input">
-            <font-awesome-icon icon="at" id="at" />
-            <input type="email" id="email" name="email" placeholder="email" />
+            <font-awesome-icon icon="envelope-icon" id="at" />
+            <input type="email" id="envelope-icon" name="email" placeholder="email" />
           </div>
           <div class="username-input">
-            <font-awesome-icon icon="user" id="user" />
-            <input type="text" id="username" name="username" placeholder="username" />
+            <font-awesome-icon icon="user-icon" id="user" />
+            <input type="text" id="user-icon" name="username" placeholder="username" />
           </div>
           <div class="password-input">
-            <font-awesome-icon icon="lock" id="password" />
-            <input type="password" id="password" name="password" v-model="password" placeholder="password" />
+            <font-awesome-icon icon="lock-icon" id="password" />
+            <input type="password" id="lock-icon" name="password" v-model="password" placeholder="password" />
           </div>
           <div class="password-input">
             <font-awesome-icon icon="repeat" id="passwordRepeat" />
@@ -43,11 +43,13 @@
 import {onBeforeUnmount, onMounted, ref} from 'vue';
 import { useRouter } from 'vue-router';
 import axios from 'axios';
-import { useStore } from '../store/store.js';
+import { useStore } from '@/store/store';
 
 const email = ref('');
 const username = ref('');
 const password = ref('');
+const passwordRepeat = ref('');
+const passwordError = ref('');
 
 onMounted(() => {
   document.body.classList.add('signup');
@@ -63,19 +65,15 @@ const showError = ref(false);
 const router = useRouter();
 const store = useStore();
 
-const password = ref('');
-const passwordRepeat = ref('');
-const passwordError = ref('');
-
 const signUp = async (event) => {
   event.preventDefault();
-  
+
   passwordError.value = '';
-  
-  if(email.value.trim() === '' || username.value.trim() === '' || password.value.trim() === '') {
-      errorMessage.value = "Email, username, and password are required.";
-      showError.value = true;
-      return;
+
+  if (email.value.trim() === '' || username.value.trim() === '' || password.value.trim() === '') {
+    errorMessage.value = "Email, username, and password are required.";
+    showError.value = true;
+    return;
   }
 
   if (password.value !== passwordRepeat.value) {
@@ -85,27 +83,27 @@ const signUp = async (event) => {
   } else {
     console.log('Proceed with signing up...');
 
-   try {
-        const response = await axios.post('http://localhost:8080/api/createUser', {
-            email: email.value,
-            username: username.value,
-            password: password.value
-        });
-        store.saveToken(username.value, response.data);
-        router.push("/home");
+    try {
+      const response = await axios.post('http://localhost:8080/api/createUser', {
+        email: email.value,
+        username: username.value,
+        password: password.value
+      });
+      store.saveToken(username.value, response.data);
+      await router.push("/home");
     } catch (error) {
-        if (error.response && error.response.status === 409) {
-            errorMessage.value = "Sign up failed: Username or email already in use.";
-        }
-        if(error.response && error.response.status === 500) {
-            errorMessage.value = "User already exists.";
-        } else {
-            errorMessage.value = "An error occurred. Please try again later.";
-        }
-        showError.value = true;
+      if (error.response && error.response.status === 409) {
+        errorMessage.value = "Sign up failed: Username or email already in use.";
+      }
+      if (error.response && error.response.status === 500) {
+        errorMessage.value = "User already exists.";
+      } else {
+        errorMessage.value = "An error occurred. Please try again later.";
+      }
+      showError.value = true;
+    }
   }
-};
-
+}
 const goToLogIn = () => {
   router.push("/login");
 };
@@ -247,9 +245,6 @@ h1 {
     font-weight: bolder;
     cursor: pointer;
 }
-
-#user, #email, #password, #passwordRepeat {
-  padding: 10px
 
 .error-message {
     color: #ff3860;
