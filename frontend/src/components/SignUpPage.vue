@@ -42,6 +42,12 @@
 <script setup>
 import {onBeforeUnmount, onMounted, ref} from 'vue';
 import { useRouter } from 'vue-router';
+import axios from 'axios';
+import { useStore } from '../store/store.js';
+
+const email = ref('');
+const username = ref('');
+const password = ref('');
 
 onMounted(() => {
   document.body.classList.add('signup');
@@ -55,6 +61,7 @@ const errorMessage = ref("oops! something went wrong!");
 const showError = ref(false);
 
 const router = useRouter();
+const store = useStore();
 
 const password = ref('');
 const passwordRepeat = ref('');
@@ -62,8 +69,14 @@ const passwordError = ref('');
 
 const signUp = async (event) => {
   event.preventDefault();
-
+  
   passwordError.value = '';
+  
+  if(email.value.trim() === '' || username.value.trim() === '' || password.value.trim() === '') {
+      errorMessage.value = "Email, username, and password are required.";
+      showError.value = true;
+      return;
+  }
 
   if (password.value !== passwordRepeat.value) {
     passwordError.value = 'Passwords do not match.';
@@ -72,8 +85,24 @@ const signUp = async (event) => {
   } else {
     console.log('Proceed with signing up...');
 
-    // Implement the logic to handle sign up here
-    // ...
+   try {
+        const response = await axios.post('http://localhost:8080/api/createUser', {
+            email: email.value,
+            username: username.value,
+            password: password.value
+        });
+        store.saveToken(username.value, response.data);
+        router.push("/home");
+    } catch (error) {
+        if (error.response && error.response.status === 409) {
+            errorMessage.value = "Sign up failed: Username or email already in use.";
+        }
+        if(error.response && error.response.status === 500) {
+            errorMessage.value = "User already exists.";
+        } else {
+            errorMessage.value = "An error occurred. Please try again later.";
+        }
+        showError.value = true;
   }
 };
 
@@ -84,6 +113,7 @@ const goToLogIn = () => {
 const goBack = () => {
   router.push("/");
 };
+
 </script>
 
 <style scoped>
@@ -133,11 +163,10 @@ h1 {
     font-size: 4rem;
 }
 
-.username-input, .password-input, .email-input {
-    display: flex;
-    flex-direction: row;
-    margin-bottom: 20px;
-    height: 35px;
+.email-input, .username-input, .password-input {
+  display: flex;
+  align-items: center; 
+  margin-bottom: 20px;
 }
 
 .username-input input, .password-input input, .email-input input {
@@ -158,8 +187,24 @@ h1 {
     color: #f7567c;
 }
 
-.username-input input::placeholder, .password-input input::placeholder, .email-input input::placeholder {
-    color: white;
+#envelope-icon, #user-icon, #lock-icon {
+  margin-right: 10px;
+  color: white; 
+}
+
+
+.email-input input, .username-input input, .password-input input {
+  flex-grow: 1;
+  padding: 8px;
+  font-size: 1rem;
+  background-color: rgba(255, 255, 255, 0);
+  border: none;
+  border-bottom: 1px solid white;
+  margin-left: 5px; 
+}
+
+.email-input input::placeholder, .username-input input::placeholder, .password-input input::placeholder {
+  color: white;
 }
 
 .error-message {
@@ -205,5 +250,10 @@ h1 {
 
 #user, #at, #password, #passwordRepeat {
   padding: 10px
+
+.error-message {
+    color: #ff3860;
+    font-weight: bold;
+    font-size: 12px;
 }
 </style>
