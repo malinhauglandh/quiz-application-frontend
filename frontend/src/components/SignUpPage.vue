@@ -18,9 +18,16 @@
           </div>
           <div class="password-input">
             <font-awesome-icon icon="lock" id="password" />
-            <input type="password" id="password" name="password" placeholder="password" />
+            <input type="password" id="password" name="password" v-model="password" placeholder="password" />
           </div>
-          <button class="sign-up-button" @click="goToHome">Sign up</button>
+          <div class="password-input">
+            <font-awesome-icon icon="repeat" id="passwordRepeat" />
+            <input type="password" id="passwordRepeat" name="passwordRepeat" v-model="passwordRepeat" placeholder="repeat password" />
+          </div>
+          <div class="error-message" v-if="passwordError">
+            <p>{{ passwordError }}</p>
+          </div>
+          <button type="submit" class="sign-up-button" @click="signUp">Sign up</button>
         </form>
         <p class="log-in-text">If you already have a user, click <a @click="goToLogIn">here</a> to log in</p>
         <div class="error-message" v-if="showError">
@@ -49,16 +56,33 @@ const showError = ref(false);
 
 const router = useRouter();
 
+const password = ref('');
+const passwordRepeat = ref('');
+const passwordError = ref('');
+
+const signUp = async (event) => {
+  event.preventDefault();
+
+  passwordError.value = '';
+
+  if (password.value !== passwordRepeat.value) {
+    passwordError.value = 'Passwords do not match.';
+    password.value = '';
+    passwordRepeat.value = '';
+  } else {
+    console.log('Proceed with signing up...');
+
+    // Implement the logic to handle sign up here
+    // ...
+  }
+};
+
 const goToLogIn = () => {
   router.push("/login");
 };
 
 const goBack = () => {
   router.push("/");
-};
-
-const goToHome = () => {
-  router.push("/home");
 };
 </script>
 
@@ -131,10 +155,18 @@ h1 {
 .username-input input:focus, .password-input input:focus, .email-input input:focus {
     outline: none;
     border-bottom: 1px solid #f7567c;
+    color: #f7567c;
 }
 
 .username-input input::placeholder, .password-input input::placeholder, .email-input input::placeholder {
     color: white;
+}
+
+.error-message {
+  color: #ff3860;
+  font-size: 0.875rem;
+  margin-top: -15px;
+  margin-bottom: 10px;
 }
 
 .sign-up-button {
@@ -171,7 +203,7 @@ h1 {
     cursor: pointer;
 }
 
-#user, #at, #password {
+#user, #at, #password, #passwordRepeat {
   padding: 10px
 }
 </style>
