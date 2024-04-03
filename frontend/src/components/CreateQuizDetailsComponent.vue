@@ -13,10 +13,11 @@
       <label for="category">Category</label>
       <select v-model="selectedCategory">
         <option value="" disabled selected>Select Category</option>
-        <option v-for="category in categories" :value="category.categoryId" :key="category.categoryId">{{ category.categoryName }}</option>
+        <option v-for="category in categories" :value="category.categoryId" :key="category.categoryId">
+          {{ category.categoryName }}
+        </option>
       </select>
-    </div>
-    <div class="input-field">
+
       <label for="difficulty">Difficulty</label>
       <select id="difficulty" v-model="difficulty" class="placeholder-grey">
         <option value="" disabled selected>Select Difficulty Level</option>
@@ -70,10 +71,6 @@ const saveQuiz = async () => {
     formData.append('category', selectedCategory.value);
     formData.append('creator', creatorId);
 
-    if (multimedia.value) {
-        formData.append('file', multimedia.value);
-    }
-
     console.log('Creator ID:', creatorId);
     console.log('Category:', selectedCategory.value);
 
@@ -83,6 +80,20 @@ const saveQuiz = async () => {
                 'Content-Type': 'multipart/form-data'
             }
         });
+
+        if (multimedia.value) {
+          const quizId = response.data.quizId;
+          let fileFormData = new FormData();
+          fileFormData.append('file', multimedia.value);
+
+          console.log("multimedia :" + multimedia.value)
+
+          await axios.post(`http://localhost:8080/api/quizzes/upload/${quizId}`, fileFormData, {
+            headers: {
+              'Content-Type': 'multipart/form-data'
+            }
+          });
+        }
 
         await router.push('/addquestions');
         console.log('Quiz created:', response.data);
