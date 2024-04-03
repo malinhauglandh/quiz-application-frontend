@@ -13,7 +13,7 @@
       <label for="category">Category</label>
       <select v-model="selectedCategory">
         <option value="" disabled selected>Select Category</option>
-        <option v-for="category in categories" :value="category.category_id" :key="category.category_id">{{ category.categoryName }}</option>
+        <option v-for="category in categories" :value="category.categoryId" :key="category.categoryId">{{ category.categoryName }}</option>
       </select>
     </div>
     <div class="input-field">
@@ -29,7 +29,7 @@
       <label for="fileUpload">Upload File</label>
       <input type="file" id="fileUpload" @change="handleFileUpload" accept="image/*, video/*" :style="{ backgroundColor: fileUploaded ? 'white' : 'transparent' }">
     </div>
-    <button class="next-button" @click="goToNextPage">NEXT</button>
+    <button class="next-button" @click="saveQuiz">NEXT</button>
   </div>
 </template>
 
@@ -37,6 +37,7 @@
 import {ref, onMounted} from 'vue';
 import { useRouter } from 'vue-router';
 import axios from 'axios';
+import {useStore} from "@/store/store";
 
 const quizName = ref('');
 const quizDescription = ref('');
@@ -48,6 +49,7 @@ const router = useRouter();
 const categories = ref([]);
 const selectedCategory = ref(null);
 
+
 onMounted(async () => {
   try {
     const response = await axios.get('http://localhost:8080/api/categories/allCategories');
@@ -58,38 +60,42 @@ onMounted(async () => {
 });
 
 const saveQuiz = async () => {
-  // Construct the quiz data
-  const quizData = {
-    quizName: quizName.value,
-    quizDescription: quizDescription.value, // This assumes you have a way to set quizDescription
-    multimedia: multimedia.value, // This assumes you have a way to set multimedia, e.g., after file upload
-    difficultyLevel: difficulty.value,
-    categoryId: selectedCategory.value, // Assuming this is the ID of the selected category
-    // Add other fields as necessary
-  };
+    const store = useStore();
+    const creatorId = store.jwtToken.userId;
 
-  try {
-    // Send a POST request to the backend to create a new quiz
-    const response = await axios.post('http://localhost:8080/quizzes/createquiz', quizData);
-    // Handle the response, e.g., navigate to another page or show a success message
-    console.log('Quiz created:', response.data);
-    router.push('/some-success-page');
-  } catch (error) {
-    console.error('Error creating quiz:', error);
-  }
+    let formData = new FormData();
+    formData.append('quizName', quizName.value);
+    formData.append('quizDescription', quizDescription.value);
+    formData.append('difficultyLevel', difficulty.value);
+    formData.append('category', selectedCategory.value);
+    formData.append('creator', creatorId);
+
+    if (multimedia.value) {
+        formData.append('file', multimedia.value);
+    }
+
+    console.log('Creator ID:', creatorId);
+    console.log('Category:', selectedCategory.value);
+
+    try {
+        const response = await axios.post('http://localhost:8080/api/quizzes/createquiz', formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        });
+
+        await router.push('/addquestions');
+        console.log('Quiz created:', response.data);
+    } catch (error) {
+        console.error('Error creating quiz:', error.response.data);
+    }
 };
 
-// Add the `saveQuiz` function to the "Next" button's click event
-
-// eslint-disable-next-line no-unused-vars
 const handleFileUpload = (event) => {
-  fileUploaded.value = true;
+    multimedia.value = event.target.files[0];
+    fileUploaded.value = true;
 };
 
-const goToNextPage = () => {
-  router.push('/addquestions');
-  saveQuiz();
-};
 </script>
 
 <style scoped>
