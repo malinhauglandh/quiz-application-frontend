@@ -1,23 +1,24 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import { useStore } from '../store/store.js'
+import { useStore } from '@/store/store'
 
-import HomeView from '../view/HomeView.vue'
-import CreateQuizView from '../view/CreateQuizView.vue'
-import SearchView from '../view/SearchView.vue'
+import HomeView from '@/view/HomeView.vue'
+import CreateQuizView from '@/view/CreateQuizView.vue'
+import SearchView from '@/view/SearchView.vue'
 import AddQuestionsComponent from "@/components/AddQuestionsComponent.vue";
 import CreateQuizDetailsComponent from "@/components/CreateQuizDetailsComponent.vue";
 import MultipleChoiceComponent from "@/components/MultipleChoiceComponent.vue";
 import TrueFalseComponent from "@/components/TrueOrFalseComponent.vue";
 import FillInTheBlankComponent from "@/components/FillInTheBlankComponent.vue";
-import StartPageView from "../view/StartPageView.vue";
-import LogInPageView from "../view/LogInPageView.vue";
-import SignUpPageView from "../view/SignUpPageView.vue";
+import StartPageView from "@/view/StartPageView.vue";
+import LogInPageView from "@/view/LogInPageView.vue";
+import SignUpPageView from "@/view/SignUpPageView.vue";
 
 const routes = [
     {
         path: '/',
         name: 'StartPage',
-        component: StartPageView
+        component: StartPageView,
+        meta: { public: true }
     },
     {
         path: '/login',
