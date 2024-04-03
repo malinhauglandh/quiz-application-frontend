@@ -1,3 +1,33 @@
+<template>
+  <body class="login">
+  <div class="log-in-page">
+    <div class="logo">
+      <img src="../assets/logo.png" alt="logo" @click="goBack" />
+    </div>
+    <div class="log-in-box">
+      <h1>Login</h1>
+      <div class="log-in-form">
+        <form>
+          <div class="username-input">
+            <font-awesome-icon icon="user" id="user" />
+            <input type="text" id="username" name="username" placeholder="username" />
+          </div>
+          <div class="password-input">
+            <font-awesome-icon icon="lock" id="password" />
+            <input type="password" id="password" name="password" placeholder="password" />
+          </div>
+          <p class="sign-up-text">If you don't have a user, click <a @click="goToSignUp">here</a> to sign up</p>
+          <div class="error-message" v-if="showError">
+            <p> {{ errorMessage }}</p>
+          </div>
+          <button class="log-in-button" @click="login">Log in</button>
+        </form>
+      </div>
+    </div>
+  </div>
+  </body>
+</template>
+
 <script setup>
 import {onBeforeUnmount, onMounted, ref} from 'vue';
 import { useRouter } from 'vue-router';
@@ -49,6 +79,7 @@ const login = async (e) => {
 
         router.push("/home");
         console.log("Logged in!");
+
     } catch (error) {
         if (error.response && error.response.status === 401) {
             errorMessage.value = "Login failed: Incorrect username or password.";
@@ -59,36 +90,6 @@ const login = async (e) => {
     }
 };
 </script>
-
-<template>
-  <body class="login">
-    <div class="log-in-page">
-        <div class="logo">
-            <img src="../assets/logo.png" alt="logo" @click="goBack" />
-        </div>
-        <div class="log-in-box">
-            <h1>Login</h1>
-            <div class="log-in-form">
-                <form @submit.prevent="login">
-                    <div class="username-input">
-                        <font-awesome-icon icon="user" id="input-icon" />
-                        <input type="text" id="username" name="username" placeholder="username" v-model="username" />
-                    </div>
-                    <div class="password-input">
-                        <font-awesome-icon icon="lock" id="input-icon" />
-                        <input type="password" id="password-field" name="password" placeholder="password" v-model="password" />
-                    </div>
-                    <p class="sign-up-text">If you don't have a user, click <a @click="goToSignUp">here</a> to sign up</p>
-                    <div class="error-message" v-if="showError">
-                        <p>{{ errorMessage }}</p>
-                    </div>
-                    <button type="submit" class="log-in-button">Log in</button>
-                </form>
-            </div>
-        </div>
-    </div>
-</body>
-</template>
 
 <style scoped>
 .login {

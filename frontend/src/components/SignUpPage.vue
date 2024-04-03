@@ -1,12 +1,55 @@
+<template>
+  <body class="signup">
+  <div class="sign-up-page">
+    <div class="logo">
+      <img src="../assets/logo.png" alt="logo" @click="goBack" />
+    </div>
+    <div class="sign-up-box">
+      <h1>Sign up</h1>
+      <div class="sign-up-form">
+        <form>
+          <div class="email-input">
+            <font-awesome-icon icon="envelope-icon" id="at" />
+            <input type="email" id="envelope-icon" name="email" placeholder="email" />
+          </div>
+          <div class="username-input">
+            <font-awesome-icon icon="user-icon" id="user" />
+            <input type="text" id="user-icon" name="username" placeholder="username" />
+          </div>
+          <div class="password-input">
+            <font-awesome-icon icon="lock-icon" id="password" />
+            <input type="password" id="lock-icon" name="password" v-model="password" placeholder="password" />
+          </div>
+          <div class="password-input">
+            <font-awesome-icon icon="repeat" id="passwordRepeat" />
+            <input type="password" id="passwordRepeat" name="passwordRepeat" v-model="passwordRepeat" placeholder="repeat password" />
+          </div>
+          <div class="error-message" v-if="passwordError">
+            <p>{{ passwordError }}</p>
+          </div>
+          <button type="submit" class="sign-up-button" @click="signUp">Sign up</button>
+        </form>
+        <p class="log-in-text">If you already have a user, click <a @click="goToLogIn">here</a> to log in</p>
+        <div class="error-message" v-if="showError">
+          <p> {{ errorMessage }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  </body>
+</template>
+
 <script setup>
 import {onBeforeUnmount, onMounted, ref} from 'vue';
 import { useRouter } from 'vue-router';
 import axios from 'axios';
-import { useStore } from '../store/store.js';
+import { useStore } from '@/store/store';
 
 const email = ref('');
 const username = ref('');
 const password = ref('');
+const passwordRepeat = ref('');
+const passwordError = ref('');
 
 onMounted(() => {
   document.body.classList.add('signup');
@@ -22,6 +65,45 @@ const showError = ref(false);
 const router = useRouter();
 const store = useStore();
 
+const signUp = async (event) => {
+  event.preventDefault();
+
+  passwordError.value = '';
+
+  if (email.value.trim() === '' || username.value.trim() === '' || password.value.trim() === '') {
+    errorMessage.value = "Email, username, and password are required.";
+    showError.value = true;
+    return;
+  }
+
+  if (password.value !== passwordRepeat.value) {
+    passwordError.value = 'Passwords do not match.';
+    password.value = '';
+    passwordRepeat.value = '';
+  } else {
+    console.log('Proceed with signing up...');
+
+    try {
+      const response = await axios.post('http://localhost:8080/api/createUser', {
+        email: email.value,
+        username: username.value,
+        password: password.value
+      });
+      store.saveToken(username.value, response.data);
+      await router.push("/home");
+    } catch (error) {
+      if (error.response && error.response.status === 409) {
+        errorMessage.value = "Sign up failed: Username or email already in use.";
+      }
+      if (error.response && error.response.status === 500) {
+        errorMessage.value = "User already exists.";
+      } else {
+        errorMessage.value = "An error occurred. Please try again later.";
+      }
+      showError.value = true;
+    }
+  }
+}
 const goToLogIn = () => {
   router.push("/login");
 };
@@ -30,70 +112,7 @@ const goBack = () => {
   router.push("/");
 };
 
-async (e) => { 
-    e.preventDefault();
-
-    if(email.value.trim() === '' || username.value.trim() === '' || password.value.trim() === '') {
-        errorMessage.value = "Email, username, and password are required.";
-        showError.value = true;
-        return;
-    }
-
-    try {
-        const response = await axios.post('http://localhost:8080/api/createUser', {
-            email: email.value,
-            username: username.value,
-            password: password.value
-        });
-        store.saveToken(username.value, response.data);
-        router.push("/home");
-    } catch (error) {
-        if (error.response && error.response.status === 409) {
-            errorMessage.value = "Sign up failed: Username or email already in use.";
-        }
-        if(error.response && error.response.status === 500) {
-            errorMessage.value = "User already exists.";
-        } else {
-            errorMessage.value = "An error occurred. Please try again later.";
-        }
-        showError.value = true;
-    }
-};
 </script>
-
-<template>
-<body class="signup">
-    <div class="sign-up-page">
-      <div class="logo">
-        <img src="../assets/logo.png" alt="logo" @click="goBack" />
-      </div>
-      <div class="sign-up-box">
-        <h1>Sign up</h1>
-        <div class="sign-up-form">
-          <form>
-            <div class="email-input">
-              <font-awesome-icon icon="envelope" id="envelope-icon" />
-              <input type="email" id="email" name="email" placeholder="email" />
-            </div>
-            <div class="username-input">
-              <font-awesome-icon icon="user" id="user-icon" />
-              <input type="text" id="username" name="username" placeholder="username" />
-            </div>
-            <div class="password-input">
-              <font-awesome-icon icon="lock" id="lock-icon" />
-              <input type="password" id="password" name="password" placeholder="password" />
-            </div>
-            <button class="sign-up-button" @click="goToHome">Sign up</button>
-          </form>
-          <p class="log-in-text">If you already have a user, click <a @click="goToLogIn">here</a> to log in</p>
-          <div class="error-message" v-if="showError">
-            <p> {{ errorMessage }}</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </body>
-</template>
 
 <style scoped>
 .signup {
@@ -148,6 +167,23 @@ h1 {
   margin-bottom: 20px;
 }
 
+.username-input input, .password-input input, .email-input input {
+    padding: 8px;
+    font-size: 1rem;
+    width: 255px;
+    background-color: rgba(255, 255, 255, 0);
+    border-bottom: 1px solid white;
+    border-left: none;
+    border-right: none;
+    border-top: none;
+    color: white;
+}
+
+.username-input input:focus, .password-input input:focus, .email-input input:focus {
+    outline: none;
+    border-bottom: 1px solid #f7567c;
+    color: #f7567c;
+}
 
 #envelope-icon, #user-icon, #lock-icon {
   margin-right: 10px;
@@ -169,9 +205,11 @@ h1 {
   color: white;
 }
 
-.email-input input:focus, .username-input input:focus, .password-input input:focus {
-  outline: none;
-  border-bottom: 1px solid #f7567c;
+.error-message {
+  color: #ff3860;
+  font-size: 0.875rem;
+  margin-top: -15px;
+  margin-bottom: 10px;
 }
 
 .sign-up-button {
