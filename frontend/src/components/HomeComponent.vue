@@ -2,36 +2,108 @@
   <div class="home-component">
     <div class="content-wrapper">
       <h1>Your recently made quizzes:</h1>
-      <div class="quiz-box-container">
-        <div class="quiz-box"></div>
-        <div class="quiz-box"></div>
-        <div class="quiz-box"></div>
+      <div class="quiz-box-container" v-if="quizzes.length > 0">
+        <div v-for="quiz in quizzes" :key="quiz.quizId" class="quiz-box">
+          <div v-if="quiz.multimedia" class="quiz-image" :style="{ backgroundImage: `url(${getPathToQuizImage(quiz.multimedia)})` }" />
+          <div v-else class="quiz-image-placeholder" />
+          <div class="quiz-details">
+            <h3 class="quiz-title">{{ quiz.quizName }}</h3>
+            <p class="quiz-description">{{ quiz.quizDescription }}</p>
+            <button class="play-quiz-button" @click="playQuiz(quiz.quizId)">Play Quiz</button>
+          </div>
+        </div>
+      </div>
+      <div v-else class="no-quizzes-message">
+        <p>You have not created any quizzes yet... Get started now!!</p>
       </div>
     </div>
     <router-link to="/createquiz" class="create-quiz-button">CREATE NEW QUIZ</router-link>
   </div>
 </template>
 
+
+<script setup>
+import { onMounted, ref } from 'vue';
+import { useStore } from "@/store/store";
+import router from "@/router/router";
+
+const store = useStore();
+
+const quizzes = ref([]);
+
+const getPathToQuizImage = (filename) => {
+  return `http://localhost:8080/api/quizzes/files/${filename}`;
+};
+
+const fetchQuizzes = async () => {
+  const token = store.jwtToken;
+  console.log("token:", token);
+
+  const creatorId = token.userId;
+
+  const accessToken = token.accessToken;
+
+  console.log("accessToken: ", accessToken);
+
+  console.log("Fetching quizzes for user:", creatorId);
+
+  try {
+    const response = await fetch(`http://localhost:8080/api/quizzes/user/${creatorId}`, {
+      headers: {
+        'Authorization': `Bearer ${accessToken}`
+      }
+    });
+
+    if (response.status === 401 || response.status === 403) {
+      console.error("Token is invalid or expired. Please re-authenticate.");
+      return;
+    }
+
+    if (!response.ok) {
+      console.error(`HTTP error! status: ${response.status}`);
+    }
+
+    const fetchedQuizzes = await response.json();
+
+    quizzes.value = fetchedQuizzes.sort((a, b) => {
+      return new Date(b.quizId) - new Date(a.quizId);
+    });
+  } catch (error) {
+    console.error("Failed to fetch quizzes:", error);
+  }
+};
+
+const playQuiz = () => {
+  router.push(`/search`);
+};
+
+
+onMounted(fetchQuizzes);
+</script>
+
 <style scoped>
 .home-component {
   display: flex;
   flex-direction: column;
-  justify-content: space-between; /* Ensures content is spaced out */
-  height: 100vh; /* Full height of the viewport */
+  justify-content: flex-start;
+  max-height: 100vh;
   text-align: center;
 }
 
 .content-wrapper {
-  overflow-y: auto; /* Makes the content scrollable */
-  margin-bottom: 20px; /* Gives some space before the button */
+  overflow-y: auto;
+  padding-bottom: 20px;
+  margin-top: 20px;
+  flex-grow: 1;
 }
 
 .quiz-box-container {
   display: flex;
-  flex-direction: row; /* Default orientation */
-  justify-content: space-between;
-  margin: 20px 20px 0; /* Adjusted to add margin top */
-  flex-wrap: wrap; /* Adjusts boxes to wrap in smaller screens */
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 20px;
+  padding: 0 60px;
+  margin-bottom: 100px;
 }
 
 .quiz-box {
@@ -40,7 +112,7 @@
   height: 200px;
   border: 1px solid #ccc;
   box-sizing: border-box;
-  margin: 0 5px 10px; /* Added bottom margin */
+  position: relative;
 }
 
 .create-quiz-button {
@@ -59,15 +131,89 @@
   font-size: 22px;
 }
 
+.quiz-image, .quiz-image-placeholder {
+  height: 200px;
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.quiz-image-placeholder {
+  background-color: white;
+}
+
+.quiz-title {
+  color: white;
+  background-color: rgba(0, 0, 0, 0.2);
+  width: 100%;
+  text-align: center;
+  padding: 10px 0;
+  position: absolute;
+  top: -20px;
+}
+
+.quiz-description {
+  position: absolute;
+  top: 28px;
+  left: 0;
+  right: 0;
+  width: auto;
+  text-align: center;
+  background-color: rgba(0, 0, 0, 0.2);
+  color: white;
+  visibility: hidden;
+  opacity: 0;
+  transition: visibility 0s, opacity 0.3s linear;
+  padding: 10px 15px;
+  box-sizing: border-box;
+  white-space: pre-wrap;
+}
+
+.play-quiz-button {
+  display: none;
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #f7567c;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.quiz-box:hover .play-quiz-button {
+  display: block;
+  visibility: visible;
+  opacity: 1;
+}
+
+.quiz-box:hover .quiz-description {
+  visibility: visible;
+  opacity: 1;
+}
+
+.no-quizzes-message {
+  text-align: center;
+  padding: 10px 10px;
+}
+
 @media (max-width: 768px) {
   .quiz-box-container {
-    flex-direction: column;
-    align-items: center;
+    justify-content: flex-start;
+    margin-bottom: 40px;
+  }
+
+  .quiz-description {
+    white-space: normal;
+    font-size: smaller;
   }
 
   .quiz-box {
-    width: 90%;
-    margin: 10px 0;
+    width: 100%;
   }
 
   h1 {
