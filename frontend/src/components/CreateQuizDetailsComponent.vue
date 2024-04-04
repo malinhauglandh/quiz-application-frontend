@@ -78,9 +78,10 @@ const saveQuiz = async () => {
     console.log('Category:', selectedCategory.value);
 
     try {
-        const response = await axios.post('http://localhost:8080/api/quizzes/createquiz', formData, {
+        const response = await axios.post('http://localhost:8080/api/quizzes/createQuiz', formData, {
             headers: {
-                'Content-Type': 'multipart/form-data'
+                'Content-Type': 'multipart/form-data',
+                'Authorization': 'Bearer ' + store.jwtToken.accessToken
             }
         });
 
