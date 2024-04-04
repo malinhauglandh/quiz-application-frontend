@@ -12,6 +12,12 @@ import FillInTheBlankComponent from "@/components/FillInTheBlankComponent.vue";
 import StartPageView from "@/view/StartPageView.vue";
 import LogInPageView from "@/view/LogInPageView.vue";
 import SignUpPageView from "@/view/SignUpPageView.vue";
+import StartPlayingQuizComponent from "@/components/StartPlayingQuizComponent.vue";
+import StartPlayingQuizView from "@/view/StartPlayingQuizView.vue";
+import TrueOrFalseQuestionComponent from "@/components/TrueOrFalseQuestionComponent.vue";
+import MultipleChoiceQuestionComponent from "@/components/MultipleChoiceQuestionComponent.vue";
+import FillInTheBlankQuestionComponent from "@/components/FillInTheBlankQuestionComponent.vue";
+
 
 const routes = [
     {
@@ -35,7 +41,29 @@ const routes = [
     { path: '/home', component: HomeView },
     { path: '/search', component: SearchView },
     {
-        path: '/createquiz',
+        path: '/playQuiz/:quizId',
+        component: StartPlayingQuizView,
+        children: [
+            {
+                path: '',
+                component: StartPlayingQuizComponent
+            },
+            {
+                path: '/playQuiz/:quizId/multipleChoiceQuestion',
+                component: MultipleChoiceQuestionComponent
+            },
+            {
+                path: '/playQuiz/:quizId/trueOrFalseQuestion',
+                component: TrueOrFalseQuestionComponent
+            },
+            {
+                path: '/playQuiz/:quizId/fillInTheBlankQuestion',
+                component: FillInTheBlankQuestionComponent
+            }
+        ]
+    },
+    {
+        path: '/createQuiz',
         component: CreateQuizView,
         children: [
             {
@@ -43,19 +71,19 @@ const routes = [
                 component: CreateQuizDetailsComponent
             },
             {
-                path: '/addquestions',
+                path: '/addQuestions',
                 component: AddQuestionsComponent,
             },
             {
-                path: '/addquestions/multiplechoice',
+                path: '/addQuestions/multipleChoice',
                 component: MultipleChoiceComponent
             },
             {
-                path: '/addquestions/truefalse',
+                path: '/addQuestions/trueFalse',
                 component: TrueFalseComponent
             },
             {
-                path: '/addquestions/fillintheblank',
+                path: '/addQuestions/fillInTheBlank',
                 component: FillInTheBlankComponent
             }
         ]
