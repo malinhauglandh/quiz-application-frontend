@@ -30,11 +30,11 @@ const selectedOption = ref(null);
 const router = useRouter();
 
 const saveQuestion = () => {
-    router.push('/addquestions');
+    router.push('/addQuestions');
 };
 
 const cancelQuestion = () => {
-    router.push('/addquestions');
+    router.push('/addQuestions');
 };
 
 </script>

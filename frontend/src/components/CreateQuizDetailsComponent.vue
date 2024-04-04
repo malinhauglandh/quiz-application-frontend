@@ -54,6 +54,7 @@ const categories = ref([]);
 const selectedCategory = ref(null);
 
 
+
 onMounted(async () => {
   try {
     const response = await axios.get('http://localhost:8080/api/categories/allCategories');
@@ -98,7 +99,7 @@ const saveQuiz = async () => {
           });
         }
 
-        await router.push('/addquestions');
+        await router.push('/addQuestions');
         console.log('Quiz created:', response.data);
     } catch (error) {
         console.error('Error creating quiz:', error.response.data);

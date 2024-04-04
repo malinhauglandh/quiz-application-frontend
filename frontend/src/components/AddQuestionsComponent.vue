@@ -28,7 +28,7 @@ const router = useRouter();
 const showOptions = ref(false);
 
 const goBack = () => {
-    router.push('/createquiz');
+    router.push('/createQuiz');
 };
 
 const goToNextPage = () => {
@@ -37,13 +37,13 @@ const goToNextPage = () => {
 const addQuestion = (type) => {
     switch (type) {
         case 'multiplechoice':
-            router.push('/addquestions/multiplechoice');
+            router.push('/addQuestions/multipleChoice');
             break;
         case 'truefalse':
-            router.push('/addquestions/truefalse');
+            router.push('/addQuestions/trueFalse');
             break;
         case 'fillintheblank':
-            router.push('/addquestions/fillintheblank');
+            router.push('/addQuestions/fillInTheBlank');
             break;
         default:
             break;

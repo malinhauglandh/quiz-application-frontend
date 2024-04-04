@@ -6,7 +6,7 @@
     <ul class="navbar-list" v-if="!showMobileMenu">
       <li><router-link to="/home">
         <font-awesome-icon class="icon" icon="house" />HOME</router-link></li>
-      <li><router-link to="/createquiz">
+      <li><router-link to="/createQuiz">
         <font-awesome-icon class="icon" icon="plus" />CREATE NEW QUIZ</router-link></li>
       <li><router-link to="/search">
         <font-awesome-icon class="icon" icon="magnifying-glass" />SEARCH</router-link></li>
@@ -30,7 +30,7 @@
       <router-link to="/home" @click="toggleMobileMenu">
         <font-awesome-icon class="icon" icon="home" />HOME
       </router-link>
-      <router-link to="/createquiz" @click="toggleMobileMenu">
+      <router-link to="/createQuiz" @click="toggleMobileMenu">
         <font-awesome-icon class="icon" icon="plus" />CREATE NEW QUIZ
       </router-link>
       <router-link to="/search" @click="toggleMobileMenu">
@@ -55,7 +55,7 @@
 <script setup>
 import {onMounted, onUnmounted, ref} from 'vue';
 import { useRouter } from 'vue-router';
-import { useStore } from '../store/store.js';
+import { useStore } from '@/store/store';
 
 const showMobileMenu = ref(false);
 const showSettingsDropdown = ref(false);

@@ -22,19 +22,17 @@
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 
-// Data
 const question = ref('');
 const alternatives = ref(['', '', '', '']);
 const correctAnswer = ref(null);
 const router = useRouter();
 
-// Methods
 const saveQuestion = () => {
-    router.push('/addquestions');
+    router.push('/addQuestions');
 };
 
 const cancelQuestion = () => {
-    router.push('/addquestions');
+    router.push('/addQuestions');
 };
 
 </script>
