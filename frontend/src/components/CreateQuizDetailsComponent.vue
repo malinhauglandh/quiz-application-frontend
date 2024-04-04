@@ -1,37 +1,36 @@
 <template>
-  <div class="create-quiz-details">
-    <h1>Create Quiz</h1>
-    <div class="input-field">
-      <label for="quizName">Quiz Name</label>
-      <input type="text" id="quizName" v-model="quizName" placeholder="Enter Quiz Name">
+    <div class="create-quiz-details">
+        <h1>Create Quiz</h1>
+        <div class="input-field">
+            <label for="quizName">Quiz Name</label>
+            <input type="text" id="quizName" v-model="quizName" placeholder="Enter Quiz Name">
+        </div>
+        <div class="input-field">
+            <label for="quizDescription">Quiz Description</label>
+            <input type="text" id="quizDescription" v-model="quizDescription" placeholder="Enter Quiz Description">
+        </div>
+        <div class="input-field">
+            <label for="category">Category</label>
+            <select v-model="selectedCategory">
+                <option value="" disabled selected>Select Category</option>
+                <option v-for="category in categories" :value="category.categoryId" :key="category.categoryId">{{ category.categoryName }}</option>
+            </select>
+        </div>
+        <div class="input-field">
+            <label for="difficulty">Difficulty</label>
+            <select id="difficulty" v-model="difficulty" class="placeholder-grey">
+                <option value="" disabled selected>Select Difficulty Level</option>
+                <option value="easy">Easy</option>
+                <option value="medium">Medium</option>
+                <option value="hard">Hard</option>
+            </select>
+        </div>
+        <div class="input-field">
+            <label for="fileUpload">Upload File</label>
+            <input type="file" id="fileUpload" @change="handleFileUpload" accept="image/*, video/*" :style="{ backgroundColor: fileUploaded ? 'white' : 'transparent' }">
+        </div>
+        <button class="next-button" @click="saveQuiz">NEXT</button>
     </div>
-    <div class="input-field">
-      <label for="quizDescription">Quiz Description</label>
-      <input type="text" id="quizDescription" v-model="quizDescription" placeholder="Enter Quiz Description">
-    </div>
-    <div class="input-field">
-      <label for="category">Category</label>
-      <select v-model="selectedCategory">
-        <option value="" disabled selected>Select Category</option>
-        <option v-for="category in categories" :value="category.categoryId" :key="category.categoryId">
-          {{ category.categoryName }}
-        </option>
-      </select>
-
-      <label for="difficulty">Difficulty</label>
-      <select id="difficulty" v-model="difficulty" class="placeholder-grey">
-        <option value="" disabled selected>Select Difficulty Level</option>
-        <option value="easy">Easy</option>
-        <option value="medium">Medium</option>
-        <option value="hard">Hard</option>
-      </select>
-    </div>
-    <div class="input-field">
-      <label for="fileUpload">Upload File</label>
-      <input type="file" id="fileUpload" @change="handleFileUpload" accept="image/*, video/*" :style="{ backgroundColor: fileUploaded ? 'white' : 'transparent' }">
-    </div>
-    <button class="next-button" @click="saveQuiz">NEXT</button>
-  </div>
 </template>
 
 <script setup>
@@ -52,12 +51,12 @@ const selectedCategory = ref(null);
 
 
 onMounted(async () => {
-  try {
-    const response = await axios.get('http://localhost:8080/api/categories/allCategories');
-    categories.value = response.data;
-  } catch (error) {
-    console.error(error);
-  }
+    try {
+        const response = await axios.get('http://localhost:8080/api/categories/allCategories');
+        categories.value = response.data;
+    } catch (error) {
+        console.error(error);
+    }
 });
 
 const saveQuiz = async () => {
@@ -71,6 +70,10 @@ const saveQuiz = async () => {
     formData.append('category', selectedCategory.value);
     formData.append('creator', creatorId);
 
+    if (multimedia.value) {
+        formData.append('file', multimedia.value);
+    }
+
     console.log('Creator ID:', creatorId);
     console.log('Category:', selectedCategory.value);
 
@@ -81,21 +84,24 @@ const saveQuiz = async () => {
             }
         });
 
-        if (multimedia.value) {
-          const quizId = response.data.quizId;
-          let fileFormData = new FormData();
-          fileFormData.append('file', multimedia.value);
+        /*if (multimedia.value) {
+            const quizId = response.data.quizId;
+            let fileFormData = new FormData();
+            fileFormData.append('file', multimedia.value);
 
-          console.log("multimedia :" + multimedia.value)
+            console.log("multimedia :" + multimedia.value)
 
-          await axios.post(`http://localhost:8080/api/quizzes/upload/${quizId}`, fileFormData, {
-            headers: {
-              'Content-Type': 'multipart/form-data'
-            }
-          });
-        }
+            await axios.post(`http://localhost:8080/api/quizzes/upload/${quizId}`, fileFormData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            });
+        }*/
 
-        await router.push('/addquestions');
+        const createdQuizId = response.data.quizId;
+        localStorage.setItem('createdQuizId', createdQuizId);
+
+        await router.push({ path: '/addquestions', query: { quizId: createdQuizId } });
         console.log('Quiz created:', response.data);
     } catch (error) {
         console.error('Error creating quiz:', error.response.data);
@@ -111,45 +117,45 @@ const handleFileUpload = (event) => {
 
 <style scoped>
 .create-quiz-details {
-  max-width: 600px;
-  margin: 0 auto;
+    max-width: 600px;
+    margin: 0 auto;
 }
 
 .input-field {
-  margin-bottom: 50px;
+    margin-bottom: 50px;
 }
 
 .input-field label {
-  display: block;
-  margin-bottom: 3px;
-  font-weight: bold;
-  text-align: left;
-  padding-left: 12px;
+    display: block;
+    margin-bottom: 3px;
+    font-weight: bold;
+    text-align: left;
+    padding-left: 12px;
 }
 
 .input-field input,
 .input-field select {
-  width: calc(100% - 22px);
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  font-size: 16px;
-  box-sizing: border-box;
+    width: calc(100% - 22px);
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+    box-sizing: border-box;
 }
 
 
 button.next-button {
-  padding: 15px 30px;
-  background-color: #6320EE;
-  color: white;
-  border: none;
-  border-radius: 20px;
-  cursor: pointer;
-  font-size: 22px;
-  margin-left: calc(100% - 140px);
+    padding: 15px 30px;
+    background-color: #6320EE;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 22px;
+    margin-left: calc(100% - 140px);
 }
 
 button.next-button:hover {
-  background-color: #7E41FDFF;
+    background-color: #7E41FDFF;
 }
 </style>
