@@ -154,7 +154,7 @@ onUnmounted(() => {
 }
 
 .navbar-settings {
-  font-size: 40px;
+  font-size: 30px;
   color: white;
   cursor: pointer;
 }
