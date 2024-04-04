@@ -3,11 +3,13 @@
     <h1>Create Quiz</h1>
     <div class="input-field">
       <label for="quizName">Quiz Name</label>
-      <input type="text" id="quizName" v-model="quizName" placeholder="Enter Quiz Name">
+      <input type="text" id="quizName" v-model="quizName" placeholder="Enter Quiz Name" maxlength="50">
+      <span>{{ 50 - quizName.length }} characters left</span>
     </div>
     <div class="input-field">
       <label for="quizDescription">Quiz Description</label>
-      <input type="text" id="quizDescription" v-model="quizDescription" placeholder="Enter Quiz Description">
+      <input type="text" id="quizDescription" v-model="quizDescription" placeholder="Enter Quiz Description" maxlength="80">
+      <span>{{ 80 - quizDescription.length }} characters left</span>
     </div>
     <div class="input-field">
       <label for="category">Category</label>
@@ -17,7 +19,8 @@
           {{ category.categoryName }}
         </option>
       </select>
-
+    </div>
+    <div class="input-field">
       <label for="difficulty">Difficulty</label>
       <select id="difficulty" v-model="difficulty" class="placeholder-grey">
         <option value="" disabled selected>Select Difficulty Level</option>
@@ -113,10 +116,20 @@ const handleFileUpload = (event) => {
 .create-quiz-details {
   max-width: 600px;
   margin: 0 auto;
+  padding: 20px;
 }
 
 .input-field {
-  margin-bottom: 50px;
+  margin-bottom: 35px;
+  position: relative;
+}
+
+.input-field span {
+  color: #f7567c;
+  position: absolute; /* Absolute position for the counter */
+  bottom: -20px; /* Adjust as needed to place it at the bottom of the input field */
+  right: 15px; /* Adjust as needed to place it to the right */
+  font-size: 12px;
 }
 
 .input-field label {
