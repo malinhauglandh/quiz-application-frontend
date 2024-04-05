@@ -1,23 +1,22 @@
 <template>
     <div class="start-playing-quiz-component">
         <div class="content-wrapper">
-            <div v-for="quiz in quiz" :key="quiz.quizId" class="quiz-box">
-                <div v-if="quiz.multimedia" class="quiz-image" :style="{ backgroundImage: `url(${getPathToQuizImage(quiz.multimedia)})` }"></div>
+            <div v-for="quizItem in quiz" :key="quizItem.quizId" class="quiz-box">
+                <div v-if="quizItem.multimedia" class="quiz-image" :style="{ backgroundImage: `url(${getPathToQuizImage(quizItem.multimedia)})` }"></div>
                 <div v-else class="quiz-image-placeholder"></div>
-                <h3 class="quiz-title">{{ quiz.quizName }}</h3>
-                <p class="quiz-description">{{ quiz.quizDescription }}</p>
-                <p class="quiz-description" v-if="quiz.difficultyLevel">
-                    <span class="label">Difficulty level:</span> {{ quiz.difficultyLevel }}
+                <h3 class="quiz-title">{{ quizItem.quizName }}</h3>
+                <p class="quiz-description">{{ quizItem.quizDescription }}</p>
+                <p class="quiz-description" v-if="quizItem.difficultyLevel">
+                    <span class="label">Difficulty level:</span> {{ quizItem.difficultyLevel }}
                 </p>
-                <p class="quiz-description" v-if="quiz.categoryName">
-                    <span class="label">Category:</span> {{ quiz.categoryName }}
+                <p class="quiz-description" v-if="quizItem.categoryName">
+                    <span class="label">Category:</span> {{ quizItem.categoryName }}
                 </p>
-                <button class="play-quiz-button" @click="playQuiz(quiz.quizId)">START</button>
+                <button class="play-quiz-button" @click="playQuiz(quizItem.quizId)">START</button>
             </div>
         </div>
     </div>
 </template>
-
 
 <script setup>
 import { onMounted, ref } from 'vue';
@@ -30,25 +29,24 @@ const categories = ref([]);
 
 const quizId = router.currentRoute.value.params.quizId;
 
-
 onMounted(async () => {
+    await fetchCategories();
+    await fetchQuiz();
+});
+
+async function fetchCategories() {
     try {
         const catResponse = await fetch('http://localhost:8080/api/categories/allCategories');
         if (!catResponse.ok) {
             throw new Error(`HTTP error! status: ${catResponse.status}`);
         }
         categories.value = await catResponse.json();
-        await fetchQuiz();
     } catch (error) {
         console.error("Failed to fetch categories:", error);
     }
-});
+}
 
-const getPathToQuizImage = (filename) => {
-    return `http://localhost:8080/api/quizzes/files/${filename}`;
-};
-
-const fetchQuiz = async () => {
+async function fetchQuiz() {
     const token = store.jwtToken;
     const creatorId = token.userId;
     const accessToken = token.accessToken;
@@ -61,73 +59,46 @@ const fetchQuiz = async () => {
         });
 
         if (!response.ok) {
-            console.error(`HTTP error! status: ${response.status}`);
-            return;
+            throw new Error(`HTTP error! status: ${response.status}`);
         }
 
         const fetchedQuiz = await response.json();
 
-        console.log("Fetched quiz:", fetchedQuiz);
-
         quiz.value = fetchedQuiz.map(q => {
             const categoryName = categories.value.find(c => c.categoryId === q.categoryId)?.categoryName;
             return { ...q, categoryName };
-        }).sort((a, b) => new Date(b.quizId) - new Date(a.quizId));
-
+        });
     } catch (error) {
         console.error("Failed to fetch quiz:", error);
+    }
+}
+
+const getPathToQuizImage = (filename) => {
+    return `http://localhost:8080/api/quizzes/files/${filename}`;
+};
+
+const determineFirstQuestionRoute = (questionTypeId) => {
+    switch(questionTypeId) {
+        case 1: return 'multipleChoiceQuestion';
+        case 2: return 'trueOrFalseQuestion';
+        case 3: return 'fillInTheBlankQuestion';
+        default: return null;
     }
 };
 
 const playQuiz = (quizId) => {
-    router.push(`/playquiz/${quizId}/fillInTheBlankQuestion`);
+    if (!quiz.value[0] || !quiz.value[0].questionList || !quiz.value[0].questionList.length) return;
+
+    const firstQuestion = quiz.value[0].questionList[0];
+    const routeName = determineFirstQuestionRoute(firstQuestion.questionType.typeId);
+
+    if (routeName) {
+        router.push(`/playQuiz/${quizId}/${routeName}`);
+    } else {
+        console.error("Invalid question type ID or route name not found.");
+    }
 };
 
-/*const playQuiz = async (quizId) => {
-    const creatorId = store.jwtToken.userId;
-
-    try {
-        const response = await fetch(`http://localhost:8080/api/quizzes/user/${creatorId}/${quizId}`, {
-            headers: {
-                'Authorization': `Bearer ${store.jwtToken.accessToken}`
-            }
-        });
-
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-
-        const quizDetails = await response.json();
-
-        const firstQuestion = quizDetails.questions[0];
-        if (!firstQuestion) {
-            console.error('No questions found in the quiz');
-            return;
-        }
-
-        let routeName = '';
-        switch (firstQuestion.typeId) {
-            case 1:
-                routeName = 'multiplechoice';
-                break;
-            case 2:
-                routeName = 'truefalse';
-                break;
-            case 3:
-                routeName = 'fillintheblank';
-                break;
-            default:
-                console.error('Unknown question type');
-                return;
-        }
-
-        router.push({ name: routeName, params: { quizId: quizId } });
-    } catch (error) {
-        console.error("Failed to start quiz:", error);
-    }
-};*/
-
-onMounted(fetchQuiz);
 </script>
 
 <style scoped>

@@ -18,7 +18,6 @@ import TrueOrFalseQuestionComponent from "@/components/TrueOrFalseQuestionCompon
 import MultipleChoiceQuestionComponent from "@/components/MultipleChoiceQuestionComponent.vue";
 import FillInTheBlankQuestionComponent from "@/components/FillInTheBlankQuestionComponent.vue";
 
-
 const routes = [
     {
         path: '/',
