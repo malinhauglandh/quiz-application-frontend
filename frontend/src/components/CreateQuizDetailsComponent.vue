@@ -291,8 +291,8 @@ button.next-button:disabled {
   align-items: center;
   cursor: pointer;
   border-radius: 1rem;
-  border: #007ACC 3px solid;
-  background-color: #007ACC;
+  border: #6320EE 3px solid;
+  background-color: #6320EE;
   width: fit-content;
   font-family: "Karla", sans-serif;
   font-weight: 500;
@@ -315,11 +315,11 @@ button.next-button:disabled {
 }
 
 #uploadFileLabel:hover p {
-  color: #007ACC;
+  color: #6320EE;
 }
 
 #uploadFileLabel:hover svg {
-  fill: #007ACC;
+  fill: #6320EE;
 }
 
 #fileUploaded {
@@ -328,8 +328,6 @@ button.next-button:disabled {
   align-items: center;
   cursor: pointer;
   border-radius: 1rem;
-  border: #007ACC 3px solid;
-  background-color: #007ACC;
   width: fit-content;
   color: white;
   font-family: "Karla", sans-serif;
