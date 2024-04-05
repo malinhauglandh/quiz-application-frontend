@@ -96,7 +96,7 @@ const signUp = async (event) => {
         errorMessage.value = "Sign up failed: Username or email already in use.";
       }
       if (error.response && error.response.status === 500) {
-        errorMessage.value = "User already exists.";
+        errorMessage.value = "Something went wrong. Please try again.";
       } else {
         errorMessage.value = "An error occurred. Please try again later.";
       }
