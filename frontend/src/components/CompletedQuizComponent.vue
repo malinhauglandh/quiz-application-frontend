@@ -23,7 +23,7 @@ onMounted(async () => {
   const quizId = 2; // Replace with dynamic ID as needed
   try {
     const response = await axios.get(
-        `http://localhost:8080/api/completed-quizzes/${quizId}/latest`,
+        `http://localhost:8080/api/completed-quizzes/${quizId}`,
         {
           headers: {
             'Authorization': `Bearer ${store.jwtToken.accessToken}`,
