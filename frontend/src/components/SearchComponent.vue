@@ -28,7 +28,7 @@ const quizzes = ref([]);
 
 async function fetchAllQuizzes() {
   try {
-    const response = await fetch('http://localhost:8080/api/quizzes/allquizzes');
+    const response = await fetch('http://localhost:8080/api/quizzes/allQuizzes');
 
     const fetchedQuizzes = await response.json();
 
