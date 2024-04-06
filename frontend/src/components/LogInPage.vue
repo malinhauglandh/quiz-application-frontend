@@ -13,7 +13,7 @@
             <input type="text" id="username" v-model="username" placeholder="username" />
           </div>
           <div class="password-input">
-            <font-awesome-icon icon="lock" id="password" />
+            <font-awesome-icon icon="lock" id="lockIcon" />
             <input type="password" id="password" v-model="password" placeholder="password" />
           </div>
           <p class="sign-up-text">If you don't have a user, click <a @click="goToSignUp">here</a> to sign up</p>
