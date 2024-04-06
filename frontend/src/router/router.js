@@ -12,6 +12,7 @@ import FillInTheBlankComponent from "@/components/FillInTheBlankComponent.vue";
 import StartPageView from "@/view/StartPageView.vue";
 import LogInPageView from "@/view/LogInPageView.vue";
 import SignUpPageView from "@/view/SignUpPageView.vue";
+import CompletedQuizView from "@/view/CompletedQuizView.vue";
 
 const routes = [
     {
@@ -34,6 +35,7 @@ const routes = [
     },
     { path: '/home', component: HomeView },
     { path: '/search', component: SearchView },
+    { path: '/completedquiz', component: CompletedQuizView },
     {
         path: '/createquiz',
         component: CreateQuizView,
