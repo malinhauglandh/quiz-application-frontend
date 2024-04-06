@@ -1,21 +1,47 @@
 <template>
-    <div class="start-playing-quiz-component">
-        <div class="content-wrapper">
-            <div v-for="quizItem in quiz" :key="quizItem.quizId" class="quiz-box">
-                <div v-if="quizItem.multimedia" class="quiz-image" :style="{ backgroundImage: `url(${getPathToQuizImage(quizItem.multimedia)})` }"></div>
-                <div v-else class="quiz-image-placeholder"></div>
-                <h3 class="quiz-title">{{ quizItem.quizName }}</h3>
-                <p class="quiz-description">{{ quizItem.quizDescription }}</p>
-                <p class="quiz-description" v-if="quizItem.difficultyLevel">
-                    <span class="label">Difficulty level:</span> {{ quizItem.difficultyLevel }}
-                </p>
-                <p class="quiz-description" v-if="quizItem.categoryName">
-                    <span class="label">Category:</span> {{ quizItem.categoryName }}
-                </p>
-                <button class="play-quiz-button" @click="playQuiz(quizItem.quizId)">START</button>
-            </div>
-        </div>
+  <div class="start-playing-quiz-component">
+    <div class="content-wrapper">
+      <div
+        v-for="quizItem in quiz"
+        :key="quizItem.quizId"
+        class="quiz-box"
+      >
+        <div
+          v-if="quizItem.multimedia"
+          class="quiz-image"
+          :style="{ backgroundImage: `url(${getPathToQuizImage(quizItem.multimedia)})` }"
+        />
+        <div
+          v-else
+          class="quiz-image-placeholder"
+        />
+        <h3 class="quiz-title">
+          {{ quizItem.quizName }}
+        </h3>
+        <p class="quiz-description">
+          {{ quizItem.quizDescription }}
+        </p>
+        <p
+          v-if="quizItem.difficultyLevel"
+          class="quiz-description"
+        >
+          <span class="label">Difficulty level:</span> {{ quizItem.difficultyLevel }}
+        </p>
+        <p
+          v-if="quizItem.categoryName"
+          class="quiz-description"
+        >
+          <span class="label">Category:</span> {{ quizItem.categoryName }}
+        </p>
+        <button
+          class="play-quiz-button"
+          @click="playQuiz(quizItem.quizId)"
+        >
+          START
+        </button>
+      </div>
     </div>
+  </div>
 </template>
 
 <script setup>

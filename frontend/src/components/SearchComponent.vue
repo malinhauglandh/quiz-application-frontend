@@ -1,17 +1,46 @@
 <template>
   <div class="search-component">
     <div class="search-bar-container">
-      <input type="text" v-model="searchQuery" placeholder="Search among all quizzes" class="search-bar">
-      <font-awesome-icon icon="magnifying-glass" class="search-image" @click="searchQuizzes" />
+      <input
+        v-model="searchQuery"
+        type="text"
+        placeholder="Search among all quizzes"
+        class="search-bar"
+      >
+      <font-awesome-icon
+        icon="magnifying-glass"
+        class="search-image"
+        @click="searchQuizzes"
+      />
     </div>
     <div class="quiz-box-container">
-      <div v-for="quiz in quizzes" :key="quiz.quizId" class="quiz-box">
-        <div v-if="quiz.multimedia" class="quiz-image" :style="{ backgroundImage: `url(${getPathToQuizImage(quiz.multimedia)})` }"></div>
-        <div v-else class="quiz-image-placeholder"></div>
+      <div
+        v-for="quiz in quizzes"
+        :key="quiz.quizId"
+        class="quiz-box"
+      >
+        <div
+          v-if="quiz.multimedia"
+          class="quiz-image"
+          :style="{ backgroundImage: `url(${getPathToQuizImage(quiz.multimedia)})` }"
+        />
+        <div
+          v-else
+          class="quiz-image-placeholder"
+        />
         <div class="quiz-details">
-          <h3 class="quiz-title">{{ quiz.quizName }}</h3>
-          <p class="quiz-description">{{ quiz.quizDescription }}</p>
-          <button class="play-quiz-button" @click="playQuiz(quiz.quizId)">Play Quiz</button>
+          <h3 class="quiz-title">
+            {{ quiz.quizName }}
+          </h3>
+          <p class="quiz-description">
+            {{ quiz.quizDescription }}
+          </p>
+          <button
+            class="play-quiz-button"
+            @click="playQuiz(quiz.quizId)"
+          >
+            Play Quiz
+          </button>
         </div>
       </div>
     </div>

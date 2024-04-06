@@ -1,20 +1,27 @@
 <template>
-    <div class="fill-in-the-blank-question">
-        <div class="question-display">
-            <p class="question-text">What is the capital of Finland?</p>
-        </div>
-        <div class="input-container">
-            <input
-                type="text"
-                class="answer-input"
-                placeholder="Answer"
-                v-model="userAnswer"
-            />
-        </div>
-        <div class="submit-container">
-            <button class="button submit-button" @click="submitAnswer">SUBMIT ANSWER AND GO TO NEXT QUESTION</button>
-        </div>
+  <div class="fill-in-the-blank-question">
+    <div class="question-display">
+      <p class="question-text">
+        What is the capital of Finland?
+      </p>
     </div>
+    <div class="input-container">
+      <input
+        v-model="userAnswer"
+        type="text"
+        class="answer-input"
+        placeholder="Answer"
+      >
+    </div>
+    <div class="submit-container">
+      <button
+        class="button submit-button"
+        @click="submitAnswer"
+      >
+        SUBMIT ANSWER AND GO TO NEXT QUESTION
+      </button>
+    </div>
+  </div>
 </template>
 
 <script setup>

@@ -1,5 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { useStore } from '@/store/store'
+import { useQuizStore } from '@/store/quizStore'
+
 
 import HomeView from '@/view/HomeView.vue'
 import CreateQuizView from '@/view/CreateQuizView.vue'
@@ -96,7 +98,11 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
     const store = useStore();
-    if (!store.jwtToken && !to.meta.public) {
+    const quizStore = useQuizStore();
+
+    const isAuthorized = store.jwtToken;
+
+    if (!isAuthorized && !to.meta.public) {
       next({ name: 'LogInPage' });
     } else {
       next();

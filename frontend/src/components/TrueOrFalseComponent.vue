@@ -1,59 +1,122 @@
 <template>
-    <div class="true-or-false-component">
-      <h2>New question with True or False answer</h2>
-      <h3>Check off for the correct answer!</h3>
-      <div class="input-field">
-        <label for="question" class="question-label">Question</label>
-        <input type="text" id="question" placeholder="Type in your question" v-model="question">
-      </div>
-      <div class="options-container">
-        <!-- True option with custom checkbox -->
-        <div class="option">
-          <button :class="{'option-button': true, 'selected': selectedOption === 'true'}" @click="selectOption('true')">True</button>
-          <div class="reject-checkbox" :class="{ 'checked': selectedOption === 'true' }">
-            <div class="checkbox-wrapper">
-              <input type="checkbox" id="true-option" :checked="selectedOption === 'true'" @change="selectOption('true')">
-              <label for="true-option">
-                <div class="tick_mark"></div>
-              </label>
-            </div>
+  <div class="true-or-false-component">
+    <h2>New question with True or False answer</h2>
+    <h3>Check off for the correct answer!</h3>
+    <div class="input-field">
+      <label
+        for="question"
+        class="question-label"
+      >Question</label>
+      <input
+        id="question"
+        v-model="question"
+        type="text"
+        placeholder="Type in your question"
+      >
+    </div>
+    <div class="options-container">
+      <!-- True option with custom checkbox -->
+      <div class="option">
+        <button
+          :class="{'option-button': true, 'selected': selectedOption === 'true'}"
+          @click="selectOption('true')"
+        >
+          True
+        </button>
+        <div
+          class="reject-checkbox"
+          :class="{ 'checked': selectedOption === 'true' }"
+        >
+          <div class="checkbox-wrapper">
+            <input
+              id="true-option"
+              type="checkbox"
+              :checked="selectedOption === 'true'"
+              @change="selectOption('true')"
+            >
+            <label for="true-option">
+              <div class="tick_mark" />
+            </label>
           </div>
         </div>
-        <!-- False option with custom checkbox -->
-        <div class="option">
-          <button :class="{'option-button': true, 'selected': selectedOption === 'false'}" @click="selectOption('false')">False</button>
-          <div class="reject-checkbox" :class="{ 'checked': selectedOption === 'false' }">
-            <div class="checkbox-wrapper">
-              <input type="checkbox" id="false-option" :checked="selectedOption === 'false'" @change="selectOption('false')">
-              <label for="false-option">
-                <div class="tick_mark"></div>
-              </label>
-            </div>
+      </div>
+      <!-- False option with custom checkbox -->
+      <div class="option">
+        <button
+          :class="{'option-button': true, 'selected': selectedOption === 'false'}"
+          @click="selectOption('false')"
+        >
+          False
+        </button>
+        <div
+          class="reject-checkbox"
+          :class="{ 'checked': selectedOption === 'false' }"
+        >
+          <div class="checkbox-wrapper">
+            <input
+              id="false-option"
+              type="checkbox"
+              :checked="selectedOption === 'false'"
+              @change="selectOption('false')"
+            >
+            <label for="false-option">
+              <div class="tick_mark" />
+            </label>
           </div>
         </div>
-      </div>
-      <div class="button-container">
-        <button class="button cancel-button" @click="cancelQuestion">CANCEL</button>
-        <button class="button save-button" @click="saveQuestion">SAVE AND GO BACK</button>
       </div>
     </div>
-  </template>
+    <div class="button-container">
+      <button
+        class="button cancel-button"
+        @click="cancelQuestion"
+      >
+        CANCEL
+      </button>
+      <button
+        class="button save-button"
+        @click="saveQuestion"
+      >
+        SAVE AND GO BACK
+      </button>
+    </div>
+  </div>
+</template>
   
   
   <script setup>
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-
+import { useQuizStore } from '@/store/quizStore';
+import axios from 'axios';
 const question = ref('');
 const selectedOption = ref(null);
 const router = useRouter();
+const store = useQuizStore();
+// hvordan vil dere gjøre det? registrere spørmålet her med en gang? hmm måten jeg hadde tenkt å få opp alle spørsmålene er sånn her::
 
 const selectOption = (option) => {
   selectedOption.value = option === selectedOption.value ? null : option;
+  console.log(selectedOption.value);
 };
 
-const saveQuestion = () => {
-    router.push('/addQuestions');
+const saveQuestion = async () => {
+  const path = "http://localhost:8080/api/questions/create";
+  const formData = new FormData();
+  formData.append('questionText', question.value);
+  formData.append('tag', 'true-or-false');
+  formData.append('quizId', store.currentQuiz.quizId);
+  formData.append('questionTypeId', 2)
+  const choices = `[{"choice":"True", "explanation":"N/A", "isCorrectChoice":${selectedOption.value}},{"choice":"False", "explanation":"N/A", "isCorrectChoice":${!selectedOption.value}}]`;
+  formData.append('choices', choices);
+
+  await axios.post(path, formData)
+    .then(() => {
+      router.push('/addQuestions');
+    })
+    .catch((error) => {
+      console.error('Failed to save question:', error);
+    });
 };
 
 const cancelQuestion = () => {

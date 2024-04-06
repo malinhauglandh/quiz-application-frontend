@@ -1,32 +1,65 @@
 <template>
-    <div class="multiple-choice-component">
-      <h2>New question with multiple choice answer</h2>
-      <h3>Check off the correct alternative</h3>
-      <div class="input-field">
-        <label for="question" class="question-label">Question</label>
-        <input type="text" id="question" v-model="question">
-      </div>
-      <div class="options-container">
-    <div class="alternative-row" v-for="(alternative, index) in alternatives" :key="index">
-      <div class="alternative-container">
-        <label :for="'alternative-' + (index + 1)" class="alternative-label">Alternative {{ index + 1 }}</label>
-        <input type="text" :id="'alternative-' + (index + 1)" v-model="alternatives[index]" class="alternative-input">
-      </div>
-      <div class="reject-checkbox" :class="{'checked': correctAnswer === index.toString()}" @click="selectCorrectAnswer(index.toString())">
-        <div class="checkbox-wrapper">
-          <label :for="'correct-' + (index + 1)">
-            <div class="tick_mark"></div>
-          </label>
+  <div class="multiple-choice-component">
+    <h2>New question with multiple choice answer</h2>
+    <h3>Check off the correct alternative</h3>
+    <div class="input-field">
+      <label
+        for="question"
+        class="question-label"
+      >Question</label>
+      <input
+        id="question"
+        v-model="question"
+        type="text"
+      >
+    </div>
+    <div class="options-container">
+      <div
+        v-for="(alternative, index) in alternatives"
+        :key="index"
+        class="alternative-row"
+      >
+        <div class="alternative-container">
+          <label
+            :for="'alternative-' + (index + 1)"
+            class="alternative-label"
+          >Alternative {{ index + 1 }}</label>
+          <input
+            :id="'alternative-' + (index + 1)"
+            v-model="alternatives[index]"
+            type="text"
+            class="alternative-input"
+          >
+        </div>
+        <div
+          class="reject-checkbox"
+          :class="{'checked': correctAnswer === index.toString()}"
+          @click="selectCorrectAnswer(index.toString())"
+        >
+          <div class="checkbox-wrapper">
+            <label :for="'correct-' + (index + 1)">
+              <div class="tick_mark" />
+            </label>
+          </div>
         </div>
       </div>
     </div>
-  </div>
-      <div class="button-container">
-        <button class="button cancel-button" @click="cancelQuestion">CANCEL</button>
-        <button class="button save-button" @click="saveQuestion">SAVE AND GO BACK</button>
-      </div>
+    <div class="button-container">
+      <button
+        class="button cancel-button"
+        @click="cancelQuestion"
+      >
+        CANCEL
+      </button>
+      <button
+        class="button save-button"
+        @click="saveQuestion"
+      >
+        SAVE AND GO BACK
+      </button>
     </div>
-  </template>
+  </div>
+</template>
 
 <script setup>
 import { ref } from 'vue';

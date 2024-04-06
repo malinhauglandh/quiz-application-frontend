@@ -1,27 +1,65 @@
 <template>
-    <div class="true-or-false-component fill-in-the-blank-component">
-      <h2>New question with fill in the blank answer</h2>
-      <div class="input-field">
-  <label for="first-part" class="question-label">First part</label>
-  <div class="input-description">Fill in the first part of the question:</div>
-  <input type="text" id="first-part" v-model="firstPart">
-</div>
-<div class="input-field">
-  <label for="fill-in-the-blank" class="question-label">Fill in the blank</label>
-  <div class="input-description">Fill in the blank word:</div>
-  <input type="text" id="fill-in-the-blank" v-model="fillInTheBlank" class="blank-input">
-</div>
-<div class="input-field">
-  <label for="rest-of-the-question" class="question-label">Remaining part</label>
-  <div class="input-description">Fill in the rest of the question:</div>
-  <input type="text" id="rest-of-the-question" v-model="restOfTheQuestion">
-</div>
-      <div class="button-container">
-        <button class="button cancel-button" @click="cancelQuestion">CANCEL</button>
-        <button class="button save-button" @click="saveQuestion">SAVE AND GO BACK</button>
+  <div class="true-or-false-component fill-in-the-blank-component">
+    <h2>New question with fill in the blank answer</h2>
+    <div class="input-field">
+      <label
+        for="first-part"
+        class="question-label"
+      >First part</label>
+      <div class="input-description">
+        Fill in the first part of the question:
       </div>
+      <input
+        id="first-part"
+        v-model="firstPart"
+        type="text"
+      >
     </div>
-  </template>
+    <div class="input-field">
+      <label
+        for="fill-in-the-blank"
+        class="question-label"
+      >Fill in the blank</label>
+      <div class="input-description">
+        Fill in the blank word:
+      </div>
+      <input
+        id="fill-in-the-blank"
+        v-model="fillInTheBlank"
+        type="text"
+        class="blank-input"
+      >
+    </div>
+    <div class="input-field">
+      <label
+        for="rest-of-the-question"
+        class="question-label"
+      >Remaining part</label>
+      <div class="input-description">
+        Fill in the rest of the question:
+      </div>
+      <input
+        id="rest-of-the-question"
+        v-model="restOfTheQuestion"
+        type="text"
+      >
+    </div>
+    <div class="button-container">
+      <button
+        class="button cancel-button"
+        @click="cancelQuestion"
+      >
+        CANCEL
+      </button>
+      <button
+        class="button save-button"
+        @click="saveQuestion"
+      >
+        SAVE AND GO BACK
+      </button>
+    </div>
+  </div>
+</template>
   
   <script setup>
   import { ref } from 'vue';

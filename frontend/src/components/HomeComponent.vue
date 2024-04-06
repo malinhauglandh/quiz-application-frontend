@@ -2,22 +2,53 @@
   <div class="home-component">
     <div class="content-wrapper">
       <h1>Your recently made quizzes:</h1>
-      <div class="quiz-box-container" v-if="quizzes.length > 0">
-        <div v-for="quiz in quizzes" :key="quiz.quizId" class="quiz-box">
-          <div v-if="quiz.multimedia" class="quiz-image" :style="{ backgroundImage: `url(${getPathToQuizImage(quiz.multimedia)})` }" />
-          <div v-else class="quiz-image-placeholder" />
+      <div
+        v-if="quizzes.length > 0"
+        class="quiz-box-container"
+      >
+        <div
+          v-for="quiz in quizzes"
+          :key="quiz.quizId"
+          class="quiz-box"
+        >
+          <div
+            v-if="quiz.multimedia"
+            class="quiz-image"
+            :style="{ backgroundImage: `url(${getPathToQuizImage(quiz.multimedia)})` }"
+          />
+          <div
+            v-else
+            class="quiz-image-placeholder"
+          />
           <div class="quiz-details">
-            <h3 class="quiz-title">{{ quiz.quizName }}</h3>
-            <p class="quiz-description">{{ quiz.quizDescription }}</p>
-            <button class="play-quiz-button" @click="playQuiz(quiz.quizId)">Play Quiz</button>
+            <h3 class="quiz-title">
+              {{ quiz.quizName }}
+            </h3>
+            <p class="quiz-description">
+              {{ quiz.quizDescription }}
+            </p>
+            <button
+              class="play-quiz-button"
+              @click="playQuiz(quiz.quizId)"
+            >
+              Play Quiz
+            </button>
           </div>
         </div>
       </div>
-      <div v-else class="no-quizzes-message">
+      <div
+        v-else
+        class="no-quizzes-message"
+      >
         <p>You have not created any quizzes yet... Get started now!!</p>
       </div>
     </div>
-    <router-link to="/createquiz" class="create-quiz-button">CREATE NEW QUIZ</router-link>
+    <router-link
+      to="/createquiz"
+      class="create-quiz-button"
+    >
+      CREATE NEW QUIZ
+    </router-link>
   </div>
 </template>
 

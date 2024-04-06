@@ -1,23 +1,30 @@
 <template>
-    <div class="true-or-false-question">
-        <div class="question-display">
-            <p class="question-text">Copenhagen is the capital of Denmark.</p>
-        </div>
-        <div class="alternatives-container">
-            <button
-                v-for="(alternative, index) in alternatives"
-                :key="alternative"
-                class="alternative-button"
-                :class="{ 'selected': selectedAnswer === index }"
-                @click="selectAlternative(index)"
-            >
-                {{ alternative }}
-            </button>
-        </div>
-        <div class="submit-container">
-            <button class="button submit-button" @click="submitAnswer">SUBMIT ANSWER AND GO TO NEXT QUESTION</button>
-        </div>
+  <div class="true-or-false-question">
+    <div class="question-display">
+      <p class="question-text">
+        Copenhagen is the capital of Denmark.
+      </p>
     </div>
+    <div class="alternatives-container">
+      <button
+        v-for="(alternative, index) in alternatives"
+        :key="alternative"
+        class="alternative-button"
+        :class="{ 'selected': selectedAnswer === index }"
+        @click="selectAlternative(index)"
+      >
+        {{ alternative }}
+      </button>
+    </div>
+    <div class="submit-container">
+      <button
+        class="button submit-button"
+        @click="submitAnswer"
+      >
+        SUBMIT ANSWER AND GO TO NEXT QUESTION
+      </button>
+    </div>
+  </div>
 </template>
 
 <script setup>
