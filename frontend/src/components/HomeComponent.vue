@@ -145,7 +145,7 @@ onMounted(fetchQuizzes);
 
 .quiz-title {
   color: white;
-  background-color: rgba(0, 0, 0, 0.2);
+  background-color: rgba(0, 0, 0, 0.4);
   width: 100%;
   text-align: center;
   padding: 10px 0;
@@ -160,7 +160,7 @@ onMounted(fetchQuizzes);
   right: 0;
   width: auto;
   text-align: center;
-  background-color: rgba(0, 0, 0, 0.2);
+  background-color: rgba(0, 0, 0, 0.4);
   color: white;
   visibility: hidden;
   opacity: 0;
