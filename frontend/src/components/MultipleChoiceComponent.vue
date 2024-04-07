@@ -33,10 +33,15 @@
         </div>
         <div
           class="reject-checkbox"
-          :class="{'checked': correctAnswer === index.toString()}"
-          @click="selectCorrectAnswer(index.toString())"
+          :class="{'checked': selectedOption === index.toString()}"
+          @click="selectOption(index.toString())"
         >
           <div class="checkbox-wrapper">
+            <input
+              :id="'input-correct-' + (index + 1)"
+              type="checkbox"
+              :checked="selectedOption === index.toString()"
+            >
             <label :for="'correct-' + (index + 1)">
               <div class="tick_mark" />
             </label>
@@ -64,27 +69,60 @@
 <script setup>
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
+import { useQuizStore } from '@/store/quizStore';
+import { useStore } from '@/store/store';
+import axios from 'axios';
 
 const question = ref('');
 const alternatives = ref(['', '', '', '']);
-const correctAnswer = ref(null);
+const selectedOption = ref(null);
 const router = useRouter();
-
-const saveQuestion = () => {
-    router.push('/addQuestions');
-};
+const store = useQuizStore(); 
+const userStore = useStore();
 
 const cancelQuestion = () => {
     router.push('/addQuestions');
 };
 
-const selectCorrectAnswer = (index) => {
-    if (correctAnswer.value === index) {
-        correctAnswer.value = null; // Uncheck the checkbox if it was already checked
-    } else {
-        correctAnswer.value = index; // Check the checkbox if it was unchecked
-    }
+const selectOption = (option) => {
+  selectedOption.value = option === selectedOption.value ? null : option;
 };
+
+const saveQuestion = async () => {
+  const path = "http://localhost:8080/api/questions/create";
+  const formData = new FormData();
+  formData.append('questionText', question.value);
+  formData.append('tag', 'true-or-false');
+  formData.append('quizId', store.currentQuiz.quizId);
+  formData.append('questionTypeId', 1)
+  let choices = [
+    {"choice": "True", "explanation": "N/A", "isCorrectChoice": false},
+    {"choice": "False", "explanation": "N/A", "isCorrectChoice": false},
+    {"choice": "False", "explanation": "N/A", "isCorrectChoice": false},
+    {"choice": "False", "explanation": "N/A", "isCorrectChoice": false}
+  ];
+  choices[selectedOption.value].isCorrectChoice = true;
+  let choicesString = JSON.stringify(choices);
+  formData.append('choices', choicesString);
+
+  await axios.post(path,formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+      'Authorization': 'Bearer ' + userStore.jwtToken.accessToken
+    }
+  })
+    .then(() => {
+      router.push('/addQuestions');
+    })
+    .catch(async (error) => {
+      console.error('Failed to save question:', error);
+      await userStore.renewToken();
+    });
+};
+
+
+
+
 </script>
 
 

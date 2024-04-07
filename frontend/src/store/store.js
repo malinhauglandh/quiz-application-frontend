@@ -1,5 +1,6 @@
 import { defineStore } from "pinia";
 import { ref } from "vue";
+import axios from "axios";
 
 export const useStore = defineStore("token", () => {
   const jwtToken = ref(null);
@@ -16,7 +17,45 @@ export const useStore = defineStore("token", () => {
     loggedInUser.value = null;
   }
 
-  return { jwtToken, loggedInUser, saveToken, clearToken};
+  async function renewToken() {
+    await axios.get("http://localhost:8080/api/refreshToken", {
+      headers: {
+        Authorization: "Bearer " + jwtToken.value.refreshToken,
+      },
+    }).then((response) => {
+      if(response.status === 200){
+        jwtToken.value.accessToken = response.data;
+        return true;
+      }
+    });
+    return false;
+  }
+
+  async function fetch(path){
+    return axios.get(path, {
+      headers: {
+        Authorization: "Bearer " + jwtToken.value.accessToken,
+      },
+    })
+  }
+
+  async function fetchData(path) {
+    const res = await fetch(path);
+    if(res.status === 200){
+      return res.data;
+    }
+    else if(res.status === 403){
+      if(await renewToken()){
+        return fetch(path);
+      }
+    }
+    else {
+      return res
+    }
+
+  }
+
+  return { jwtToken, loggedInUser, saveToken, clearToken, fetchData, fetch, renewToken};
 }, 
 {
   persist: {

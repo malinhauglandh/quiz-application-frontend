@@ -99,7 +99,6 @@
       id="fileUpload"
       type="file"
       accept="image/*, video/*"
-      :style="{ backgroundColor: fileUploaded ? 'white' : 'transparent' }"
       hidden
       @change="handleFileUpload"
     >
@@ -119,6 +118,7 @@ import { useRouter } from 'vue-router';
 import { useQuizStore } from "@/store/quizStore";
 import { computed } from 'vue';
 import axios from 'axios';
+import { useStore } from '@/store/store';
 
 const store = useQuizStore();
 const quizName = ref('');
@@ -127,6 +127,7 @@ const multimedia = ref('');
 const difficulty = ref('');
 const fileUploaded = ref(false);
 const router = useRouter();
+const userStore = useStore();
 
 const categories = ref([]);
 const selectedCategory = ref(null);
@@ -138,9 +139,15 @@ const isFormValid = computed(() => {
          difficulty.value.trim() !== '';
 });
 
+const config = {
+  headers: {
+    'Authorization': 'Bearer ' + userStore.jwtToken.accessToken
+  }
+};
+
 onMounted(async () => {
   try {
-    const response = await axios.get('http://localhost:8080/api/categories/allCategories');
+    const response = await axios.get('http://localhost:8080/api/categories/allCategories', config);
     categories.value = response.data;
   } catch (error) {
     console.error(error);
@@ -148,7 +155,7 @@ onMounted(async () => {
 });
     
 // Inside your script setup
-const saveQuiz = async () => {
+const saveQuiz = async (event) => {
   try {
     // Create an object with the quiz data
     const quizData = new FormData();
@@ -170,18 +177,17 @@ const saveQuiz = async () => {
       let fileFormData = new FormData();
       fileFormData.append('file', multimedia.value);
 
-      await axios.post(`http://localhost:8080/api/quizzes/upload/${createdQuiz.id}`, fileFormData, {
+      await axios.post(`http://localhost:8080/api/quizzes/upload/${createdQuiz.quizId}`, fileFormData, {
         headers: {
-          'Content-Type': 'multipart/form-data'
+          'Content-Type': 'multipart/form-data',
+          'Authorization': 'Bearer ' + userStore.jwtToken.accessToken
         }
       });
     }
-  // Redirect to the addQuestions route with the new quiz ID
   console.log('Quiz created:', createdQuiz);
   router.push({ path: '/addQuestions'});
     
   } catch (error) {
-    // Handle any errors that occur during quiz creation
     console.error('Error creating quiz:', error);
   }
 };

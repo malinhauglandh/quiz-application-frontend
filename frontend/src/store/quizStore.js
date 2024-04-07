@@ -69,5 +69,9 @@ export const useQuizStore = defineStore('quiz', {
         throw error;
       }
     },
-  }
+  },
+  persist: {
+    enabled: true,
+    storage: sessionStorage,
+  },
 });

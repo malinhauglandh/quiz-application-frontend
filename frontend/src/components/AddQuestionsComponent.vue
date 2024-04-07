@@ -32,9 +32,16 @@
             </div>
         </div>
         <div class="nav-buttons">
-            <button class="nav-button back-button" @click="goBack">BACK</button>
+            <button class="nav-button back-button" @click="showModal = true">BACK</button>
             <button class="nav-button next-button" @click="goToNextPage">NEXT</button>
         </div>
+            <ConfirmModal
+            :visible="showModal"
+            title="Confirm Delete"
+            message="You are about to delete the quiz! Are you sure you want to delete the it?"
+            @confirm="handleDelete"
+            @cancel="handleCancel"
+        />
         </div>
     </template>
     
@@ -42,10 +49,13 @@
     import { ref, watch, onBeforeMount } from 'vue';
     import { useRouter, useRoute } from 'vue-router';
     import { useQuizStore } from "@/store/quizStore";
+    import { useStore } from "@/store/store";
     import { computed } from 'vue';
     import axios from 'axios';
+    import ConfirmModal from '@/components/ConfirmModal.vue';
     
     const quizStore = useQuizStore();
+    const userStore = useStore();
     const route = useRoute();
     const router = useRouter();
     const showOptions = ref(false);
@@ -53,10 +63,27 @@
 
     const currentQuiz = ref(null);
 
+    const showModal = ref(false);
+
+    const fetchQuizDetailsAlternatively = async () => {
+        try {
+            const quizId = quizStore.currentQuiz.quizId;
+            const data = await userStore.fetchData(`http://localhost:8080/api/quizzes/${quizId}/details`)
+            console.log("this data wats fetched alternatively:", data)
+        } catch (error) {
+            console.error('Failed to fetch quiz details:', error);
+        }
+    }
+
     const fetchQuizDetails = async (quizId) => {
     try {
-        const response = await axios.get(`http://localhost:8080/api/quizzes/${quizId}/details`);
-        if (response.data) { // Make sure there's actual data
+        const response = await axios.get(`http://localhost:8080/api/quizzes/${quizId}/details`, {
+        headers: {
+            Authorization: `Bearer ${userStore.jwtToken.accessToken}`
+        }
+        
+        });
+        if (response.data) {
         currentQuiz.value = response.data;
         console.log('Quiz details:', currentQuiz.value);
         } else {
@@ -71,6 +98,7 @@
     if(quizStore.currentQuiz && quizStore.currentQuiz.quizId) {
         const quizId = useQuizStore().currentQuiz.quizId;
         fetchQuizDetails(quizId);
+        fetchQuizDetailsAlternatively();
     } else {
         router.push('/createQuiz');
     }
@@ -80,14 +108,38 @@
         showOptions.value = !showOptions.value;
     };
     
-    const goBack = () => {
-        router.push('/createQuiz');
+    const handleCancel = () => {
+        showModal.value = false;
+    };
+
+
+    const deleteQuiz = async (quizId) => {
+    try {
+        await axios.delete(`http://localhost:8080/api/quizzes/${quizId}`, {
+            headers: {
+                Authorization: `Bearer ${userStore.jwtToken.accessToken}`
+            }
+        });
+        console.log('Quiz deleted successfully');
+        } catch (error) {
+            console.error('Failed to delete quiz:', error);
+            throw error;
+        }
+    };
+
+    const handleDelete = () => {
+        deleteQuiz(currentQuiz.value.quizId).then(() => {
+            router.push('/createQuiz');
+            showModal.value = false;
+        }).catch(error => {
+            console.error('Failed to delete quiz:', error);
+            showModal.value = false;
+        });
     };
     
     const goToNextPage = () => {
         // Logic for going to the next page
     };
-    
         
     const chooseQuestionType = (type) => {
         switch (type) {
@@ -101,7 +153,7 @@
                 router.push({ path: '/addQuestions/fillInTheBlank'});
                 break;
             default:
-                console.log('Unknown question type:', type);
+
                 break;
         }
 
@@ -202,7 +254,7 @@
         display: flex;
     }
     
-    
+
     
     @media (max-width: 768px) {
         .layout-container {

@@ -84,23 +84,24 @@
 </template>
   
   
-  <script setup>
+<script setup>
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useQuizStore } from '@/store/quizStore';
+import { useStore } from '@/store/store';
 import axios from 'axios';
 const question = ref('');
 const selectedOption = ref(null);
 const router = useRouter();
 const store = useQuizStore();
-// hvordan vil dere gjøre det? registrere spørmålet her med en gang? hmm måten jeg hadde tenkt å få opp alle spørsmålene er sånn her::
+const userStore = useStore();
 
 const selectOption = (option) => {
   selectedOption.value = option === selectedOption.value ? null : option;
-  console.log(selectedOption.value);
 };
 
 const saveQuestion = async () => {
+  console.log(userStore.jwtToken)
   const path = "http://localhost:8080/api/questions/create";
   const formData = new FormData();
   formData.append('questionText', question.value);
@@ -109,12 +110,20 @@ const saveQuestion = async () => {
   formData.append('questionTypeId', 2)
   const choices = `[{"choice":"True", "explanation":"N/A", "isCorrectChoice":${selectedOption.value}},{"choice":"False", "explanation":"N/A", "isCorrectChoice":${!selectedOption.value}}]`;
   formData.append('choices', choices);
-
-  await axios.post(path, formData)
+  console.log(formData)
+  await axios.post(path, formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+      'Authorization': `Bearer ${userStore.jwtToken.accessToken}`
+    }
+  })
     .then(() => {
       router.push('/addQuestions');
     })
     .catch((error) => {
+      if(error.response.status === 403 && error.response.data.message === 'Token is invalid or expired') {
+        userStore.renewToken();
+      }
       console.error('Failed to save question:', error);
     });
 };
