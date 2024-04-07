@@ -7,4 +7,9 @@ services:
    dockerfile: Dockerfile
   container_name: vue-app
   ports:
-   - "5001:5000"
+   - "5000:5000"
+
+networks:
+ default:
+  external:
+   name: backend_my-network
