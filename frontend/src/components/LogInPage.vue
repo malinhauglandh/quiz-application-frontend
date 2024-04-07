@@ -63,8 +63,6 @@ const login = async (e) => {
 
     showError.value = false;
 
-    console.log("Attempting to log in with: ", username.value , password.value);
-
     if (username.value.trim() === '' || password.value.trim() === '') {
         errorMessage.value = "Username and password are required.";
         showError.value = true;
@@ -78,11 +76,9 @@ const login = async (e) => {
             password: password.value
         });
 
-        console.log('Login response:', response.data);
         store.saveToken(username.value, response.data);
 
         await router.push("/home");
-        console.log("Logged in!");
 
     } catch (error) {
         console.error('Login error:', error);

@@ -43,15 +43,13 @@ async function fetchAllQuizzes() {
 onMounted(fetchAllQuizzes);
 
 const searchQuizzes = () => {
-  console.log("Searching quizzes...");
 };
 
 function getPathToQuizImage(fileName) {
   return `http://localhost:8080/api/quizzes/files/${fileName}`;
 }
 
-function playQuiz(quizId) {
-  console.log(`Navigating to quiz ${quizId}`);
+function playQuiz() {
 }
 
 </script>

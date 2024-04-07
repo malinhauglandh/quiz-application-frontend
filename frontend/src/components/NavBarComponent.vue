@@ -73,15 +73,12 @@ const toggleSettings = () => {
 };
 
 const handleProfile = () => {
-  console.log('Profile clicked');
 };
 
 const handleColorMode = () => {
-  console.log('Color mode clicked');
 };
 
 const handleLogout = () => {
-    console.log("Logging out...");
     store.clearToken();
     router.push('/login');
 };

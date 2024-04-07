@@ -37,15 +37,10 @@ const getPathToQuizImage = (filename) => {
 
 const fetchQuizzes = async () => {
   const token = store.jwtToken;
-  console.log("token:", token);
 
   const creatorId = token.userId;
 
   const accessToken = token.accessToken;
-
-  console.log("accessToken: ", accessToken);
-
-  console.log("Fetching quizzes for user:", creatorId);
 
   try {
     const response = await fetch(`http://localhost:8080/api/quizzes/user/${creatorId}`, {

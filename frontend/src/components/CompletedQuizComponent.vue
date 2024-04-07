@@ -1,4 +1,5 @@
 <template>
+    <div>
   <div v-for="(result, quizIndex) in quizResults" :key="'quiz-' + quizIndex" class="quiz-results">
     <h1>Quiz Results</h1>
     <p>Your score is: {{ result.score }} / {{ result.userAnswers.length }} points</p>
@@ -9,6 +10,7 @@
     </div>
   </div>
   <button class="button" @click="$router.push('/home')">Go to Home</button>
+</div>
 </template>
 
 <script setup>
