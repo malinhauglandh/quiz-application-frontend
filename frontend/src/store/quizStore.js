@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 import axios from 'axios';
-import { useStore } from './store.js';
+import { useStore } from './userStore.js';
 
 
 export const useQuizStore = defineStore('quiz', {

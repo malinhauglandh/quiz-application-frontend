@@ -160,7 +160,7 @@
 <script setup>
 import {onMounted, onUnmounted, ref} from 'vue';
 import { useRouter } from 'vue-router';
-import { useStore } from '@/store/store';
+import { useStore } from '@/store/userStore';
 
 const showMobileMenu = ref(false);
 const showSettingsDropdown = ref(false);
@@ -382,4 +382,4 @@ onUnmounted(() => {
   color: white;
   cursor: pointer;
 }
-</style>
+</style>@/store/userStore

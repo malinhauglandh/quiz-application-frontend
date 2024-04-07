@@ -55,7 +55,7 @@
 
 <script setup>
 import { onMounted, ref } from 'vue';
-import { useStore } from "@/store/store";
+import { useStore } from "@/store/userStore";
 import router from "@/router/router";
 
 const store = useStore();
@@ -68,15 +68,10 @@ const getPathToQuizImage = (filename) => {
 
 const fetchQuizzes = async () => {
   const token = store.jwtToken;
-  console.log("token:", token);
 
   const creatorId = token.userId;
 
   const accessToken = token.accessToken;
-
-  console.log("accessToken: ", accessToken);
-
-  console.log("Fetching quizzes for user:", creatorId);
 
   try {
     const response = await fetch(`http://localhost:8080/api/quizzes/user/${creatorId}`, {
@@ -231,6 +226,10 @@ onMounted(fetchQuizzes);
   padding: 10px 10px;
 }
 
+h1 {
+  color: white
+}
+
 @media (max-width: 768px) {
   .quiz-box-container {
     justify-content: flex-start;
@@ -250,4 +249,4 @@ onMounted(fetchQuizzes);
     font-size: 1.8rem;
   }
 }
-</style>
+</style>@/store/userStore

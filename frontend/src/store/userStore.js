@@ -42,11 +42,12 @@ export const useStore = defineStore("token", () => {
   async function fetchData(path) {
     const res = await fetch(path);
     if(res.status === 200){
-      return res.data;
+      return res;
     }
     else if(res.status === 403){
       if(await renewToken()){
-        return fetch(path);
+        res2 = await fetch(path);
+        return res2;
       }
     }
     else {

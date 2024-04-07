@@ -1,7 +1,7 @@
 <template>
   <div class="multiple-choice-component">
     <h2>New question with multiple choice answer</h2>
-    <h3>Check off the correct alternative</h3>
+    <h3>Fill in your question with alternatives, and check off for the correct answer!</h3>
     <div class="input-field">
       <label
         for="question"
@@ -64,13 +64,21 @@
       </button>
     </div>
   </div>
+  <ConfirmModal
+    :visible="showModal"
+    :title="modalTitle"
+    :message="modalMessage"
+    :confirmShow="false"
+    @cancel="handleCancel"
+  />
 </template>
 
 <script setup>
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useQuizStore } from '@/store/quizStore';
-import { useStore } from '@/store/store';
+import { useStore } from '@/store/userStore';
+import ConfirmModal from '@/components/ConfirmModal.vue';
 import axios from 'axios';
 
 const question = ref('');
@@ -79,6 +87,12 @@ const selectedOption = ref(null);
 const router = useRouter();
 const store = useQuizStore(); 
 const userStore = useStore();
+const showModal = ref(false);
+const modalTitle = ref('Please fill in all fields');
+const modalMessage = ref('Could not add question');
+const handleCancel = () => {
+  showModal.value = false;
+};
 
 const cancelQuestion = () => {
     router.push('/addQuestions');
@@ -89,6 +103,10 @@ const selectOption = (option) => {
 };
 
 const saveQuestion = async () => {
+  if(question.value === '' || alternatives.value.some(alternative => alternative === '') || selectedOption.value === null) {
+    showModal.value = true;
+    return;
+  }
   const path = "http://localhost:8080/api/questions/create";
   const formData = new FormData();
   formData.append('questionText', question.value);
@@ -96,7 +114,7 @@ const saveQuestion = async () => {
   formData.append('quizId', store.currentQuiz.quizId);
   formData.append('questionTypeId', 1)
   let choices = [
-    {"choice": "True", "explanation": "N/A", "isCorrectChoice": false},
+    {"choice": "True", "explanation": "N/A", "isCorrectChoice": true},
     {"choice": "False", "explanation": "N/A", "isCorrectChoice": false},
     {"choice": "False", "explanation": "N/A", "isCorrectChoice": false},
     {"choice": "False", "explanation": "N/A", "isCorrectChoice": false}
@@ -119,10 +137,6 @@ const saveQuestion = async () => {
       await userStore.renewToken();
     });
 };
-
-
-
-
 </script>
 
 
@@ -404,4 +418,4 @@ h3 {
         width: 75%; /* Adjusted for smaller screens */
     }
 }
-</style>
+</style>@/store/userStore

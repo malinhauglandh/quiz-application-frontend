@@ -32,14 +32,15 @@
             </div>
         </div>
         <div class="nav-buttons">
-            <button class="nav-button back-button" @click="showModal = true">BACK</button>
-            <button class="nav-button next-button" @click="goToNextPage">NEXT</button>
+            <button class="nav-button back-button" @click="promptDelete">BACK</button>
+            <button class="nav-button next-button" @click="promptSave">NEXT</button>
         </div>
             <ConfirmModal
             :visible="showModal"
-            title="Confirm Delete"
-            message="You are about to delete the quiz! Are you sure you want to delete the it?"
-            @confirm="handleDelete"
+            :title="modalTitle"
+            :message="modalMessage"
+            :confirmShow="true"
+            @confirm="modalConfirm"
             @cancel="handleCancel"
         />
         </div>
@@ -49,7 +50,7 @@
     import { ref, watch, onBeforeMount } from 'vue';
     import { useRouter, useRoute } from 'vue-router';
     import { useQuizStore } from "@/store/quizStore";
-    import { useStore } from "@/store/store";
+    import { useStore } from "@/store/userStore";
     import { computed } from 'vue';
     import axios from 'axios';
     import ConfirmModal from '@/components/ConfirmModal.vue';
@@ -64,6 +65,9 @@
     const currentQuiz = ref(null);
 
     const showModal = ref(false);
+    const modalTitle = ref('');
+    const modalMessage = ref('');
+    const modalConfirm = ref(() => {});
 
     const fetchQuizDetailsAlternatively = async () => {
         try {
@@ -107,11 +111,6 @@
     const toggleOptions = () => {
         showOptions.value = !showOptions.value;
     };
-    
-    const handleCancel = () => {
-        showModal.value = false;
-    };
-
 
     const deleteQuiz = async (quizId) => {
     try {
@@ -127,6 +126,10 @@
         }
     };
 
+    const handleCancel = () => {
+        showModal.value = false;
+    };
+
     const handleDelete = () => {
         deleteQuiz(currentQuiz.value.quizId).then(() => {
             router.push('/createQuiz');
@@ -136,9 +139,30 @@
             showModal.value = false;
         });
     };
-    
-    const goToNextPage = () => {
-        // Logic for going to the next page
+
+    const promptDelete = () => {
+    modalTitle.value = "Confirm Delete";
+    modalMessage.value = "You are about to delete the quiz! Are you sure you want to proceed?";
+    modalConfirm.value = handleDelete;
+    showModal.value = true;
+    };
+
+    const promptSave = () => {
+        modalTitle.value = "Confirm Save";
+        modalMessage.value = "You are about to save the quiz! Are you sure you want to proceed?";
+        modalConfirm.value = handleSave;
+        showModal.value = true;
+    };
+
+    const handleSave = () => {
+        confetti({
+            particleCount: 200,
+            spread: 100,
+            origin: { y: 0.6 }
+        });
+        setTimeout(() => {
+            router.push('/home');
+        }, 250);
     };
         
     const chooseQuestionType = (type) => {
@@ -270,4 +294,4 @@
         margin-right: 0;
         }
     }
-    </style>
+    </style>@/store/userStore

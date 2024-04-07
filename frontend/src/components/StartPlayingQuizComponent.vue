@@ -46,7 +46,7 @@
 
 <script setup>
 import { onMounted, ref } from 'vue';
-import { useStore } from "@/store/store";
+import { useStore } from "@/store/userStore";
 import router from "@/router/router";
 
 const store = useStore();
@@ -62,11 +62,11 @@ onMounted(async () => {
 
 async function fetchCategories() {
     try {
-        const catResponse = await fetch('http://localhost:8080/api/categories/allCategories');
-        if (!catResponse.ok) {
+        const catResponse = await store.fetchData('http://localhost:8080/api/categories/allCategories');
+        if (catResponse.status !== 200) {
             throw new Error(`HTTP error! status: ${catResponse.status}`);
         }
-        categories.value = await catResponse.json();
+        categories.value = await catResponse.data;
     } catch (error) {
         console.error("Failed to fetch categories:", error);
     }
@@ -188,3 +188,4 @@ const playQuiz = (quizId) => {
 }
 
 </style>
+@/store/userStore

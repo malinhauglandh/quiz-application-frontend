@@ -62,7 +62,7 @@
 import {onBeforeUnmount, onMounted, ref} from 'vue';
 import { useRouter } from 'vue-router';
 import axios from 'axios';
-import { useStore } from '@/store/store.js';
+import { useStore } from '@/store/userStore';
 
 const username = ref('');
 const password = ref('');
@@ -247,4 +247,4 @@ h1 {
   font-size: 12px;
 }
 
-</style>
+</style>@/store/userStore.js

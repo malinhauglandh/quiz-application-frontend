@@ -118,7 +118,7 @@ import { useRouter } from 'vue-router';
 import { useQuizStore } from "@/store/quizStore";
 import { computed } from 'vue';
 import axios from 'axios';
-import { useStore } from '@/store/store';
+import { useStore } from '@/store/userStore';
 
 const store = useQuizStore();
 const quizName = ref('');
@@ -147,10 +147,14 @@ const config = {
 
 onMounted(async () => {
   try {
-    const response = await axios.get('http://localhost:8080/api/categories/allCategories', config);
+    const response = await userStore.fetchData('http://localhost:8080/api/categories/allCategories');
+    console.log(response); 
+    if(!response.status === 200) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
     categories.value = response.data;
   } catch (error) {
-    console.error(error);
+    console.error('Failed to fetch categories:', error);
   }
 });
     
@@ -401,6 +405,8 @@ button.next-button:disabled {
   color: white;
   font-family: "Karla", sans-serif;
   font-weight: 500;
+  background-color: #6320EE;
+  border: #6320EE 3px solid;
 }
 
 #fileUploaded p {
@@ -408,7 +414,7 @@ button.next-button:disabled {
 }
 
 #fileUploaded svg {
-  fill: white;
+  fill: #6320EE;
   width: 2rem;
   height: 2rem;
 }
@@ -438,15 +444,15 @@ button.next-button:disabled {
 }
 
 #fileUploaded:hover p {
-  color: #007ACC;
+  color: #6320EE;
 }
 
 #fileUploaded:hover svg {
-  fill: #007ACC;
+  fill: #6320EE;
 }
 
 #fileUploaded:hover button {
-  color: #007ACC;
+  color: #6320EE;
 }
 
-</style>
+</style>@/store/userStore

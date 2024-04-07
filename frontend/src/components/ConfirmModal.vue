@@ -3,7 +3,7 @@
     <div class="modal-content">
       <h2>{{ title }}</h2>
       <p>{{ message }}</p>
-      <button class="modal-button" @click="confirm">Confirm</button>
+      <button v-if="confirmShow" class="modal-button" @click="confirm">Confirm</button>
       <button class="modal-button" @click="cancel">Cancel</button>
     </div>
   </div>
@@ -15,7 +15,8 @@ import { defineEmits } from 'vue';
 const props = defineProps({
   visible: Boolean,
   title: String,
-  message: String
+  message: String,
+  confirmShow: Boolean
 });
 
 const emit = defineEmits(['confirm', 'cancel']);
@@ -40,6 +41,7 @@ const cancel = () => {
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index: 999;
 }
 
 .modal-content {

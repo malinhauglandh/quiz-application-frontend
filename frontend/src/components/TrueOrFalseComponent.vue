@@ -1,7 +1,7 @@
 <template>
   <div class="true-or-false-component">
     <h2>New question with True or False answer</h2>
-    <h3>Check off for the correct answer!</h3>
+    <h3>Fill in your question and check off for the correct answer!</h3>
     <div class="input-field">
       <label
         for="question"
@@ -81,6 +81,13 @@
       </button>
     </div>
   </div>
+  <ConfirmModal
+    :visible="showModal"
+    :title="modalTitle"
+    :message="modalMessage"
+    :confirmShow="false"
+    @cancel="handleCancel"
+  />
 </template>
   
   
@@ -88,19 +95,32 @@
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useQuizStore } from '@/store/quizStore';
-import { useStore } from '@/store/store';
+import { useStore } from '@/store/userStore';
+import ConfirmModal from '@/components/ConfirmModal.vue';
 import axios from 'axios';
+import confetti from 'canvas-confetti';
+
 const question = ref('');
 const selectedOption = ref(null);
 const router = useRouter();
 const store = useQuizStore();
 const userStore = useStore();
+const showModal = ref(false);
+const modalTitle = ref('Please fill in all fields');
+const modalMessage = ref('Could not add question');
+const handleCancel = () => {
+  showModal.value = false;
+};
 
 const selectOption = (option) => {
   selectedOption.value = option === selectedOption.value ? null : option;
 };
 
 const saveQuestion = async () => {
+  if(!question.value || !selectedOption.value) {
+    showModal.value = true;
+    return;
+  }
   console.log(userStore.jwtToken)
   const path = "http://localhost:8080/api/questions/create";
   const formData = new FormData();
@@ -425,4 +445,4 @@ h3 {
         width: 75%;
     }
 }
-</style>
+</style>@/store/userStore
