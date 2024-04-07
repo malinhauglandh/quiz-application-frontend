@@ -21,8 +21,12 @@
 <script setup>
 import { onMounted, ref } from 'vue';
 import { useStore } from "@/store/store";
-import router from "@/router/router";
+import { useRoute, useRouter } from 'vue-router';
+import axios from "axios";
 
+const router = useRouter();
+// eslint-disable-next-line no-unused-vars
+const route = useRoute();
 const store = useStore();
 const quiz = ref([]);
 const categories = ref([]);
@@ -32,6 +36,8 @@ const quizId = router.currentRoute.value.params.quizId;
 onMounted(async () => {
   await fetchCategories();
   await fetchQuiz();
+  await fetchQuizDetails();
+  console.log("Quiz details:", store.quizDetails);
 });
 
 async function fetchCategories() {
@@ -45,6 +51,10 @@ async function fetchCategories() {
     console.error("Failed to fetch categories:", error);
   }
 }
+
+const getPathToQuizImage = (filename) => {
+    return `http://localhost:8080/api/quizzes/files/${filename}`;
+};
 
 async function fetchQuiz() {
   const token = store.jwtToken;
@@ -73,9 +83,21 @@ async function fetchQuiz() {
   }
 }
 
-const getPathToQuizImage = (filename) => {
-  return `http://localhost:8080/api/quizzes/files/${filename}`;
-};
+async function fetchQuizDetails() {
+    try {
+        const response = await axios.get(`http://localhost:8080/api/quizzes/${quizId}/details`, {
+            headers: {
+                'Authorization': `Bearer ${store.jwtToken.accessToken}`,
+            },
+        });
+        store.quizDetails.questions = response.data.questions;
+        store.quizDetails.currentQuestionIndex = 0;
+        console.log('Fetched Quiz Details:', store.quizDetails.questions);
+    } catch (error) {
+        console.error('Failed to fetch quiz details:', error);
+    }
+}
+
 
 const determineFirstQuestionRoute = (questionTypeId) => {
   switch(questionTypeId) {
@@ -88,40 +110,24 @@ const determineFirstQuestionRoute = (questionTypeId) => {
 
 
 const playQuiz = async (quizId) => {
-  try {
-    const response = await fetch(`http://localhost:8080/api/quizzes/${quizId}/details`, {
-      headers: {
-        'Authorization': `Bearer ${store.jwtToken.accessToken}`
-      }
-    });
+    if (store.quizDetails.questions && store.quizDetails.questions.length > 0) {
+        const firstQuestion = store.quizDetails.questions[0];
+        const routeName = determineFirstQuestionRoute(firstQuestion.questionTypeId);
 
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-
-    const quizDetails = await response.json();
-
-    if (quizDetails.questions && quizDetails.questions.length > 0) {
-      const firstQuestion = quizDetails.questions[0];
-      const routeName = determineFirstQuestionRoute(firstQuestion.questionTypeId);
-
-      if (routeName) {
-        await router.push({
-          name: routeName,
-          params: {
-            quizId: quizId.toString(),
-            questionId: firstQuestion.questionId.toString(),
-          }
-        });
-      } else {
-        console.error("Invalid question type ID or route name not found.");
-      }
+        if (routeName) {
+            await router.push({
+                name: routeName,
+                params: {
+                    quizId: quizId.toString(),
+                    questionId: firstQuestion.questionId.toString(),
+                }
+            });
+        } else {
+            console.error("Invalid question type ID or route name not found.");
+        }
     } else {
-      console.error("Quiz has no questions.");
+        console.error("Quiz has no questions.");
     }
-  } catch (error) {
-    console.error("Failed to fetch quiz details:", error);
-  }
 };
 
 </script>

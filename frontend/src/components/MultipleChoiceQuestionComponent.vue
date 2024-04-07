@@ -1,91 +1,71 @@
 <template>
-  <div class="multiple-choice-question">
-    <div class="question-display">
-      <p class="question-text">{{ currentQuestionText }}</p>
+    <div class="multiple-choice-question" v-if="currentQuestion">
+        <div class="question-display">
+            <p class="question-text">{{ currentQuestion.questionText }}</p>
+        </div>
+        <div class="alternatives-container">
+            <button v-for="(choice, index) in currentQuestion.choices"
+                    :key="choice.quizChoiceId"
+                    class="alternative-button"
+                    :class="{ 'selected': selectedAnswer === index }"
+                    @click="selectAlternative(index, choice.quizChoiceId)">
+                {{ choice.choice }}
+            </button>
+        </div>
+        <div class="submit-container">
+            <button class="button submit-button" @click="submitAnswer">SUBMIT ANSWER AND GO TO NEXT QUESTION</button>
+        </div>
     </div>
-    <div class="alternatives-container">
-      <button
-          v-for="(choice, index) in currentChoices"
-          :key="choice.id"
-          class="alternative-button"
-          :class="{ 'selected': selectedAnswer === index }"
-          @click="selectAlternative(index, choice.id)"
-      >
-        {{ choice.text }}
-      </button>
-    </div>
-    <div class="submit-container">
-      <button class="button submit-button" @click="submitAnswer">SUBMIT ANSWER AND GO TO NEXT QUESTION</button>
-    </div>
-  </div>
+    <div v-else>No question available.</div>
 </template>
 
-
 <script setup>
-import { onMounted, ref } from 'vue';
-import { useRoute } from 'vue-router';
+import { computed, ref } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 import { useStore } from "@/store/store";
 
+
 const store = useStore();
+const router = useRouter();
 const route = useRoute();
-const currentQuestionText = ref('');
-const currentChoices = ref([]);
+
+const quizId = route.params.quizId;
 const selectedAnswer = ref(null);
 
-// These should be reactive references if they are expected to change
-const quizId = ref(route.params.quizId);
-const questionId = ref(route.params.questionId);
+const currentQuestion = computed(() => {
+    return store.quizDetails.questions[store.quizDetails.currentQuestionIndex];
+});
 
-// Define a method for selecting an alternative
-const selectedChoiceId = ref(null);
 
 const selectAlternative = (index, choiceId) => {
-  selectedAnswer.value = index;
-  selectedChoiceId.value = choiceId; // Store the choiceId
-  // Additional logic if needed
-}
+    selectedAnswer.value = index;
+    store.updateAnswer(currentQuestion.value.questionId, choiceId);
+};
 
-
-async function fetchQuestionDetails() {
-  const accessToken = store.jwtToken.accessToken;
-
-  // Make sure to use the reactive variables' value here
-  const url = `http://localhost:8080/api/quizzes/${quizId.value}/question/${questionId.value}`;
-  console.log(`Fetching: ${url}`);
-
-  try {
-    const response = await fetch(url, {
-      headers: {
-        'Authorization': `Bearer ${accessToken}`
-      }
-    });
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
+const submitAnswer = async () => {
+    if (store.quizDetails.currentQuestionIndex < store.quizDetails.questions.length - 1) {
+        store.incrementQuestionIndex();
+        router.push({
+            name: getRouteNameByQuestionTypeId(currentQuestion.value.questionTypeId),
+            params: { quizId, questionId: currentQuestion.value.questionId }
+        });
+    } else {
+        await store.submitAnswers(quizId);
+        router.push({ name: 'QuizCompletion', params: { quizId } });
+        store.clearQuizDetails();
     }
+};
 
-    const questionDetails = await response.json();
-    currentQuestionText.value = questionDetails.questionText;
-
-    // If the object keys are 'choiceId' and 'text', then use those.
-    // Adjust if the API returns different keys
-    currentChoices.value = questionDetails.choices.map(choice => ({
-      id: choice.quizChoiceId, // Assuming this is the correct key
-      text: choice.choice // Assuming this is the correct key
-    }));
-
-  } catch (error) {
-    console.error("Failed to fetch question details:", error);
-  }
+function getRouteNameByQuestionTypeId(questionTypeId) {
+    switch (questionTypeId) {
+        case 1: return 'MultipleChoiceQuestion';
+        case 2: return 'TrueOrFalseQuestion';
+        case 3: return 'FillInTheBlankQuestion';
+        default: return null;
+    }
 }
-
-// Use the router parameters to fetch the question details
-onMounted(() => {
-  if (quizId.value && questionId.value) {
-    fetchQuestionDetails();
-  }
-});
 </script>
+
 
 
 <style scoped>
