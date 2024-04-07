@@ -1,7 +1,6 @@
-```Dockerfile
 # Use the node image from official Docker Hub
 FROM node:16.10.0-alpine3.13 as build-stage
-# set the working directory
+# Set the working directory
 WORKDIR /app
 # Copy the working directory in the container
 COPY package*.json ./
@@ -11,14 +10,13 @@ RUN npm install
 COPY . .
 # Build the Vue.js application to the production mode to dist folder
 RUN npm run build
-# Use the lightweight Nginx image from the previous stage for the nginx container
-FROM nginx:stable-alpine as production-stage
-# Copy the build application from the previous stage to the Nginx container
-COPY - from=build-stage /app/dist /usr/share/nginx/html
-# Copy the nginx configuration file
-COPY ./nginx/default.conf /etc/nginx/conf.d/default.conf
-# Expose the port 80
-EXPOSE 80
-# Start Nginx to serve the application
-CMD ["nginx", "-g", "daemon off;"]
-```
+# New stage: Use a node image to serve the built app using 'serve'
+FROM node:16.10.0-alpine3.13
+# Install serve - a static file serving package
+RUN npm install -g serve
+# Copy the build directory from the build-stage to the current stage
+COPY --from=build-stage /app/dist /app
+# Expose the port 5000
+EXPOSE 5000
+# Command to serve the application
+CMD ["serve", "-s", "/app", "-p", "5000"]
