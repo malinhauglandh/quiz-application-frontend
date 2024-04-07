@@ -1,0 +1,38 @@
+name: CI Workflow
+
+on:
+  push:
+    branches-ignore:
+      - master  # Ignore master since it's used rarely
+  pull_request:
+    branches:
+      - dev  # Trigger on PRs to dev
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: List directory structure
+      run: ls -alh
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        cache-dependency-path: frontend/package-lock.json
+
+    - name: Install dependencies
+      run: npm ci
+      working-directory: ./frontend
+
+    - name: Build 
+      run: npm run build
+      working-directory: ./frontend
+
+    - name: Lint check
+      run: npm run lint
+      working-directory: ./frontend

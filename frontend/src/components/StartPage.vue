@@ -1,3 +1,31 @@
+<template>
+  <div class="start-page">
+    <div class="logo">
+      <img src="../assets/logo.png" alt="logo" />
+    </div>
+    <div class="top-row-buttons">
+      <button class="login-button" @click="goToLogIn">Log in</button>
+      <button class="sign-up-button" @click="goToSignUp">Sign up</button>
+    </div>
+    <div class="text-and-sign-up">
+      <div class="start-page-text">
+        <h1>Welcome!</h1>
+        <p>
+          Test your knowledge with our quizzes and have fun while learning something new!
+          Our quizzes are created by users like you, so feel free to create your own quiz and share it with the world.
+          If you don't have an account yet, sign up today and start creating!
+        </p>
+      </div>
+      <div class="sign-up-today-button">
+        <button @click="goToSignUp">Sign up today!</button>
+      </div>
+    </div>
+    <div class="big-logo">
+      <img src="../assets/logo.png" alt="big-logo" />
+    </div>
+  </div>
+</template>
+
 <script setup>
 import {useRouter} from "vue-router";
 
@@ -12,32 +40,6 @@ function goToSignUp() {
 }
 
 </script>
-
-<template>
- <div class="start-page">
-   <div class="logo">
-     <img src="../assets/logo.png" alt="logo" />
-   </div>
-   <div class="top-row-buttons">
-     <button class="login-button" @click="goToLogIn">Log in</button>
-      <button class="sign-up-button" @click="goToSignUp">Sign up</button>
-   </div>
-   <div class="text-and-sign-up">
-     <div class="start-page-text">
-       <h1>Welcome!</h1>
-       <p>
-         Test your knowledge with our quizzes and have fun while learning something new!
-       </p>
-   </div>
-     <div class="sign-up-today-button">
-       <button @click="goToSignUp">Sign up today!</button>
-     </div>
-    </div>
-   <div class="big-logo">
-     <img src="../assets/logo.png" alt="big-logo" />
- </div>
-</div>
-</template>
 
 <style scoped>
 .start-page {
@@ -83,7 +85,7 @@ function goToSignUp() {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: start;
+  align-items: center;
   padding: 20px;
   margin-left: 20px;
 }
@@ -115,12 +117,45 @@ function goToSignUp() {
   width: 50%;
   display: flex;
   align-items: center;
+  margin-top: 10%;
 }
 
 .big-logo img {
   max-width: 96%;
   height: auto;
-  margin-top: 40px;
+  margin-top: 20px;
+}
+
+@media (max-width: 768px) {
+  .start-page {
+    flex-direction: column;
+  }
+
+  .text-and-sign-up {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* This will center the children (text and buttons) horizontally */
+    width: 100%; /* Full width of its parent */
+    margin-left: 0;
+    margin-top: 30%;
+    padding: 0 20px;
+  }
+
+  .sign-up-today-button {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    align-content: center;
+  }
+
+  .sign-up-today-button button {
+    width: auto; /* Adjust the width as necessary */
+    margin: 0 auto; /* Auto margins for horizontal centering if flexbox isn't applied */
+  }
+
+  .big-logo {
+    width: 100%;
+  }
 }
 
 </style>

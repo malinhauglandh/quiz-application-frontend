@@ -1,26 +1,5 @@
-<script setup>
-import { ref } from 'vue';
-import { useRouter } from 'vue-router';
-
-const errorMessage = ref("oops! something went wrong!");
-const showError = ref(false);
-
-const router = useRouter();
-
-const goToSignUp = () => {
-  router.push("/signup");
-};
-
-const goBack = () => {
-  router.push("/");
-};
-
-const goToHome = () => {
-  router.push("/home");
-};
-</script>
-
 <template>
+  <body class="login">
   <div class="log-in-page">
     <div class="logo">
       <img src="../assets/logo.png" alt="logo" @click="goBack" />
@@ -30,26 +9,98 @@ const goToHome = () => {
       <div class="log-in-form">
         <form>
           <div class="username-input">
-            <div class="box" />
-            <input type="text" id="username" name="username" placeholder="username" />
+            <font-awesome-icon icon="user" id="user" />
+            <input type="text" id="username" v-model="username" placeholder="username" />
           </div>
           <div class="password-input">
-            <div class="box" />
-            <input type="password" id="password" name="password" placeholder="password" />
+            <font-awesome-icon icon="lock" id="password" />
+            <input type="password" id="password" v-model="password" placeholder="password" />
           </div>
           <p class="sign-up-text">If you don't have a user, click <a @click="goToSignUp">here</a> to sign up</p>
           <div class="error-message" v-if="showError">
             <p> {{ errorMessage }}</p>
           </div>
-          <button class="log-in-button" @click="goToHome">Log in</button>
+          <button class="log-in-button" @click="login">Log in</button>
         </form>
       </div>
     </div>
   </div>
-
+  </body>
 </template>
 
+<script setup>
+import {onBeforeUnmount, onMounted, ref} from 'vue';
+import { useRouter } from 'vue-router';
+import axios from 'axios';
+import { useStore } from '@/store/store.js';
+
+const username = ref('');
+const password = ref('');
+const errorMessage = ref("Oops! Something went wrong!");
+const showError = ref(false);
+
+onMounted(() => {
+  document.body.classList.add('login');
+});
+
+onBeforeUnmount(() => {
+  document.body.classList.remove('login');
+});
+
+const router = useRouter();
+const store = useStore();
+
+const goToSignUp = () => {
+    router.push("/signup");
+};
+
+const goBack = () => {
+    router.push("/");
+};
+
+const login = async (e) => {
+    e.preventDefault();
+
+    showError.value = false;
+
+    console.log("Attempting to log in with: ", username.value , password.value);
+
+    if (username.value.trim() === '' || password.value.trim() === '') {
+        errorMessage.value = "Username and password are required.";
+        showError.value = true;
+        console.error(errorMessage.value);
+        return;
+    }
+
+    try {
+        const response = await axios.post('http://localhost:8080/api/login', {
+            username: username.value,
+            password: password.value
+        });
+
+        console.log('Login response:', response.data);
+        store.saveToken(username.value, response.data);
+
+        await router.push("/home");
+        console.log("Logged in!");
+
+    } catch (error) {
+        console.error('Login error:', error);
+        if (error.response && error.response.status === 401) {
+            errorMessage.value = "Login failed: Incorrect username or password.";
+        } else {
+            errorMessage.value = "An error occurred. Please try again later.";
+        }
+        showError.value = true;
+    }
+};
+</script>
+
 <style scoped>
+.login {
+  background-image: linear-gradient(120deg, #bcb6ff 20%, #6320EE 80%);
+
+}
 
 .log-in-page {
   display: flex;
@@ -96,37 +147,34 @@ h1 {
 .username-input, .password-input {
   display: flex;
   flex-direction: row;
+  align-items: center;
   margin-bottom: 20px;
   height: 35px;
 }
 
 .username-input input, .password-input input {
+  flex: 1;
   padding: 8px;
   font-size: 1rem;
-  width: 255px;
   background-color: rgba(255, 255, 255, 0);
+  border: none;
   border-bottom: 1px solid white;
-  border-left: none;
-  border-right: none;
-  border-top: none;
+  margin-left: 10px;
   color: white;
-}
-
-.username-input input:focus, .password-input input:focus {
-  outline: none;
-  border-bottom: 1px solid #f7567c;
 }
 
 .username-input input::placeholder, .password-input input::placeholder {
   color: white;
 }
 
-.username-input .box, .password-input .box {
-  background-color: #f7567c;
-  width: 35px;
-  height: 35px;
-  margin-bottom: 5px;
-  border: none;
+.username-input input:focus, .password-input input:focus {
+  outline: none;
+  border-bottom: 1px solid #f7567c;
+  color: white;
+}
+
+.username-input input::placeholder, .password-input input::placeholder {
+  color: white;
 }
 
 .log-in-button {
@@ -161,6 +209,12 @@ h1 {
   color: white;
   font-weight: bolder;
   cursor: pointer;
+}
+
+.error-message {
+  color: red;
+  font-weight: bold;
+  font-size: 12px;
 }
 
 </style>
