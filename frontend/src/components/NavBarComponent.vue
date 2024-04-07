@@ -20,7 +20,7 @@
     <div class="hamburger-menu-container" v-if="isMobileMenuVisible" @click="toggleMobileMenu">
       <font-awesome-icon icon="bars" class="hamburger-menu" />
     </div>
-    <div v-if="showMobileMenu" class="mobile-dropdown-menu" ref="mobileDropdownMenu">
+    <div v-if="isMobileMenuVisible" class="mobile-dropdown-menu" :style="mobileMenuStyle" ref="mobileDropdownMenu">
       <router-link to="/home" @click="toggleMobileMenu">
         <font-awesome-icon class="icon" icon="home" />HOME
       </router-link>
@@ -30,10 +30,10 @@
       <router-link to="/search" @click="toggleMobileMenu">
         <font-awesome-icon class="icon" icon="search" />SEARCH
       </router-link>
-      <button @click="toggleSettingsDropdown" class="mobile-settings-button">
+      <button @click="toggleMobileSettingsDropdown" class="mobile-settings-button">
         <font-awesome-icon icon="cog" class="icon" />SETTINGS
       </button>
-      <div v-if="showSettingsDropdown" class="dropdown-menu-mobile" ref="dropdownMenu">
+      <div v-if="showMobileSettingsDropdown" class="dropdown-menu-mobile" ref="dropdownMenu">
         <button @click="handleLogout">Log out</button>
       </div>
     </div>
@@ -45,17 +45,27 @@
 import {onMounted, onUnmounted, ref} from 'vue';
 import { useRouter } from 'vue-router';
 import { useStore } from '@/store/store.js';
+import { computed } from 'vue';
 
 const showMobileMenu = ref(false);
 const showSettingsDropdown = ref(false);
-const showProfileDropdown = ref(false);
 const router = useRouter();
 const store = useStore();
+const showMobileSettingsDropdown = ref(false);
+
 
 const toggleSettingsDropdown = () => {
   showSettingsDropdown.value = !showSettingsDropdown.value;
-  showProfileDropdown.value = false;
 };
+
+const toggleMobileSettingsDropdown = () => {
+  showMobileSettingsDropdown.value = !showMobileSettingsDropdown.value;
+
+  if (!showMobileMenu.value || !isMobileMenuVisible.value) {
+    showMobileSettingsDropdown.value = false;
+  }
+};
+
 
 const handleLogout = () => {
     console.log("Logging out...");
@@ -71,17 +81,24 @@ const checkWidth = () => window.innerWidth >= 800;
 const isMobileMenuVisible = ref(checkWidth());
 
 const toggleMobileMenu = () => {
+  if (showMobileMenu.value) {
+    showMobileSettingsDropdown.value = false;
+  }
+
   showMobileMenu.value = !showMobileMenu.value;
 };
+
 
 const handleResize = () => {
   const currentWidthIsMobile = window.innerWidth < 800;
   isMobileMenuVisible.value = currentWidthIsMobile;
 
-  if (!currentWidthIsMobile && showMobileMenu.value) {
+  if (!currentWidthIsMobile) {
     showMobileMenu.value = false;
+    showMobileSettingsDropdown.value = false;
     showSettingsDropdown.value = false;
-    showProfileDropdown.value = false;
+  } else {
+    showSettingsDropdown.value = false;
   }
 };
 
@@ -92,6 +109,11 @@ onMounted(() => {
 onUnmounted(() => {
   window.removeEventListener('resize', handleResize)
 });
+
+const mobileMenuStyle = computed(() => ({
+  maxHeight: showMobileMenu.value ? '500px' : '0',
+}));
+
 
 </script>
 
@@ -196,9 +218,9 @@ onUnmounted(() => {
   }
 
   .dropdown-menu-mobile {
-    position: absolute;
-    top: calc(100% + 5px);
-    right: 10px;
+    position: fixed;
+    top: 250px;
+    left: 10px;
     background-color: #ef8354;
     border: 1px solid #6320EE;
     z-index: 1;
@@ -221,11 +243,14 @@ onUnmounted(() => {
   position: absolute;
   top: 60px;
   right: 0;
-  width: 45%;
+  width: 100%;
   background-color: #6320EE;
   z-index: 100;
   padding: 10px 0;
   border-radius: 20px;
+  overflow: hidden;
+  max-height: 0;
+  transition: max-height 0.5s ease-in-out;
 }
 
 .mobile-dropdown-menu a,
