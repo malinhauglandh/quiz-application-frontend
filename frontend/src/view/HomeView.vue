@@ -1,10 +1,10 @@
 <template>
-    <div class="home-view">
-        <navbar-component></navbar-component>
-        <div class="content">
-            <HomeComponent />
-        </div>
+  <div class="home-view">
+    <navbar-component />
+    <div class="content">
+      <HomeComponent />
     </div>
+  </div>
 </template>
 
 <script setup>

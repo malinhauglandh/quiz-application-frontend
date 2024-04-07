@@ -1,41 +1,93 @@
 <template>
   <body class="signup">
-  <div class="sign-up-page">
-    <div class="logo">
-      <img src="../assets/logo.png" alt="logo" @click="goBack" />
-    </div>
-    <div class="sign-up-box">
-      <h1>Sign up</h1>
-      <div class="sign-up-form">
-        <form>
-          <div class="email-input">
-            <font-awesome-icon icon="at" id="at" />
-            <input type="email" id="envelope-icon" v-model="email" placeholder="email" />
+    <div class="sign-up-page">
+      <div class="logo">
+        <img
+          src="../assets/logo.png"
+          alt="logo"
+          @click="goBack"
+        >
+      </div>
+      <div class="sign-up-box">
+        <h1>Sign up</h1>
+        <div class="sign-up-form">
+          <form>
+            <div class="email-input">
+              <font-awesome-icon
+                id="at"
+                icon="at"
+              />
+              <input
+                id="envelope-icon"
+                v-model="email"
+                type="email"
+                placeholder="email"
+              >
+            </div>
+            <div class="username-input">
+              <font-awesome-icon
+                id="user"
+                icon="user"
+              />
+              <input
+                id="user-icon"
+                v-model="username"
+                type="text"
+                placeholder="username"
+              >
+            </div>
+            <div class="password-input">
+              <font-awesome-icon
+                id="password"
+                icon="lock"
+              />
+              <input
+                id="lock-icon"
+                v-model="password"
+                type="password"
+                name="password"
+                placeholder="password"
+              >
+            </div>
+            <div class="password-input">
+              <font-awesome-icon
+                id="passwordRepeat"
+                icon="repeat"
+              />
+              <input
+                id="passwordRepeat"
+                v-model="passwordRepeat"
+                type="password"
+                name="passwordRepeat"
+                placeholder="repeat password"
+              >
+            </div>
+            <div
+              v-if="passwordError"
+              class="error-message"
+            >
+              <p>{{ passwordError }}</p>
+            </div>
+            <button
+              type="submit"
+              class="sign-up-button"
+              @click="signUp"
+            >
+              Sign up
+            </button>
+          </form>
+          <p class="log-in-text">
+            If you already have a user, click <a @click="goToLogIn">here</a> to log in
+          </p>
+          <div
+            v-if="showError"
+            class="error-message"
+          >
+            <p> {{ errorMessage }}</p>
           </div>
-          <div class="username-input">
-            <font-awesome-icon icon="user" id="user" />
-            <input type="text" id="user-icon" v-model="username" placeholder="username" />
-          </div>
-          <div class="password-input">
-            <font-awesome-icon icon="lock" id="password" />
-            <input type="password" id="lock-icon" name="password" v-model="password" placeholder="password" />
-          </div>
-          <div class="password-input">
-            <font-awesome-icon icon="repeat" id="passwordRepeat" />
-            <input type="password" id="passwordRepeat" name="passwordRepeat" v-model="passwordRepeat" placeholder="repeat password" />
-          </div>
-          <div class="error-message" v-if="passwordError">
-            <p>{{ passwordError }}</p>
-          </div>
-          <button type="submit" class="sign-up-button" @click="signUp">Sign up</button>
-        </form>
-        <p class="log-in-text">If you already have a user, click <a @click="goToLogIn">here</a> to log in</p>
-        <div class="error-message" v-if="showError">
-          <p> {{ errorMessage }}</p>
         </div>
       </div>
     </div>
-  </div>
   </body>
 </template>
 
@@ -43,7 +95,7 @@
 import {onBeforeUnmount, onMounted, ref} from 'vue';
 import { useRouter } from 'vue-router';
 import axios from 'axios';
-import { useStore } from '@/store/store';
+import { useStore } from '@/store/userStore';
 
 const email = ref('');
 const username = ref('');
@@ -244,3 +296,4 @@ h1 {
     font-size: 12px;
 }
 </style>
+@/store/userStore

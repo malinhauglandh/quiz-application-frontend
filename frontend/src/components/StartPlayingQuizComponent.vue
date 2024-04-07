@@ -35,15 +35,15 @@ onMounted(async () => {
 });
 
 async function fetchCategories() {
-  try {
-    const catResponse = await fetch('http://localhost:8080/api/categories/allCategories');
-    if (!catResponse.ok) {
-      throw new Error(`HTTP error! status: ${catResponse.status}`);
+    try {
+        const catResponse = await store.fetchData('http://localhost:8080/api/categories/allCategories');
+        if (catResponse.status !== 200) {
+            throw new Error(`HTTP error! status: ${catResponse.status}`);
+        }
+        categories.value = await catResponse.data;
+    } catch (error) {
+        console.error("Failed to fetch categories:", error);
     }
-    categories.value = await catResponse.json();
-  } catch (error) {
-    console.error("Failed to fetch categories:", error);
-  }
 }
 
 async function fetchQuiz() {

@@ -1,50 +1,155 @@
 <template>
   <nav class="navbar">
     <router-link to="/home">
-      <img src="../assets/logo.png" alt="Logo" class="navbar-logo" @click="navigateToHome">
+      <img
+        src="../assets/logo.png"
+        alt="Logo"
+        class="navbar-logo"
+        @click="navigateToHome"
+      >
     </router-link>
-    <ul class="navbar-list" v-if="!showMobileMenu">
-      <li><router-link to="/home">
-        <font-awesome-icon class="icon" icon="house" />HOME</router-link></li>
-      <li><router-link to="/createquiz">
-        <font-awesome-icon class="icon" icon="plus" />CREATE NEW QUIZ</router-link></li>
-      <li><router-link to="/search">
-        <font-awesome-icon class="icon" icon="magnifying-glass" />SEARCH</router-link></li>
+    <ul
+      v-if="!showMobileMenu"
+      class="navbar-list"
+    >
+      <li>
+        <router-link to="/home">
+          <font-awesome-icon
+            class="icon"
+            icon="house"
+          />HOME
+        </router-link>
+      </li>
+      <li>
+        <router-link to="/createQuiz">
+          <font-awesome-icon
+            class="icon"
+            icon="plus"
+          />CREATE NEW QUIZ
+        </router-link>
+      </li>
+      <li>
+        <router-link to="/search">
+          <font-awesome-icon
+            class="icon"
+            icon="magnifying-glass"
+          />SEARCH
+        </router-link>
+      </li>
     </ul>
-    <div class="navbar-settings-container" v-if="!showMobileMenu">
-      <font-awesome-icon icon="cog" class="navbar-settings" @click="toggleSettingsDropdown" />
-      <div v-if="showSettingsDropdown" class="dropdown-menu" ref="dropdownMenu">
-        <button @click="toggleSettings">Settings</button>
-        <button @click="handleLogout">Log out</button>
+    <div
+      v-if="!showMobileMenu"
+      class="navbar-settings-container"
+    >
+      <font-awesome-icon
+        icon="cog"
+        class="navbar-settings"
+        @click="toggleSettingsDropdown"
+      />
+      <div
+        v-if="showSettingsDropdown"
+        ref="dropdownMenu"
+        class="dropdown-menu"
+      >
+        <button @click="toggleSettings">
+          Settings
+        </button>
+        <button @click="handleLogout">
+          Log out
+        </button>
       </div>
-      <div v-if="showProfileDropdown" class="dropdown-menu" ref="dropdownMenu">
-        <button @click="handleProfile">Profile</button>
-        <button @click="handleColorMode">Lightmode / darkmode</button>
-        <button @click="toggleSettings" class="back-button">Back</button>
+      <div
+        v-if="showProfileDropdown"
+        ref="dropdownMenu"
+        class="dropdown-menu"
+      >
+        <button @click="handleProfile">
+          Profile
+        </button>
+        <button @click="handleColorMode">
+          Lightmode / darkmode
+        </button>
+        <button
+          class="back-button"
+          @click="toggleSettings"
+        >
+          Back
+        </button>
       </div>
     </div>
-    <div class="hamburger-menu-container" v-if="isMobileMenuVisible" @click="toggleMobileMenu">
-      <font-awesome-icon icon="bars" class="hamburger-menu" />
+    <div
+      v-if="isMobileMenuVisible"
+      class="hamburger-menu-container"
+      @click="toggleMobileMenu"
+    >
+      <font-awesome-icon
+        icon="bars"
+        class="hamburger-menu"
+      />
     </div>
-    <div v-if="showMobileMenu" class="mobile-dropdown-menu" ref="mobileDropdownMenu">
-      <router-link to="/home" @click="toggleMobileMenu">
-        <font-awesome-icon class="icon" icon="home" />HOME
+    <div
+      v-if="showMobileMenu"
+      ref="mobileDropdownMenu"
+      class="mobile-dropdown-menu"
+    >
+      <router-link
+        to="/home"
+        @click="toggleMobileMenu"
+      >
+        <font-awesome-icon
+          class="icon"
+          icon="home"
+        />HOME
       </router-link>
-      <router-link to="/createquiz" @click="toggleMobileMenu">
-        <font-awesome-icon class="icon" icon="plus" />CREATE NEW QUIZ
+      <router-link
+        to="/createQuiz"
+        @click="toggleMobileMenu"
+      >
+        <font-awesome-icon
+          class="icon"
+          icon="plus"
+        />CREATE NEW QUIZ
       </router-link>
-      <router-link to="/search" @click="toggleMobileMenu">
-        <font-awesome-icon class="icon" icon="search" />SEARCH
+      <router-link
+        to="/search"
+        @click="toggleMobileMenu"
+      >
+        <font-awesome-icon
+          class="icon"
+          icon="search"
+        />SEARCH
       </router-link>
-      <button @click="toggleSettingsDropdown" class="mobile-settings-button">
-        <font-awesome-icon icon="cog" class="icon" />SETTINGS
+      <button
+        class="mobile-settings-button"
+        @click="toggleSettingsDropdown"
+      >
+        <font-awesome-icon
+          icon="cog"
+          class="icon"
+        />SETTINGS
       </button>
-      <div v-if="showSettingsDropdown" class="dropdown-menu-mobile" ref="dropdownMenu">
-        <button @click="toggleSettings">Settings</button>
-        <button @click="handleLogout">Log out</button>
-        <div v-if="showProfileDropdown" class="dropdown-menu" ref="dropdownMenu">
-          <button @click="handleProfile">Profile</button>
-          <button @click="handleColorMode">Lightmode / darkmode</button>
+      <div
+        v-if="showSettingsDropdown"
+        ref="dropdownMenu"
+        class="dropdown-menu-mobile"
+      >
+        <button @click="toggleSettings">
+          Settings
+        </button>
+        <button @click="handleLogout">
+          Log out
+        </button>
+        <div
+          v-if="showProfileDropdown"
+          ref="dropdownMenu"
+          class="dropdown-menu"
+        >
+          <button @click="handleProfile">
+            Profile
+          </button>
+          <button @click="handleColorMode">
+            Lightmode / darkmode
+          </button>
         </div>
       </div>
     </div>
@@ -55,7 +160,7 @@
 <script setup>
 import {onMounted, onUnmounted, ref} from 'vue';
 import { useRouter } from 'vue-router';
-import { useStore } from '../store/store.js';
+import { useStore } from '@/store/userStore';
 
 const showMobileMenu = ref(false);
 const showSettingsDropdown = ref(false);
@@ -277,4 +382,4 @@ onUnmounted(() => {
   color: white;
   cursor: pointer;
 }
-</style>
+</style>@/store/userStore

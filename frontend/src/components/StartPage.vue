@@ -1,11 +1,24 @@
 <template>
   <div class="start-page">
     <div class="logo">
-      <img src="../assets/logo.png" alt="logo" />
+      <img
+        src="../assets/logo.png"
+        alt="logo"
+      >
     </div>
     <div class="top-row-buttons">
-      <button class="login-button" @click="goToLogIn">Log in</button>
-      <button class="sign-up-button" @click="goToSignUp">Sign up</button>
+      <button
+        class="login-button"
+        @click="goToLogIn"
+      >
+        Log in
+      </button>
+      <button
+        class="sign-up-button"
+        @click="goToSignUp"
+      >
+        Sign up
+      </button>
     </div>
     <div class="text-and-sign-up">
       <div class="start-page-text">
@@ -17,11 +30,16 @@
         </p>
       </div>
       <div class="sign-up-today-button">
-        <button @click="goToSignUp">Sign up today!</button>
+        <button @click="goToSignUp">
+          Sign up today!
+        </button>
       </div>
     </div>
     <div class="big-logo">
-      <img src="../assets/logo.png" alt="big-logo" />
+      <img
+        src="../assets/logo.png"
+        alt="big-logo"
+      >
     </div>
   </div>
 </template>

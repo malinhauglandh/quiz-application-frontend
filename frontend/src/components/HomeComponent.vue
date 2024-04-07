@@ -2,29 +2,60 @@
   <div class="home-component">
     <div class="content-wrapper">
       <h1>Your recently made quizzes:</h1>
-      <div class="quiz-box-container" v-if="quizzes.length > 0">
-        <div v-for="quiz in quizzes" :key="quiz.quizId" class="quiz-box">
-          <div v-if="quiz.multimedia" class="quiz-image" :style="{ backgroundImage: `url(${getPathToQuizImage(quiz.multimedia)})` }" />
-          <div v-else class="quiz-image-placeholder" />
+      <div
+        v-if="quizzes.length > 0"
+        class="quiz-box-container"
+      >
+        <div
+          v-for="quiz in quizzes"
+          :key="quiz.quizId"
+          class="quiz-box"
+        >
+          <div
+            v-if="quiz.multimedia"
+            class="quiz-image"
+            :style="{ backgroundImage: `url(${getPathToQuizImage(quiz.multimedia)})` }"
+          />
+          <div
+            v-else
+            class="quiz-image-placeholder"
+          />
           <div class="quiz-details">
-            <h3 class="quiz-title">{{ quiz.quizName }}</h3>
-            <p class="quiz-description">{{ quiz.quizDescription }}</p>
-            <button class="play-quiz-button" @click="playQuiz(quiz.quizId)">Play Quiz</button>
+            <h3 class="quiz-title">
+              {{ quiz.quizName }}
+            </h3>
+            <p class="quiz-description">
+              {{ quiz.quizDescription }}
+            </p>
+            <button
+              class="play-quiz-button"
+              @click="playQuiz(quiz.quizId)"
+            >
+              Play Quiz
+            </button>
           </div>
         </div>
       </div>
-      <div v-else class="no-quizzes-message">
+      <div
+        v-else
+        class="no-quizzes-message"
+      >
         <p>You have not created any quizzes yet... Get started now!!</p>
       </div>
     </div>
-    <router-link to="/createquiz" class="create-quiz-button">CREATE NEW QUIZ</router-link>
+    <router-link
+      to="/createquiz"
+      class="create-quiz-button"
+    >
+      CREATE NEW QUIZ
+    </router-link>
   </div>
 </template>
 
 
 <script setup>
 import { onMounted, ref } from 'vue';
-import { useStore } from "@/store/store";
+import { useStore } from "@/store/userStore";
 import router from "@/router/router";
 
 const store = useStore();
@@ -37,15 +68,10 @@ const getPathToQuizImage = (filename) => {
 
 const fetchQuizzes = async () => {
   const token = store.jwtToken;
-  console.log("token:", token);
 
   const creatorId = token.userId;
 
   const accessToken = token.accessToken;
-
-  console.log("accessToken: ", accessToken);
-
-  console.log("Fetching quizzes for user:", creatorId);
 
   try {
     const response = await fetch(`http://localhost:8080/api/quizzes/user/${creatorId}`, {
@@ -200,6 +226,10 @@ onMounted(fetchQuizzes);
   padding: 10px 10px;
 }
 
+h1 {
+  color: white
+}
+
 @media (max-width: 768px) {
   .quiz-box-container {
     justify-content: flex-start;
@@ -219,4 +249,4 @@ onMounted(fetchQuizzes);
     font-size: 1.8rem;
   }
 }
-</style>
+</style>@/store/userStore

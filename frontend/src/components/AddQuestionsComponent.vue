@@ -1,139 +1,297 @@
-<template>
-    <div>
-        <div class="add-questions">
+    <template>
+        <div class="quiz-container">
+        <div class="layout-container">
+            <div class="add-questions">
             <h1>Add Questions</h1>
             <div class="button-container">
-                <div class="add-question-button" @click="showOptions = !showOptions">
-                    <span>+</span>
+                <div v-if="!showOptions" class="add-question-button" @click="toggleOptions">
+                <span>+ Add</span>
                 </div>
                 <div v-if="showOptions" class="options-container">
-                    <button @click="addQuestion('multiplechoice')">Multiple Choice</button>
-                    <button @click="addQuestion('truefalse')">True or False</button>
-                    <button @click="addQuestion('fillintheblank')">Fill in the Blank</button>
+                <button @click="chooseQuestionType('multiplechoice')">Multiple Choice</button>
+                <button @click="chooseQuestionType('truefalse')">True or False</button>
+                <button @click="chooseQuestionType('fillintheblank')">Fill in the Blank</button>
                 </div>
+            </div>
+            </div>
+            <div class="quiz-preview">
+            <h1>Quiz Preview</h1>
+            <div class="quiz-info" v-if="currentQuiz">
+                <h2>{{ currentQuiz.quizName }}</h2>
+                <p>{{ currentQuiz.quizDescription }}</p>
+                <p>Category: {{ currentQuiz.categoryName }}</p>
+                <p>Difficulty Level: {{ currentQuiz.difficultyLevel }}</p>
+            </div>
+            <div class="question-list">
+                <ul v-if="currentQuiz && currentQuiz.questions">
+                <li v-for="question in currentQuiz.questions" :key="question.questionId">
+                    {{ question.questionText }}
+                </li>
+                </ul>
+            </div>
             </div>
         </div>
         <div class="nav-buttons">
-            <button class="nav-button back-button" @click="goBack">BACK</button>
-            <button class="nav-button next-button" @click="goToNextPage">NEXT</button>
+            <button class="nav-button back-button" @click="promptDelete">BACK</button>
+            <button class="nav-button next-button" @click="promptSave">NEXT</button>
         </div>
-    </div>
-</template>
+            <ConfirmModal
+            :visible="showModal"
+            :title="modalTitle"
+            :message="modalMessage"
+            :confirmShow="true"
+            @confirm="modalConfirm"
+            @cancel="handleCancel"
+        />
+        </div>
+    </template>
+    
+    <script setup>
+    import { ref, watch, onBeforeMount } from 'vue';
+    import { useRouter, useRoute } from 'vue-router';
+    import { useQuizStore } from "@/store/quizStore";
+    import { useStore } from "@/store/userStore";
+    import { computed } from 'vue';
+    import axios from 'axios';
+    import ConfirmModal from '@/components/ConfirmModal.vue';
+    
+    const quizStore = useQuizStore();
+    const userStore = useStore();
+    const route = useRoute();
+    const router = useRouter();
+    const showOptions = ref(false);
+    const selectedFile = ref(null);
 
-<script setup>
-import { ref } from 'vue';
-import { useRouter } from 'vue-router';
+    const currentQuiz = ref(null);
 
-const router = useRouter();
-const showOptions = ref(false);
+    const showModal = ref(false);
+    const modalTitle = ref('');
+    const modalMessage = ref('');
+    const modalConfirm = ref(() => {});
 
-const goBack = () => {
-    router.push('/createquiz');
-};
+    const fetchQuizDetailsAlternatively = async () => {
+        try {
+            const quizId = quizStore.currentQuiz.quizId;
+            const data = await userStore.fetchData(`http://localhost:8080/api/quizzes/${quizId}/details`)
+            console.log("this data wats fetched alternatively:", data)
+        } catch (error) {
+            console.error('Failed to fetch quiz details:', error);
+        }
+    }
 
-const goToNextPage = () => {
-};
-
-const addQuestion = (type) => {
-    switch (type) {
-        case 'multiplechoice':
-            router.push('/addquestions/multiplechoice');
-            break;
-        case 'truefalse':
-            router.push('/addquestions/truefalse');
-            break;
-        case 'fillintheblank':
-            router.push('/addquestions/fillintheblank');
-            break;
-        default:
-            break;
+    const fetchQuizDetails = async (quizId) => {
+    try {
+        const response = await axios.get(`http://localhost:8080/api/quizzes/${quizId}/details`, {
+        headers: {
+            Authorization: `Bearer ${userStore.jwtToken.accessToken}`
+        }
+        
+        });
+        if (response.data) {
+        currentQuiz.value = response.data;
+        console.log('Quiz details:', currentQuiz.value);
+        } else {
+        console.error('No quiz details were returned for quiz ID:', quizId);
+        }
+    } catch (error) {
+        console.error('Failed to fetch quiz details:', error);
     }
 };
-</script>
 
-<style scoped>
-.add-questions {
-    max-width: 600px;
-    margin: 0 auto;
-}
+    onBeforeMount(() => {
+    if(quizStore.currentQuiz && quizStore.currentQuiz.quizId) {
+        const quizId = useQuizStore().currentQuiz.quizId;
+        fetchQuizDetails(quizId);
+        fetchQuizDetailsAlternatively();
+    } else {
+        router.push('/createQuiz');
+    }
+    });
+    
+    const toggleOptions = () => {
+        showOptions.value = !showOptions.value;
+    };
 
-h1 {
-    margin-bottom: 20px;
-}
+    const deleteQuiz = async (quizId) => {
+    try {
+        await axios.delete(`http://localhost:8080/api/quizzes/${quizId}`, {
+            headers: {
+                Authorization: `Bearer ${userStore.jwtToken.accessToken}`
+            }
+        });
+        console.log('Quiz deleted successfully');
+        } catch (error) {
+            console.error('Failed to delete quiz:', error);
+            throw error;
+        }
+    };
 
-.button-container {
-    display: flex;
-    align-items: center;
-}
+    const handleCancel = () => {
+        showModal.value = false;
+    };
 
-.add-question-button {
-    width: 60px;
-    height: 60px;
-    background-color: #f7567c;
-    color: white;
-    border: none;
-    border-radius: 50%;
-    cursor: pointer;
-    font-size: 36px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-right: 20px;
-}
+    const handleDelete = () => {
+        deleteQuiz(currentQuiz.value.quizId).then(() => {
+            router.push('/createQuiz');
+            showModal.value = false;
+        }).catch(error => {
+            console.error('Failed to delete quiz:', error);
+            showModal.value = false;
+        });
+    };
 
-.add-question-button:hover {
-    background-color: #F8809AFF;
-}
+    const promptDelete = () => {
+    modalTitle.value = "Confirm Delete";
+    modalMessage.value = "You are about to delete the quiz! Are you sure you want to proceed?";
+    modalConfirm.value = handleDelete;
+    showModal.value = true;
+    };
 
-.options-container {
-    display: flex;
-}
+    const promptSave = () => {
+        modalTitle.value = "Confirm Save";
+        modalMessage.value = "You are about to save the quiz! Are you sure you want to proceed?";
+        modalConfirm.value = handleSave;
+        showModal.value = true;
+    };
 
-.options-container button {
-    margin-right: 10px;
-    padding: 10px 20px;
-    background-color: #6320EE;
-    color: white;
-    border: none;
-    border-radius: 20px;
-    cursor: pointer;
-    font-size: 18px;
-}
+    const handleSave = () => {
+        confetti({
+            particleCount: 200,
+            spread: 100,
+            origin: { y: 0.6 }
+        });
+        setTimeout(() => {
+            router.push('/home');
+        }, 250);
+    };
+        
+    const chooseQuestionType = (type) => {
+        switch (type) {
+            case 'multiplechoice':
+                router.push({ path: '/addQuestions/multipleChoice'});
+                break;
+            case 'truefalse':
+                router.push({ path: '/addQuestions/trueFalse'});
+                break;
+            case 'fillintheblank':
+                router.push({ path: '/addQuestions/fillInTheBlank'});
+                break;
+            default:
 
-.options-container button:last-child {
-    margin-right: 0;
-}
+                break;
+        }
 
-.options-container button:hover {
-    background-color: #7E41FDFF;
-}
+    };
 
-.nav-buttons {
-    display: flex;
-    justify-content: center;
-    margin-top: 20px;
-}
+    const handleAddQuestion = async () => {
+    const questionData = {
+    quizId: currentQuiz.value.quizId,
+    questionText: currentQuiz.value.questionText,
+    tag: currentQuiz.value.tag,
+    questionTypeId: currentQuiz.value.questionTypeId,
+    choices: currentQuiz.value.choices,
+    file: selectedFile.value
+    };
 
-.nav-button {
-    padding: 15px 30px;
-    background-color: #6320EE;
-    color: white;
-    border: none;
-    border-radius: 20px;
-    cursor: pointer;
-    font-size: 22px;
-    margin-top: 390px;
-}
+    try {
+        await quizStore.addQuestionToQuiz(questionData);
+        console.log('Question added successfully');
+    } catch (error) {
+        console.error('Failed to add question', error);
+    }
+};
 
-.nav-button:hover {
-    background-color: #7E41FDFF;
-}
+    </script>
+    
+    <style scoped>
+    @import url('https://fonts.googleapis.com/css2?family=Karla:ital,wght@0,200..800;1,200..800&display=swap');
+    
+    .quiz-container {
+        max-width: 1200px;
+        margin: 50px auto;
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .layout-container {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 20px;
+    }
+    
+    .add-questions, .quiz-preview {
+        flex-basis: 48%;
+        padding: 40px;
+        background: #fff;
+        border-radius: 8px;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+        font-family: 'Karla', sans-serif;
+        margin: 10px;
+    }
+    
+    h1 {
+        text-align: center;
+        color: #333;
+        font-weight: 700;
+        margin-bottom: 2rem;
+    }
+    
+    .button-container, .nav-buttons {
+        display: flex;
+        justify-content: center;
+    }
 
-.back-button {
-    margin-right: 80px;
-}
+    .options-container {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+    }
 
-.next-button {
-    margin-left: 80px;
-}
-</style>
+    .add-question-button, .options-container button, .nav-button {
+        border: none;
+        background-color: #6320EE;
+        padding: 15px 30px;
+        color: white;
+        border-radius: 25px;
+        font-family: "Karla", sans-serif;
+        font-weight: bold;
+        cursor: pointer;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 16px;
+        margin-right: 1rem;
+    }
+    
+    .nav-buttons {
+        margin-top: 20px;
+    }
+    
+    .nav-button.back-button, .nav-button.next-button {
+        margin-left: 80px;
+        margin-right: 80px;
+    }
+
+    .question-list {
+        flex-direction: column;
+        align-items: center;
+        display: flex;
+    }
+    
+
+    
+    @media (max-width: 768px) {
+        .layout-container {
+        flex-direction: column;
+        }
+    
+        .add-questions, .quiz-preview {
+        flex-basis: 100%;
+        }
+        
+        .nav-button.back-button, .nav-button.next-button {
+        margin-left: 0;
+        margin-right: 0;
+        }
+    }
+    </style>@/store/userStore

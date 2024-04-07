@@ -3,123 +3,197 @@
     <h1>Create Quiz</h1>
     <div class="input-field">
       <label for="quizName">Quiz Name</label>
-      <input type="text" id="quizName" v-model="quizName" placeholder="Enter Quiz Name" maxlength="50">
+      <input
+        id="quizName"
+        v-model="quizName"
+        type="text"
+        placeholder="Enter Quiz Name"
+        maxlength="50"
+      >
       <span>{{ 50 - quizName.length }} characters left</span>
     </div>
     <div class="input-field">
       <label for="quizDescription">Quiz Description</label>
-      <input type="text" id="quizDescription" v-model="quizDescription" placeholder="Enter Quiz Description" maxlength="80">
+      <input
+        id="quizDescription"
+        v-model="quizDescription"
+        type="text"
+        placeholder="Enter Quiz Description"
+        maxlength="80"
+      >
       <span>{{ 80 - quizDescription.length }} characters left</span>
     </div>
     <div class="input-field">
       <label for="category">Category</label>
       <select v-model="selectedCategory">
-        <option value="" disabled selected>Select Category</option>
-        <option v-for="category in categories" :value="category.categoryId" :key="category.categoryId">
+        <option
+          value=""
+          disabled
+          selected
+        >
+          Select Category
+        </option>
+        <option
+          v-for="category in categories"
+          :key="category.categoryId"
+          :value="category.categoryId"
+        >
           {{ category.categoryName }}
         </option>
       </select>
     </div>
     <div class="input-field">
       <label for="difficulty">Difficulty</label>
-      <select id="difficulty" v-model="difficulty" class="placeholder-grey">
-        <option value="" disabled selected>Select Difficulty Level</option>
-        <option value="easy">Easy</option>
-        <option value="medium">Medium</option>
-        <option value="hard">Hard</option>
+      <select
+        id="difficulty"
+        v-model="difficulty"
+        class="placeholder-grey"
+      >
+        <option
+          value=""
+          disabled
+          selected
+        >
+          Select Difficulty Level
+        </option>
+        <option value="easy">
+          Easy
+        </option>
+        <option value="medium">
+          Medium
+        </option>
+        <option value="hard">
+          Hard
+        </option>
       </select>
     </div>
-    <label for="fileUpload" id="uploadFileLabel" v-if="!fileUploaded">
+    <label
+      v-if="!fileUploaded"
+      id="uploadFileLabel"
+      for="fileUpload"
+    >
       <p>Upload File</p>
-      <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"><path d="M440-200h80v-167l64 64 56-57-160-160-160 160 57 56 63-63v167ZM240-80q-33 0-56.5-23.5T160-160v-640q0-33 23.5-56.5T240-880h320l240 240v480q0 33-23.5 56.5T720-80H240Zm280-520v-200H240v640h480v-440H520ZM240-800v200-200 640-640Z"/></svg>
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        height="24"
+        viewBox="0 -960 960 960"
+        width="24"
+      ><path d="M440-200h80v-167l64 64 56-57-160-160-160 160 57 56 63-63v167ZM240-80q-33 0-56.5-23.5T160-160v-640q0-33 23.5-56.5T240-880h320l240 240v480q0 33-23.5 56.5T720-80H240Zm280-520v-200H240v640h480v-440H520ZM240-800v200-200 640-640Z" /></svg>
     </label>
-    <div id="fileUploaded" v-else>
+    <div
+      v-else
+      id="fileUploaded"
+    >
       <p>{{ multimedia.name }}</p>
       <button @click="removeMedia">
         Remove
-        <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"><path d="m480-800 200 200-56 58-104-104v92l-80-80-63-63 103-103Zm-40 480v-200l80 80v120h-80ZM791-55 686-160H240q-33 0-56.5-23.5T160-240v-120h80v120h366L55-791l57-57 736 736-57 57Zm9-219-80-80v-6h80v86Z"/></svg>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          height="24"
+          viewBox="0 -960 960 960"
+          width="24"
+        ><path d="m480-800 200 200-56 58-104-104v92l-80-80-63-63 103-103Zm-40 480v-200l80 80v120h-80ZM791-55 686-160H240q-33 0-56.5-23.5T160-240v-120h80v120h366L55-791l57-57 736 736-57 57Zm9-219-80-80v-6h80v86Z" /></svg>
       </button>
     </div>
-    <input type="file" id="fileUpload" @change="handleFileUpload" accept="image/*, video/*" :style="{ backgroundColor: fileUploaded ? 'white' : 'transparent' }" hidden>
-    <button class="next-button" @click="saveQuiz" :disabled="!isFormValid">NEXT</button>
+    <input
+      id="fileUpload"
+      type="file"
+      accept="image/*, video/*"
+      hidden
+      @change="handleFileUpload"
+    >
+    <button
+      class="next-button"
+      :disabled="!isFormValid"
+      @click="saveQuiz"
+    >
+      NEXT
+    </button>
   </div>
 </template>
 
 <script setup>
 import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
-import axios from 'axios';
-import  {useStore } from "@/store/store";
+import { useQuizStore } from "@/store/quizStore";
 import { computed } from 'vue';
+import axios from 'axios';
+import { useStore } from '@/store/userStore';
 
+const store = useQuizStore();
 const quizName = ref('');
 const quizDescription = ref('');
 const multimedia = ref('');
 const difficulty = ref('');
 const fileUploaded = ref(false);
 const router = useRouter();
+const userStore = useStore();
 
 const categories = ref([]);
 const selectedCategory = ref(null);
+const formData = new FormData();
 
 const isFormValid = computed(() => {
   return quizName.value.trim() !== '' &&
-          quizDescription.value.trim() !== '' &&
          selectedCategory.value !== null &&
          difficulty.value.trim() !== '';
 });
 
+const config = {
+  headers: {
+    'Authorization': 'Bearer ' + userStore.jwtToken.accessToken
+  }
+};
 
 onMounted(async () => {
   try {
-    const response = await axios.get('http://localhost:8080/api/categories/allCategories');
+    const response = await userStore.fetchData('http://localhost:8080/api/categories/allCategories');
+    console.log(response); 
+    if(!response.status === 200) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
     categories.value = response.data;
   } catch (error) {
-    console.error(error);
+    console.error('Failed to fetch categories:', error);
   }
 });
-
-const saveQuiz = async () => {
-    const store = useStore();
-    const creatorId = store.jwtToken.userId;
-
-    let formData = new FormData();
-    formData.append('quizName', quizName.value);
-    formData.append('quizDescription', quizDescription.value);
-    formData.append('difficultyLevel', difficulty.value);
-    formData.append('category', selectedCategory.value);
-    formData.append('creator', creatorId);
-
-    console.log('Creator ID:', creatorId);
-    console.log('Category:', selectedCategory.value);
-
-    try {
-        const response = await axios.post('http://localhost:8080/api/quizzes/createQuiz', formData, {
-            headers: {
-                'Content-Type': 'multipart/form-data',
-                'Authorization': 'Bearer ' + store.jwtToken.accessToken
-            }
-        });
-
-        if (multimedia.value) {
-          const quizId = response.data.quizId;
-          let fileFormData = new FormData();
-          fileFormData.append('file', multimedia.value);
-
-          console.log("multimedia :" + multimedia.value)
-
-          await axios.post(`http://localhost:8080/api/quizzes/upload/${quizId}`, fileFormData, {
-            headers: {
-              'Content-Type': 'multipart/form-data'
-            }
-          });
-        }
-
-        await router.push('/addquestions');
-        console.log('Quiz created:', response.data);
-    } catch (error) {
-        console.error('Error creating quiz:', error.response.data);
+    
+// Inside your script setup
+const saveQuiz = async (event) => {
+  try {
+    // Create an object with the quiz data
+    const quizData = new FormData();
+    quizData.append('quizName', quizName.value);
+    quizData.append('quizDescription', quizDescription.value);
+    quizData.append('category', selectedCategory.value);
+    quizData.append('difficultyLevel', difficulty.value);
+    if (multimedia.value) {
+      quizData.append('file', multimedia.value);
     }
+
+    // Call the store action to create the quiz
+    const createdQuiz = await store.createQuiz(quizData);
+    console.log('Quiz created:', createdQuiz);
+
+    // If the quiz was created successfully, and there is multimedia,
+    // make another call to upload the multimedia file.
+    if (createdQuiz && multimedia.value) {
+      let fileFormData = new FormData();
+      fileFormData.append('file', multimedia.value);
+
+      await axios.post(`http://localhost:8080/api/quizzes/upload/${createdQuiz.quizId}`, fileFormData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          'Authorization': 'Bearer ' + userStore.jwtToken.accessToken
+        }
+      });
+    }
+  console.log('Quiz created:', createdQuiz);
+  router.push({ path: '/addQuestions'});
+    
+  } catch (error) {
+    console.error('Error creating quiz:', error);
+  }
 };
 
 const handleFileUpload = (event) => {
@@ -290,8 +364,8 @@ button.next-button:disabled {
   align-items: center;
   cursor: pointer;
   border-radius: 1rem;
-  border: #007ACC 3px solid;
-  background-color: #007ACC;
+  border: #6320EE 3px solid;
+  background-color: #6320EE;
   width: fit-content;
   font-family: "Karla", sans-serif;
   font-weight: 500;
@@ -314,11 +388,11 @@ button.next-button:disabled {
 }
 
 #uploadFileLabel:hover p {
-  color: #007ACC;
+  color: #6320EE;
 }
 
 #uploadFileLabel:hover svg {
-  fill: #007ACC;
+  fill: #6320EE;
 }
 
 #fileUploaded {
@@ -327,12 +401,12 @@ button.next-button:disabled {
   align-items: center;
   cursor: pointer;
   border-radius: 1rem;
-  border: #007ACC 3px solid;
-  background-color: #007ACC;
   width: fit-content;
   color: white;
   font-family: "Karla", sans-serif;
   font-weight: 500;
+  background-color: #6320EE;
+  border: #6320EE 3px solid;
 }
 
 #fileUploaded p {
@@ -340,7 +414,7 @@ button.next-button:disabled {
 }
 
 #fileUploaded svg {
-  fill: white;
+  fill: #6320EE;
   width: 2rem;
   height: 2rem;
 }
@@ -370,17 +444,15 @@ button.next-button:disabled {
 }
 
 #fileUploaded:hover p {
-  color: #007ACC;
+  color: #6320EE;
 }
 
 #fileUploaded:hover svg {
-  fill: #007ACC;
+  fill: #6320EE;
 }
 
 #fileUploaded:hover button {
-  color: #007ACC;
+  color: #6320EE;
 }
 
-
-
-</style>
+</style>@/store/userStore
