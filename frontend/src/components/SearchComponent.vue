@@ -22,6 +22,7 @@
 <script setup>
 import { onMounted, ref } from 'vue';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import router from "@/router/router";
 
 const searchQuery = ref('');
 const quizzes = ref([]);
@@ -50,9 +51,9 @@ function getPathToQuizImage(fileName) {
   return `http://localhost:8080/api/quizzes/files/${fileName}`;
 }
 
-function playQuiz(quizId) {
-  console.log(`Navigating to quiz ${quizId}`);
-}
+const playQuiz = (quizId) => {
+  router.push(`/playquiz/${quizId}`);
+};
 
 </script>
 

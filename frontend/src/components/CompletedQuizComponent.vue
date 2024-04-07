@@ -1,7 +1,7 @@
 <template>
   <div v-for="(result, quizIndex) in quizResults" :key="'quiz-' + quizIndex" class="quiz-results">
     <h1>Quiz Results</h1>
-    <p>Your score is: {{ result.score }} / {{ result.userAnswers.length }} points</p>
+    <p>Your score is: {{ result.score }} / {{ result.userAnswers }} points</p>
     <div v-for="(answer, index) in result.userAnswers" :key="'answer-' + index" class="result-item">
       <h3>Question {{ index + 1 }}: {{ answer.questionText }}</h3>
       <p>Your Answer: {{ answer.choice }} - <strong :class="{ 'correct': answer.correct, 'incorrect': !answer.correct }">{{ answer.correct ? 'Correct' : 'Incorrect' }}</strong></p>
@@ -15,12 +15,14 @@
 import { onMounted, ref } from 'vue';
 import axios from 'axios';
 import { useStore } from "@/store/store";
+import { useRoute } from 'vue-router';
 
+const route = useRoute();
 const store = useStore();
 const quizResults = ref([]);
 
 onMounted(async () => {
-  const quizId = 2; // Replace with dynamic ID as needed
+  const quizId = route.params.quizId;
   try {
     const response = await axios.get(
         `http://localhost:8080/api/completed-quizzes/${quizId}`,

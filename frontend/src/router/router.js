@@ -13,6 +13,11 @@ import StartPageView from "@/view/StartPageView.vue";
 import LogInPageView from "@/view/LogInPageView.vue";
 import SignUpPageView from "@/view/SignUpPageView.vue";
 import CompletedQuizView from "@/view/CompletedQuizView.vue";
+import StartPlayingQuizComponent from "@/components/StartPlayingQuizComponent.vue";
+import StartPlayingQuizView from "@/view/StartPlayingQuizView.vue";
+import TrueOrFalseQuestionComponent from "@/components/TrueOrFalseQuestionComponent.vue";
+import MultipleChoiceQuestionComponent from "@/components/MultipleChoiceQuestionComponent.vue";
+import FillInTheBlankQuestionComponent from "@/components/FillInTheBlankQuestionComponent.vue";
 
 const routes = [
     {
@@ -34,8 +39,31 @@ const routes = [
         meta: { public: true }
     },
     { path: '/home', component: HomeView },
-    { path: '/search', component: SearchView },
-    { path: '/completedquiz', component: CompletedQuizView },
+    { path: '/search', component: SearchView },{
+        path: '/playQuiz/:quizId',
+        component: StartPlayingQuizView,
+        children: [
+            {
+                path: '',
+                component: StartPlayingQuizComponent
+            },
+            {
+                path: '/playQuiz/:quizId/multipleChoiceQuestion/:questionId',
+                name: 'MultipleChoiceQuestion',
+                component: MultipleChoiceQuestionComponent
+            },
+            {
+                path: '/playQuiz/:quizId/trueOrFalseQuestion/:questionId',
+                name: 'TrueOrFalseQuestion',
+                component: TrueOrFalseQuestionComponent
+            },
+            {
+                path: '/playQuiz/:quizId/fillInTheBlankQuestion/:questionId',
+                name: 'FillInTheBlankQuestion',
+                component: FillInTheBlankQuestionComponent
+            }
+        ]
+    },{ path: '/completedQuiz/:quizId', name: 'QuizCompletion' , component: CompletedQuizView  },
     {
         path: '/createquiz',
         component: CreateQuizView,

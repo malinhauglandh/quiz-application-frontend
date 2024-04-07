@@ -73,10 +73,9 @@ const fetchQuizzes = async () => {
   }
 };
 
-const playQuiz = () => {
-  router.push(`/search`);
+const playQuiz = (quizId) => {
+  router.push(`/playquiz/${quizId}`);
 };
-
 
 onMounted(fetchQuizzes);
 </script>
