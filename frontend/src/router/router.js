@@ -63,7 +63,7 @@ const routes = [
                 component: FillInTheBlankQuestionComponent
             }
         ]
-    },{ path: '/completedQuiz/:quizId', name: 'QuizCompletion' , component: CompletedQuizView  },
+    },{ path: '/completedQuiz/:quizId', name: 'QuizCompletion' , component: CompletedQuizView },
     {
         path: '/createquiz',
         component: CreateQuizView,
