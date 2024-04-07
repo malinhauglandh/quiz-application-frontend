@@ -14,13 +14,7 @@
     <div class="navbar-settings-container" v-if="!showMobileMenu">
       <font-awesome-icon icon="cog" class="navbar-settings" @click="toggleSettingsDropdown" />
       <div v-if="showSettingsDropdown" class="dropdown-menu" ref="dropdownMenu">
-        <button @click="toggleSettings">Settings</button>
         <button @click="handleLogout">Log out</button>
-      </div>
-      <div v-if="showProfileDropdown" class="dropdown-menu" ref="dropdownMenu">
-        <button @click="handleProfile">Profile</button>
-        <button @click="handleColorMode">Lightmode / darkmode</button>
-        <button @click="toggleSettings" class="back-button">Back</button>
       </div>
     </div>
     <div class="hamburger-menu-container" v-if="isMobileMenuVisible" @click="toggleMobileMenu">
@@ -40,12 +34,7 @@
         <font-awesome-icon icon="cog" class="icon" />SETTINGS
       </button>
       <div v-if="showSettingsDropdown" class="dropdown-menu-mobile" ref="dropdownMenu">
-        <button @click="toggleSettings">Settings</button>
         <button @click="handleLogout">Log out</button>
-        <div v-if="showProfileDropdown" class="dropdown-menu" ref="dropdownMenu">
-          <button @click="handleProfile">Profile</button>
-          <button @click="handleColorMode">Lightmode / darkmode</button>
-        </div>
       </div>
     </div>
   </nav>
@@ -55,7 +44,7 @@
 <script setup>
 import {onMounted, onUnmounted, ref} from 'vue';
 import { useRouter } from 'vue-router';
-import { useStore } from '../store/store.js';
+import { useStore } from '@/store/store.js';
 
 const showMobileMenu = ref(false);
 const showSettingsDropdown = ref(false);
@@ -66,18 +55,6 @@ const store = useStore();
 const toggleSettingsDropdown = () => {
   showSettingsDropdown.value = !showSettingsDropdown.value;
   showProfileDropdown.value = false;
-};
-
-const toggleSettings = () => {
-  showProfileDropdown.value = !showProfileDropdown.value;
-};
-
-const handleProfile = () => {
-  console.log('Profile clicked');
-};
-
-const handleColorMode = () => {
-  console.log('Color mode clicked');
 };
 
 const handleLogout = () => {
@@ -207,11 +184,6 @@ onUnmounted(() => {
 .dropdown-menu button:hover {
   background-color: #EF9C76FF;
   border-radius: 8px;
-}
-
-.back-button {
-  font-weight: bolder;
-  color: #6320EE !important;
 }
 
 @media screen and (max-width: 800px) {
