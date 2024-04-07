@@ -155,7 +155,7 @@ onMounted(fetchQuizzes);
 
 .quiz-description {
   position: absolute;
-  top: 28px;
+  top: 24px;
   left: 0;
   right: 0;
   width: auto;
@@ -210,6 +210,7 @@ onMounted(fetchQuizzes);
   .quiz-description {
     white-space: normal;
     font-size: smaller;
+    top: 27px;
   }
 
   .quiz-box {
