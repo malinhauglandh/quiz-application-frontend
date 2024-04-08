@@ -29,9 +29,9 @@
 
 <script setup>
 import { onMounted, ref, onBeforeMount } from 'vue';
-import { useStore } from "@/store/userStore";
-import { useQuizStore } from "@/store/quizStore";
-import router from "@/router/router";
+import { useStore } from "/src/store/userStore";
+import { useQuizStore } from "/src/store/quizStore";
+import router from "/src/router/router";
 import axios from 'axios';
 
 const userStore = useStore();

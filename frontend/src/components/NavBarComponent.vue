@@ -125,7 +125,7 @@
 <script setup>
 import {onMounted, onUnmounted, ref, computed} from 'vue';
 import { useRouter } from 'vue-router';
-import { useStore } from '@/store/userStore';
+import { useStore } from '/src/store/userStore';
 
 const showMobileMenu = ref(false);
 const showSettingsDropdown = ref(false);

@@ -8,8 +8,8 @@
 </template>
 
 <script setup>
-import NavbarComponent from '@/components/NavBarComponent.vue';
-import HomeComponent from '@/components/HomeComponent.vue';
+import NavbarComponent from '/src/components/NavBarComponent.vue';
+import HomeComponent from '/src/components/HomeComponent.vue';
 
 </script>
 
