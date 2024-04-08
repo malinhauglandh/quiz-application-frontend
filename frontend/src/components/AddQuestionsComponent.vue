@@ -87,10 +87,10 @@
     <script setup>
     import { ref, watch, onBeforeMount, computed } from 'vue';
     import { useRouter, useRoute } from 'vue-router';
-    import { useQuizStore } from "@/store/quizStore";
-    import { useStore } from "@/store/userStore";
+    import { useQuizStore } from "/src/store/quizStore";
+    import { useStore } from "/src/store/userStore";
     import axios from 'axios';
-    import ConfirmModal from '@/components/ConfirmModal.vue';
+    import ConfirmModal from '/src/components/ConfirmModal.vue';
     import confetti from 'canvas-confetti';
     
     const quizStore = useQuizStore();

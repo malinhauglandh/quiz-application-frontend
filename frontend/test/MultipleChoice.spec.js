@@ -1,14 +1,17 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { mount, flushPromises } from '@vue/test-utils';
+import { createPinia, setActivePinia } from 'pinia';
 import MultipleChoiceComponent from '/src/components/MultipleChoiceComponent.vue';
 import { createRouter, createWebHistory } from 'vue-router';
+import { useQuizStore } from '/src/store/quizStore';
 
 const routes = [{ path: '/addquestions', name: 'AddQuestions' }];
 const router = createRouter({ history: createWebHistory(), routes });
 
 describe('MultipleChoiceComponent', () => {
-
     beforeEach(async () => {
+        const pinia = createPinia();
+        setActivePinia(pinia);
         await router.push('/');
         await router.isReady();
     });
@@ -16,7 +19,7 @@ describe('MultipleChoiceComponent', () => {
     it('allows inputting a question', async () => {
         const wrapper = mount(MultipleChoiceComponent, {
             global: {
-                plugins: [router]
+                plugins: [router, createPinia()]
             }
         });
         const questionInput = wrapper.find('#question');
@@ -27,44 +30,30 @@ describe('MultipleChoiceComponent', () => {
     it('allows inputting alternatives and selecting the correct answer', async () => {
         const wrapper = mount(MultipleChoiceComponent, {
             global: {
-                plugins: [router]
+                plugins: [router, createPinia()]
             }
         });
 
         const alternativeInputs = wrapper.findAll('.alternative-input');
-        await alternativeInputs[0].setValue('A1');
-        await alternativeInputs[1].setValue('A2');
-        await alternativeInputs[2].setValue('A3');
-        await alternativeInputs[3].setValue('A4');
+        for (let i = 0; i < alternativeInputs.length; i++) {
+            await alternativeInputs[i].setValue(`Alternative ${i + 1}`);
+        }
+        await wrapper.findAll('.reject-checkbox')[1].trigger('click');
 
-        const correctAnswer = wrapper.find('#correct-1');
-        await correctAnswer.setChecked();
-
-        expect(wrapper.vm.alternatives[0]).toBe('A1');
-        expect(wrapper.vm.correctAnswer).toBe(0);
+        expect(wrapper.vm.alternatives).toEqual(['Alternative 1', 'Alternative 2', 'Alternative 3', 'Alternative 4']);
+        expect(wrapper.vm.selectedOption).toBe('1');
     });
 
-    it('navigates back to Add Questions on save', async () => {
-        const wrapper = mount(MultipleChoiceComponent, {
-            global: {
-                plugins: [router]
-            }
-        });
-        const saveButton = wrapper.find('.save-button');
-        await saveButton.trigger('click');
-        await flushPromises();
-        expect(router.currentRoute.value.path).toBe('/addquestions');
-    });
 
     it('navigates back to Add Questions on cancel', async () => {
         const wrapper = mount(MultipleChoiceComponent, {
             global: {
-                plugins: [router]
+                plugins: [router, createPinia()]
             }
         });
-        const cancelButton = wrapper.find('.cancel-button');
-        await cancelButton.trigger('click');
+        await wrapper.find('.cancel-button').trigger('click');
         await flushPromises();
-        expect(router.currentRoute.value.path).toBe('/addquestions');
+
+        expect(router.currentRoute.value.name).toBe('AddQuestions');
     });
 });

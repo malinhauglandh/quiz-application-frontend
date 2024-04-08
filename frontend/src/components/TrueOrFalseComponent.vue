@@ -19,6 +19,7 @@
       <div class="option">
         <button
           :class="{'option-button': true, 'selected': selectedOption === 'true'}"
+          data-testid="true-option"
           @click="selectOption('true')"
         >
           True
@@ -44,6 +45,7 @@
       <div class="option">
         <button
           :class="{'option-button': true, 'selected': selectedOption === 'false'}"
+          data-testid="false-option"
           @click="selectOption('false')"
         >
           False
@@ -94,9 +96,9 @@
 <script setup>
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-import { useQuizStore } from '@/store/quizStore';
-import { useStore } from '@/store/userStore';
-import ConfirmModal from '@/components/ConfirmModal.vue';
+import { useQuizStore } from '/src/store/quizStore';
+import { useStore } from '/src/store/userStore';
+import ConfirmModal from '/src/components/ConfirmModal.vue';
 import axios from 'axios';
 import confetti from 'canvas-confetti';
 

@@ -115,9 +115,9 @@
 <script setup>
 import { ref, onMounted, computed } from 'vue';
 import { useRouter } from 'vue-router';
-import { useQuizStore } from "@/store/quizStore";
+import { useQuizStore } from "/src/store/quizStore";
 import axios from 'axios';
-import { useStore } from '@/store/userStore';
+import { useStore } from '/src/store/userStore';
 
 const store = useQuizStore();
 const quizName = ref('');
