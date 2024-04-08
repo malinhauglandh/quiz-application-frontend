@@ -21,7 +21,7 @@
             <input type="password" id="lock-icon" name="password" v-model="password" placeholder="password" />
           </div>
           <div class="password-input">
-            <font-awesome-icon icon="repeat" id="passwordRepeat" />
+            <font-awesome-icon icon="repeat" id="repeatIcon" />
             <input type="password" id="passwordRepeat" name="passwordRepeat" v-model="passwordRepeat" placeholder="repeat password" />
           </div>
           <div class="error-message" v-if="passwordError">
