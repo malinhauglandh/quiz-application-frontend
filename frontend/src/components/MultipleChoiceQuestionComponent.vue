@@ -20,7 +20,7 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, computed } from 'vue';
 import { useStore } from "@/store/userStore";
 import { useQuizStore } from "@/store/quizStore";
 import { useRouter } from 'vue-router';

@@ -113,10 +113,9 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import { useRouter } from 'vue-router';
 import { useQuizStore } from "@/store/quizStore";
-import { computed } from 'vue';
 import axios from 'axios';
 import { useStore } from '@/store/userStore';
 

@@ -47,11 +47,10 @@
     </template>
     
     <script setup>
-    import { ref, watch, onBeforeMount } from 'vue';
+    import { ref, watch, onBeforeMount, computed } from 'vue';
     import { useRouter, useRoute } from 'vue-router';
     import { useQuizStore } from "@/store/quizStore";
     import { useStore } from "@/store/userStore";
-    import { computed } from 'vue';
     import axios from 'axios';
     import ConfirmModal from '@/components/ConfirmModal.vue';
     import confetti from 'canvas-confetti';
