@@ -21,14 +21,15 @@
 
 <script setup>
 import { onMounted, ref } from 'vue';
-import { useRoute } from 'vue-router';
 import { useStore } from "@/store/userStore";
+import { useQuizStore } from "@/store/quizStore";
+import { useRouter } from 'vue-router';
 
 const store = useStore();
 const router = useRouter();
-const route = useRoute();
+const quizStore = useQuizStore();
+const quizId = quizStore.currentQuiz.quizId;
 
-const quizId = route.params.quizId;
 const selectedAnswer = ref(null);
 
 const currentQuestion = computed(() => {

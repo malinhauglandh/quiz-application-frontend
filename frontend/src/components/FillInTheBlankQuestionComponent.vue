@@ -1,5 +1,5 @@
 <template>
-  <div class="quiz-play-component">
+  <div class="quiz-play-component" v-if="quizId">
     <h2>Quiz Question</h2>
     <p v-html="formattedQuestion"></p>
     <div class="options-container">
@@ -7,6 +7,7 @@
         <input type="checkbox" :id="option" v-model="selectedOption" :value="option" @change="updateQuestion">
         <label :for="option">{{ option }}</label>
       </div>
+    </div>
     </div>
     <div v-else>No question available.</div>
 </template>
