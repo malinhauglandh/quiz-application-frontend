@@ -114,6 +114,7 @@ const handleCancel = () => {
 
 const selectOption = (option) => {
   selectedOption.value = option === selectedOption.value ? null : option;
+  console.log('Selected option:', selectedOption.value);
 };
 
 const saveQuestion = async () => {
@@ -127,9 +128,16 @@ const saveQuestion = async () => {
   formData.append('tag', 'true-or-false');
   formData.append('quizId', store.currentQuiz.quizId);
   formData.append('questionTypeId', 2)
-  const choices = `[{"choice":"True", "explanation":"N/A", "isCorrectChoice":${selectedOption.value}},{"choice":"False", "explanation":"N/A", "isCorrectChoice":${!selectedOption.value}}]`;
-  formData.append('choices', choices);
-  console.log(formData)
+  
+  let choices = [
+    {"choice": "True", "explanation": "N/A", "isCorrectChoice": false},
+    {"choice": "False", "explanation": "N/A", "isCorrectChoice": false},
+  ];
+  const right_index = selectedOption.value === 'true' ? 0 : 1;
+  choices[right_index].isCorrectChoice = true;
+  let choicesString = JSON.stringify(choices);
+  formData.append('choices', choicesString);
+  console.log(choicesString)
   await axios.post(path, formData, {
     headers: {
       'Content-Type': 'multipart/form-data',

@@ -1,15 +1,15 @@
 <template>
-    <div>
-        <div v-for="(result, quizIndex) in quizResults" :key="'quiz-' + quizIndex" class="quiz-results">
+    <div v-if="!loadingResults">
+        <div class="quiz-results">
             <h1>Quiz Results</h1>
-            <p>Your score is: {{ result.score }} / {{ result.userAnswers }} points</p>
-            <div v-for="(answer, index) in result.userAnswers" :key="'answer-' + index" class="result-item">
+            <p>Your score is: {{ quizResults.score }} / {{ quizResults.userAnswers.length }} points</p>
+            <div v-for="(answer, index) in quizResults.userAnswers" :key="'answer-' + index" class="result-item">
                 <h3>Question {{ index + 1 }}: {{ answer.questionText }}</h3>
                 <p>Your Answer: {{ answer.choice }} - <strong
                         :class="{ 'correct': answer.correct, 'incorrect': !answer.correct }">{{
                     answer.correct ? 'Correct' : 'Incorrect'
                     }}</strong></p>
-                <p>Explanation: {{ answer.explanation }}</p>
+                <p v-if="!answer.correct" class="">Correct answer: {{ answer.correctAnswer }}</p>
             </div>
         </div>
         <button class="button" @click="$router.push('/home')">Go to Home</button>
@@ -21,13 +21,17 @@ import {onMounted, ref} from 'vue';
 import axios from 'axios';
 import { useStore } from "@/store/userStore";
 import { useRoute } from 'vue-router';
+import { useQuizStore } from "@/store/quizStore";
 
 const route = useRoute();
 const store = useStore();
 const quizResults = ref([]);
+const loadingResults = ref(true);
+const quizStore = useQuizStore();
 
 onMounted(async () => {
     const quizId = route.params.quizId;
+    let tempQuizResults = [];
     try {
         const response = await axios.get(
             `http://localhost:8080/api/completed-quizzes/${quizId}`,
@@ -37,10 +41,24 @@ onMounted(async () => {
                 },
             }
         );
-        quizResults.value = [response.data];
-
+        tempQuizResults = response.data;        
     } catch (error) {
         console.error('Error fetching quiz results:', error);
+    } finally {
+        tempQuizResults = tempQuizResults.reduce((max, quiz) => max.completedQuizId > quiz.completedQuizId ? max : quiz);
+        console.log('Temp quiz results:', quizStore.currentQuiz.questions[0].choices).find(c => c.isCorrectChoice === true).choice
+        tempQuizResults.userAnswers = tempQuizResults.userAnswers.map((answer, index) => {
+            return {
+                questionText: quizStore.currentQuiz.questions[index].questionText,
+                choice: quizStore.currentQuiz.questions[index].choices.find(c => c.quizChoiceId === answer.questionChoiceId).choice,
+                correct: quizStore.currentQuiz.questions[index].choices.find(c => c.quizChoiceId === answer.questionChoiceId).isCorrectChoice,
+                explanation: quizStore.currentQuiz.questions[index].explanation,
+            }
+        });
+        quizResults.value = tempQuizResults;
+        console.log('Quiz results:', quizResults.value)
+        console.log('Quiz answers:', quizResults.value.userAnswers)
+        loadingResults.value = false;
     }
 });
 </script>

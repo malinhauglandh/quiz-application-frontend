@@ -129,7 +129,7 @@ const router = useRouter();
 const userStore = useStore();
 const categoriesLoading = ref(true);
 
-const categories = ref(store.categories);
+const categories = ref(null);
 const selectedCategory = ref(null);
 const formData = new FormData();
 

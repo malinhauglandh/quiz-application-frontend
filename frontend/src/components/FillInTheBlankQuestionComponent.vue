@@ -27,8 +27,11 @@
         </div>
       </div>
     </div>
+    <div class="submit-container">
+      <button class="button submit-button" :disabled="selectedOption === null" @click="submitAnswer">SUBMIT ANSWER AND GO TO NEXT QUESTION</button>
     </div>
-    <div v-else>No question available.</div>
+  </div>
+  <div v-else>No question available.</div>
 </template>
 
 <script setup>
@@ -61,7 +64,13 @@ const currentQuestion = computed(() => {
 
 const selectOption = (option) => {
   selectedOption.value = option === selectedOption.value ? null : option;
-  console.log('Selected option:', option);
+  if(selectedOption.value !== null) {
+    const choiceId = currentQuestion.value.choices[option].quizChoiceId;
+    quizStore.updateAnswer(choiceId);
+  } else {
+    quizStore.updateAnswer(null);
+  }
+  console.log(quizStore.userAnswers)
 };
 
 const options = computed(() => {
@@ -81,19 +90,18 @@ const updateUserAnswerForFillInTheBlank = () => {
 };
 
 const submitAnswer = async () => {
-  updateUserAnswerForFillInTheBlank();
-  if(quizStore.nextQuestion !== null) {
-    console.log('Next question is:');
-  } else {
-      router.push({ name: 'QuizCompletion', params: { quizId } });
-  }
-  if (quizStore.currentQuestion) {
-      userAnswer.value = '';
-      quizStore.nextQuestion();
-      await userStore.submitAnswers(quizId);
-  } else {
-      router.push({ name: 'QuizCompletion', params: { quizId } });
-  }
+    console.log('Submitting answer...')
+    const next = quizStore.nextQuestion()
+    if(next !== null) {
+        const route = quizStore.getQuestionRouteName(next.questionTypeId);
+        quizStore.currentQuestion = next;
+        console.log(route)
+        router.push({ name: route });
+    }
+    else {
+          await quizStore.submitAnswers(quizId);
+          router.push({ name: 'QuizCompletion', params: { quizId } });
+    }
 };
 
 
@@ -129,6 +137,35 @@ const submitAnswer = async () => {
   display: flex;
   align-items: center;
   justify-self: flex-start;
+}
+
+.submit-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.button.submit-button {
+  padding: 15px 30px;
+  background-color: #6320EE;
+  color: white;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.button.submit-button:hover {
+  background-color: #7E41FDFF;
+}
+
+.button.submit-button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.button.submit-button:disabled:hover {
+  background-color: #ccc;
 }
 
 

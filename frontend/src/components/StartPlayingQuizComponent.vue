@@ -106,62 +106,86 @@ const playQuiz = async (quizId) => {
 </script>
 
 <style scoped>
+@import url('https://fonts.googleapis.com/css2?family=Karla:wght@400;700&display=swap');
+
 .content-wrapper {
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  height: 100vh;
-  padding: 20px;
+  min-height: 90vh;
+  padding: 10px 20px;
+  font-family: 'Karla', sans-serif;
 }
 
 .quiz-box {
-  margin-top: -200px;
+  margin: 10px 0;
   width: 80%;
   max-width: 600px;
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
+  padding: 15px;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
 }
 
 .quiz-image, .quiz-image-placeholder {
-  width: 300px;
-  height: 300px;
+  width: 250px;
+  height: 250px;
   background-size: cover;
   background-position: center;
-  margin-bottom: 20px;
+  border-radius: 8px;
+  margin-bottom: 10px;
 }
 
 .quiz-title {
   margin-bottom: 10px;
-  font-size: 24px;
-  color: black;
-  font-weight: bold;
+  font-size: 2rem;
+  color: #333;
+  font-weight: 700;
   background-color: transparent;
 }
 
 .quiz-description {
   margin-bottom: 20px;
-  font-size: 18px;
+  font-size: 1.5rem;
+  font-weight: 400;
+  color: #666;
 }
 
 .play-quiz-button {
-  padding: 15px 30px;
-  transform: translateX(-50%);
-  background-color: #f7567c;
+  padding: 10px 20px;
+  background-color: #6320EE;
   color: white;
-  position: absolute;
-  border-radius: 5px;
+  border-radius: 20px;
   border: none;
-  bottom: 10px;
-  left: 50%;
   cursor: pointer;
-  font-size: 16px;
+  font-size: 1rem;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+.play-quiz-button:hover {
+  background-color: #7E41FDFF;
 }
 
 .label {
-  font-weight: bold;
+  font-weight: 700;
   color: #f7567c;
+}
+
+@media (max-width: 768px) {
+  .quiz-box {
+    width: 90%;
+    padding: 20px;
+  }
+
+  .quiz-image, .quiz-image-placeholder {
+    width: 80%;
+    height: auto;
+  }
 }
 </style>

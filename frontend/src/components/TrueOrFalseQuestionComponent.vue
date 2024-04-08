@@ -67,6 +67,7 @@ const submitAnswer = async () => {
         const route = quizStore.getQuestionRouteName(next.questionTypeId);
         quizStore.currentQuestion = next;
         console.log(route)
+        selectedAnswer.value = null;
         router.push({ name: route });
     }
     else {
@@ -80,14 +81,18 @@ const submitAnswer = async () => {
 
 
 <style scoped>
+@import url('https://fonts.googleapis.com/css2?family=Karla:wght@400;700&display=swap');
+
 .question-display {
   text-align: center;
   margin-bottom: 20px;
 }
 
 .question-text {
-  font-size: 28px;
+  font-size: 24px;
   font-weight: bold;
+  color: #333;
+  font-family: 'Karla', sans-serif;
 }
 
 .alternatives-container {
@@ -97,13 +102,14 @@ const submitAnswer = async () => {
 }
 
 .alternative-button {
-  width: 250px;
-  height: 100px;
+  width: 80%;
+  max-width: 250px;
+  min-height: 60px;
   padding: 10px;
-  margin-bottom: 30px;
+  margin-bottom: 15px;
   background-color: #f0f0f0;
-  border: 1px solid #ccc;
-  border-radius: 5px;
+  border: 2px solid #ccc;
+  border-radius: 20px;
   cursor: pointer;
   font-weight: bold;
   transition: background-color 0.3s ease;
@@ -112,17 +118,13 @@ const submitAnswer = async () => {
   justify-content: center;
   align-items: center;
   text-align: center;
-  white-space: nowrap;
-  overflow: hidden;
+  font-family: 'Karla', sans-serif;
 }
 
-.alternative-button:hover {
-  background-color: #e0e0e0;
-}
-
-.alternative-button.selected {
+.alternative-button:hover, .alternative-button.selected {
   background-color: #f7567c;
   color: white;
+  border-color: #f7567c;
 }
 
 .submit-container {
@@ -132,16 +134,24 @@ const submitAnswer = async () => {
 }
 
 .button.submit-button {
-  padding: 15px 30px;
+  padding: 10px 20px;
   background-color: #6320EE;
   color: white;
   border: none;
   border-radius: 20px;
   cursor: pointer;
   font-size: 16px;
+  font-family: 'Karla', sans-serif;
+  transition: background-color 0.3s ease;
 }
 
 .button.submit-button:hover {
   background-color: #7E41FDFF;
+}
+
+@media (max-width: 768px) {
+  .alternative-button {
+    width: 90%;
+  }
 }
 </style>

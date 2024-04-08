@@ -120,10 +120,16 @@ export const useQuizStore = defineStore('quiz', () => {
 
 
   function updateAnswer(choiceId) {
+    const store = useStore();
     const questionIndex = currentQuiz.value.questions.findIndex(
       (question) => question.questionId === currentQuestion.value.questionId
     );
-    userAnswers.value[questionIndex] = { questionId: currentQuestion.value.questionId, choiceId };
+    if(choiceId === null) {
+      userAnswers.value[questionIndex] = null;
+      return;
+    }
+    
+    userAnswers.value[questionIndex] = { userAnswerId: 1, completedQuizId:1, questionChoiceId: choiceId };
     console.log('User answers:', userAnswers.value);
   }
 
@@ -132,6 +138,7 @@ export const useQuizStore = defineStore('quiz', () => {
   }
 
   async function submitAnswers(quizId) {
+    const store = useStore();
     const accessToken = store.jwtToken.accessToken;
     try {
       console.log('Submitting quiz answers:', userAnswers.value);
@@ -148,5 +155,5 @@ export const useQuizStore = defineStore('quiz', () => {
     }
   }
 
-  return { fetchCategories, currentQuiz, quizzes, currentQuestion, userAnswers, getQuestionRouteName, getQuizById, createQuiz, addQuestionToQuiz, fetchQuizDetails, updateAnswer, clearAnswers, submitAnswers, nextQuestion };
+  return { categories, fetchCategories, currentQuiz, quizzes, currentQuestion, userAnswers, getQuestionRouteName, getQuizById, createQuiz, addQuestionToQuiz, fetchQuizDetails, updateAnswer, clearAnswers, submitAnswers, nextQuestion };
 });
