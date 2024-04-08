@@ -8,8 +8,9 @@ services:
   container_name: vue-app
   ports:
    - "5001:5001"
+  networks:
+   - backend_my-network
 
 networks:
- default:
-  external:
-   name: backend_my-network
+ backend_my-network:
+  external: true
