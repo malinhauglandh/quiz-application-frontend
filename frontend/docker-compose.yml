@@ -9,8 +9,8 @@ services:
   ports:
    - "5001:5001"
   networks:
-   - backend_my-network
+   - my-network
 
 networks:
- backend_my-network:
-  external: true
+ my-network:
+  driver: bridge
