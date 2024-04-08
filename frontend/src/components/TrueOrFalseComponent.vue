@@ -41,7 +41,6 @@
           </div>
         </div>
       </div>
-      <!-- False option with custom checkbox -->
       <div class="option">
         <button
           :class="{'option-button': true, 'selected': selectedOption === 'false'}"

@@ -419,4 +419,4 @@ h3 {
         width: 75%; /* Adjusted for smaller screens */
     }
 }
-</style>@/store/userStore
+</style>

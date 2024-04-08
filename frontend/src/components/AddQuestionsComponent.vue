@@ -100,7 +100,6 @@
     const showOptions = ref(false);
     const selectedFile = ref(null);
     const categoryName = computed(() => {
-        // find the category with matchin id in this list: quizStore.categories
         const category = quizStore.categories.find(cat => cat.categoryId === quizStore.currentQuiz.categoryId);
         return category ? category.categoryName : '';
     });

@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import { useStore } from '@/store/userStore'
+import { useStore } from '/src/store/userStore'
 
 import HomeView from '@/view/HomeView.vue'
 import CreateQuizView from '@/view/CreateQuizView.vue'

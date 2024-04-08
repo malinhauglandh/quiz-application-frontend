@@ -433,7 +433,7 @@ h3 {
     }
 
     .input-field input[type="text"], .alternative-input {
-        width: 75%; /* Adjusted for smaller screens */
+        width: 75%;
     }
 }
 </style>@/store/userStore
