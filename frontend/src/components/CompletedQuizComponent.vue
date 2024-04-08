@@ -22,6 +22,7 @@ import axios from 'axios';
 import { useStore } from "@/store/userStore";
 import { useRoute } from 'vue-router';
 import { useQuizStore } from "@/store/quizStore";
+import confetti from 'canvas-confetti'; 
 
 const route = useRoute();
 const store = useStore();
@@ -30,6 +31,11 @@ const loadingResults = ref(true);
 const quizStore = useQuizStore();
 
 onMounted(async () => {
+    confetti({
+        particleCount: 500,
+        spread: 150,
+        origin: { y: 0.5 }
+    })
     const quizId = route.params.quizId;
     let tempQuizResults = [];
     try {
