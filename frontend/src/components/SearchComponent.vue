@@ -6,6 +6,7 @@
         type="text"
         placeholder="Search among all quizzes"
         class="search-bar"
+        @change="searchQuizzes"
       >
       <font-awesome-icon
         icon="magnifying-glass"
@@ -15,7 +16,7 @@
     </div>
     <div class="quiz-box-container">
       <div
-        v-for="quiz in quizzes"
+        v-for="quiz in filteredQuizzes"
         :key="quiz.quizId"
         class="quiz-box"
       >
@@ -53,20 +54,23 @@ import { onMounted, ref } from 'vue';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import router from "@/router/router";
 import { useStore } from "@/store/userStore";
+import { useQuizStore } from "@/store/quizStore"
 
 const searchQuery = ref('');
 const quizzes = ref([]);
-const userStore = useUserStore();
+const userStore = useStore();
+const filteredQuizzes = ref([]);
+const quizStore = useQuizStore();
 
 async function fetchAllQuizzes() {
   try {
     const response = await userStore.fetchData('http://localhost:8080/api/quizzes/allQuizzes');
-
-    const fetchedQuizzes = await response.json();
+    const fetchedQuizzes = await response.data;
 
     quizzes.value = fetchedQuizzes.sort((a, b) => {
       return new Date(b.quizId) - new Date(a.quizId);
     });
+    filteredQuizzes.value = quizzes.value
   } catch (error) {
     console.error("Failed to fetch quizzes:", error);
   }
@@ -75,6 +79,12 @@ async function fetchAllQuizzes() {
 onMounted(fetchAllQuizzes);
 
 const searchQuizzes = () => {
+  if(searchQuery.value == ''){
+    filteredQuizzes.value = quizzes.value
+    return;
+  }
+  const categoryIds = quizStore.categories.filter(c => c.categoryName.toLowerCase().includes(searchQuery.value.trim()))
+  filteredQuizzes.value = quizzes.value.filter(q => q.quizName.toLowerCase().includes(searchQuery.value))
 };
 
 function getPathToQuizImage(fileName) {
