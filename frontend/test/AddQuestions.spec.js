@@ -1,4 +1,4 @@
-import {describe, it, expect, beforeEach, vi} from 'vitest';
+import {describe, it, expect, beforeEach} from 'vitest';
 import {mount, flushPromises} from '@vue/test-utils';
 import AddQuestions from '/src/components/AddQuestionsComponent.vue';
 import {createRouter, createWebHistory} from 'vue-router';
