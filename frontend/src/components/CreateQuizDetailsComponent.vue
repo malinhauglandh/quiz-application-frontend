@@ -90,9 +90,6 @@ const saveQuiz = async () => {
     formData.append('category', selectedCategory.value);
     formData.append('creator', creatorId);
 
-    console.log('Creator ID:', creatorId);
-    console.log('Category:', selectedCategory.value);
-
     try {
         const response = await axios.post('http://localhost:8080/api/quizzes/createQuiz', formData, {
             headers: {
@@ -106,8 +103,6 @@ const saveQuiz = async () => {
           let fileFormData = new FormData();
           fileFormData.append('file', multimedia.value);
 
-          console.log("multimedia :" + multimedia.value)
-
           await axios.post(`http://localhost:8080/api/quizzes/upload/${quizId}`, fileFormData, {
             headers: {
               'Content-Type': 'multipart/form-data'
@@ -116,7 +111,6 @@ const saveQuiz = async () => {
         }
 
         await router.push('/addquestions');
-        console.log('Quiz created:', response.data);
     } catch (error) {
         console.error('Error creating quiz:', error.response.data);
     }

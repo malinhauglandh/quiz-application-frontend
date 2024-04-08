@@ -19,4 +19,4 @@ COPY --from=build-stage /app/dist /app
 # Expose the port 5000
 EXPOSE 5000
 # Command to serve the application
-CMD ["serve", "-s", "/app", "-p", "5000"]
+CMD ["serve", "-s", "/app", "-p", "5001"]

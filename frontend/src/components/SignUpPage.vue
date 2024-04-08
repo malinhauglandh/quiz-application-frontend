@@ -81,7 +81,6 @@ const signUp = async (event) => {
     password.value = '';
     passwordRepeat.value = '';
   } else {
-    console.log('Proceed with signing up...');
 
     try {
       const response = await axios.post('http://localhost:8080/api/createUser', {

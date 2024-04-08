@@ -66,9 +66,7 @@ const toggleMobileSettingsDropdown = () => {
   }
 };
 
-
 const handleLogout = () => {
-    console.log("Logging out...");
     store.clearToken();
     router.push('/login');
 };
