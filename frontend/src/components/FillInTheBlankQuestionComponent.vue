@@ -1,5 +1,5 @@
 <template>
-  <div class="quiz-play-component" v-if="options">
+  <div class="fill-in-the-blank-question" v-if="options">
     <h2>Fill in the blank!</h2>
     <p v-html="formattedQuestion"></p>
     <div class="options-container">
@@ -74,20 +74,9 @@ const selectOption = (option) => {
 };
 
 const options = computed(() => {
-  
   return currentQuestion.value.choices.map(choice => choice.choice);
 });
 
-const updateUserAnswerForFillInTheBlank = () => {
-  const answer = {
-      questionId: currentQuestion.value.questionId,
-      answerText: userAnswer.value, // Directly using the user's input
-      // Optionally use a dummy choiceId if needed
-      choiceId: 'dummy-choice-id'
-  };
-  // Update the store with this answer
-  quizStore.updateAnswer(answer.choiceId);
-};
 
 const submitAnswer = async () => {
     console.log('Submitting answer...')
@@ -95,7 +84,7 @@ const submitAnswer = async () => {
     if(next !== null) {
         const route = quizStore.getQuestionRouteName(next.questionTypeId);
         quizStore.currentQuestion = next;
-        console.log(route)
+        selectedOption.value = null;
         router.push({ name: route });
     }
     else {
@@ -109,7 +98,7 @@ const submitAnswer = async () => {
 
 
 <style scoped>
-.quiz-play-component {
+.fill-in-the-blank-question {
   max-width: 800px;
   margin: 50px auto;
   padding: 40px;
@@ -132,6 +121,16 @@ const submitAnswer = async () => {
   align-items: center;
   width: clamp(100px, 70%, 400px);
 }
+
+.button.submit-button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.button.submit-button:disabled:hover {
+  background-color: #ccc;
+}
+
 
 .option-choice {
   display: flex;

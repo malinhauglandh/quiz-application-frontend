@@ -108,14 +108,25 @@ const playQuiz = async (quizId) => {
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Karla:wght@400;700&display=swap');
 
+.start-playing-quiz-component {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
 .content-wrapper {
+  margin-top: 20px;
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  min-height: 90vh;
+  min-height: 85vh;
   padding: 10px 20px;
   font-family: 'Karla', sans-serif;
+  min-width: 250px;
+  width: 70%;
+  background-color: white;
+  border-radius: 8px;
 }
 
 .quiz-box {

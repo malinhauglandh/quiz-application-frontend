@@ -9,7 +9,7 @@
                         :class="{ 'correct': answer.correct, 'incorrect': !answer.correct }">{{
                     answer.correct ? 'Correct' : 'Incorrect'
                     }}</strong></p>
-                <p v-if="!answer.correct" class="">Correct answer: {{ answer.correctAnswer }}</p>
+                <p v-if="!answer.correct" style="color:#2ecc71 ">Correct answer: {{ answer.correctAnswer }}</p>
             </div>
         </div>
         <button class="button" @click="$router.push('/home')">Go to Home</button>
@@ -46,13 +46,13 @@ onMounted(async () => {
         console.error('Error fetching quiz results:', error);
     } finally {
         tempQuizResults = tempQuizResults.reduce((max, quiz) => max.completedQuizId > quiz.completedQuizId ? max : quiz);
-        console.log('Temp quiz results:', quizStore.currentQuiz.questions[0].choices).find(c => c.isCorrectChoice === true).choice
         tempQuizResults.userAnswers = tempQuizResults.userAnswers.map((answer, index) => {
             return {
                 questionText: quizStore.currentQuiz.questions[index].questionText,
                 choice: quizStore.currentQuiz.questions[index].choices.find(c => c.quizChoiceId === answer.questionChoiceId).choice,
                 correct: quizStore.currentQuiz.questions[index].choices.find(c => c.quizChoiceId === answer.questionChoiceId).isCorrectChoice,
                 explanation: quizStore.currentQuiz.questions[index].explanation,
+                correctAnswer: quizStore.currentQuiz.questions[index].choices.find(c => c.isCorrectChoice === true).choice
             }
         });
         quizResults.value = tempQuizResults;

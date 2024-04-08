@@ -20,7 +20,7 @@
             </button>
         </div>
         <div class="submit-container">
-            <button class="button submit-button" @click="submitAnswer">SUBMIT ANSWER AND GO TO NEXT QUESTION</button>
+            <button class="button submit-button" :disabled="selectedAnswer === null" @click="submitAnswer">SUBMIT ANSWER AND GO TO NEXT QUESTION</button>
         </div>
     </div>
     <div v-else>No question available.</div>
@@ -40,7 +40,7 @@ const selectedAnswer = ref(null);
 const currentQuestion = computed(() => quizStore.currentQuestion);
 
 const selectAlternative = (answer) => {
-    selectedAnswer.value = answer;
+    selectedAnswer.value = answer !== selectedAnswer.value ? answer : null;
     console.log('Selected answer:', answer);
     console.log(currentQuestion.value.choices)
     const trueChoice = currentQuestion.value.choices.find(c => c.choice === 'True');
@@ -119,12 +119,15 @@ const submitAnswer = async () => {
   align-items: center;
   text-align: center;
   font-family: 'Karla', sans-serif;
+  background-color: white;
+  color: #6320EE;
+  border:#6320EE solid 2px;
 }
 
 .alternative-button:hover, .alternative-button.selected {
-  background-color: #f7567c;
+  background-color: #7E41FDFF;
   color: white;
-  border-color: #f7567c;
+  border-color: #7E41FDFF;
 }
 
 .submit-container {
@@ -149,9 +152,27 @@ const submitAnswer = async () => {
   background-color: #7E41FDFF;
 }
 
+.button.submit-button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.button.submit-button:disabled:hover {
+  background-color: #ccc;
+}
+
 @media (max-width: 768px) {
   .alternative-button {
     width: 90%;
   }
+}
+.true-or-false-question {
+  max-width: 800px;
+  margin: 50px auto;
+  padding: 40px;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+  font-family: 'Karla', sans-serif;
 }
 </style>
