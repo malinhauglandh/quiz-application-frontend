@@ -114,7 +114,6 @@
     if(quizStore.currentQuiz && quizStore.currentQuiz.quizId) {
         const quizId = quizStore.currentQuiz.quizId;
         const data = await quizStore.fetchQuizDetails(quizId);
-        console.log("this data was fetched:", data);
         currentQuiz.value = data;
     } else {
         router.push('/createQuiz');
@@ -132,7 +131,6 @@
                 Authorization: `Bearer ${userStore.jwtToken.accessToken}`
             }
         });
-        console.log('Quiz deleted successfully');
         } catch (error) {
             console.error('Failed to delete quiz:', error);
             throw error;
@@ -208,7 +206,6 @@
 
         try {
             await quizStore.addQuestionToQuiz(questionData);
-            console.log('Question added successfully');
         } catch (error) {
             console.error('Failed to add question', error);
         }

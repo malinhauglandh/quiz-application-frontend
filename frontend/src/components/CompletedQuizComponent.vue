@@ -65,7 +65,6 @@ onMounted(async () => {
             }
         );
         tempQuizResults = response.data;     
-        console.log('Quiz results:', tempQuizResults);   
     } catch (error) {
         console.error('Error fetching quiz results:', error);
     } finally {

@@ -115,7 +115,6 @@ const handleCancel = () => {
 
 const selectOption = (option) => {
   selectedOption.value = option === selectedOption.value ? null : option;
-  console.log('Selected option:', selectedOption.value);
 };
 
 const saveQuestion = async () => {
@@ -138,7 +137,6 @@ const saveQuestion = async () => {
   choices[right_index].isCorrectChoice = true;
   let choicesString = JSON.stringify(choices);
   formData.append('choices', choicesString);
-  console.log(choicesString)
   await axios.post(path, formData, {
     headers: {
       'Content-Type': 'multipart/form-data',

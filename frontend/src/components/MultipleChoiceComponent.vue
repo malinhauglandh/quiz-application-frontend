@@ -119,7 +119,6 @@ const saveQuestion = async () => {
     {"choice": alternatives.value[2], "explanation": "N/A", "isCorrectChoice": false},
     {"choice": alternatives.value[3], "explanation": "N/A", "isCorrectChoice": false}
   ];
-  console.log(choices);
   choices[selectedOption.value].isCorrectChoice = true;
   let choicesString = JSON.stringify(choices);
   formData.append('choices', choicesString);

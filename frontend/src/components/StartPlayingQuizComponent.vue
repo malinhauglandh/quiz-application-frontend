@@ -1,23 +1,52 @@
 <template>
   <div class="start-playing-quiz-component">
-    <div v-if="!loading" class="content-wrapper">
+    <div
+      v-if="!loading"
+      class="content-wrapper"
+    >
       <div class="quiz-details">
-        <div v-if="currentQuiz.multimedia" class="quiz-image" :style="{ backgroundImage: `url(${getPathToQuizImage(currentQuiz.multimedia)})` }" />
-        <div v-else class="quiz-image-placeholder" />
-        <h3 class="quiz-title">{{ currentQuiz.quizName }}</h3>
-        <p class="quiz-description">Quiz Description: {{ currentQuiz.quizDescription }}</p>
-        <p v-if="currentQuiz.difficultyLevel" class="quiz-description">
+        <div
+          v-if="currentQuiz.multimedia"
+          class="quiz-image"
+          :style="{ backgroundImage: `url(${getPathToQuizImage(currentQuiz.multimedia)})` }"
+        />
+        <div
+          v-else
+          class="quiz-image-placeholder"
+        />
+        <h3 class="quiz-title">
+          {{ currentQuiz.quizName }}
+        </h3>
+        <p class="quiz-description">
+          Quiz Description: {{ currentQuiz.quizDescription }}
+        </p>
+        <p
+          v-if="currentQuiz.difficultyLevel"
+          class="quiz-description"
+        >
           <span class="label">Difficulty level:</span> {{ currentQuiz.difficultyLevel }}
         </p>
-        <p v-if="currentQuiz.categoryId && !categoriesLoading" class="quiz-description">
+        <p
+          v-if="currentQuiz.categoryId && !categoriesLoading"
+          class="quiz-description"
+        >
           <span class="label">Category:</span> {{ categories.find(cat => cat.categoryId === currentQuiz.categoryId).categoryName }}
         </p>
-        <button class="play-quiz-button" @click="playQuiz(currentQuiz.quizId)">START</button>
+        <button
+          class="play-quiz-button"
+          @click="playQuiz(currentQuiz.quizId)"
+        >
+          START
+        </button>
       </div>
       <div class="questions-wrapper">
         <h2>Questions:</h2>
         <ul>
-          <li v-for="question in currentQuiz.questions" :key="question.questionId" class="single-question">
+          <li
+            v-for="question in currentQuiz.questions"
+            :key="question.questionId"
+            class="single-question"
+          >
             {{ question.questionText }}
             {{ question.questionTypeId }}
           </li>
@@ -49,7 +78,6 @@ onBeforeMount(async () => {
   try{
     const data = await quizStore.fetchQuizDetails(quizId);
     currentQuiz.value = data;
-    console.log("this data was fetched:", data);
     if(data.multimedia){
       multimedia.value = data.multimedia;
     }

@@ -84,7 +84,6 @@ const selectOption = (option) => {
   } else {
     quizStore.updateAnswer(null);
   }
-  console.log(quizStore.userAnswers)
 };
 
 const options = computed(() => {
