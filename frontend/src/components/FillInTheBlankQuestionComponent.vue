@@ -1,12 +1,21 @@
 <template>
-  <div class="fill-in-the-blank-question" v-if="options">
+  <div
+    v-if="options"
+    class="fill-in-the-blank-question"
+  >
     <h2>Fill in the blank!</h2>
-    <p v-html="formattedQuestion"></p>
+    <p v-html="formattedQuestion" />
     <div class="options-container">
-      <div class="option" v-for="(option, index) in options" :key="index">
+      <div
+        v-for="(option, index) in options"
+        :key="index"
+        class="option"
+      >
         <div class="option-choice">
           <span>{{ index+1 }}.</span>
-          <p style="color:transparent">__</p>
+          <p style="color:transparent">
+            __
+          </p>
           <label :for="option">{{ option }}</label>
         </div>
         <div
@@ -28,10 +37,18 @@
       </div>
     </div>
     <div class="submit-container">
-      <button class="button submit-button" :disabled="selectedOption === null" @click="submitAnswer">SUBMIT ANSWER AND GO TO NEXT QUESTION</button>
+      <button
+        class="button submit-button"
+        :disabled="selectedOption === null"
+        @click="submitAnswer"
+      >
+        SUBMIT ANSWER AND GO TO NEXT QUESTION
+      </button>
     </div>
   </div>
-  <div v-else>No question available.</div>
+  <div v-else>
+    No question available.
+  </div>
 </template>
 
 <script setup>

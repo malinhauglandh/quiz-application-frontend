@@ -3,7 +3,10 @@
     <h2>New fill in the blank question</h2>
     <h3>Type in your question and check off for the correct answer!</h3>
     <div class="input-field">
-      <label for="question-part-one" class="question-label">First part of the question</label>
+      <label
+        for="question-part-one"
+        class="question-label"
+      >First part of the question</label>
       <input
         id="question-part-one"
         v-model="questionPartOne"
@@ -49,7 +52,10 @@
       </div>
     </div>
     <div class="input-field">
-      <label for="question-part-two" class="question-label">Second part of the question</label>
+      <label
+        for="question-part-two"
+        class="question-label"
+      >Second part of the question</label>
       <input
         id="question-part-two"
         v-model="questionPartTwo"
@@ -76,7 +82,7 @@
     :visible="showModal"
     :title="modalTitle"
     :message="modalMessage"
-    :confirmShow="false"
+    :confirm-show="false"
     @cancel="handleCancel"
   />
 </template>

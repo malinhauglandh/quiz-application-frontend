@@ -1,5 +1,8 @@
 <template>
-  <div class="home-component" v-if="!categoriesLoading">
+  <div
+    v-if="!categoriesLoading"
+    class="home-component"
+  >
     <div class="content-wrapper">
       <h1>Your recently made quizzes:</h1>
       <div

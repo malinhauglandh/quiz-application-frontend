@@ -1,10 +1,24 @@
 <template>
-  <div v-if="visible" class="modal-overlay">
+  <div
+    v-if="visible"
+    class="modal-overlay"
+  >
     <div class="modal-content">
       <h2>{{ title }}</h2>
       <p>{{ message }}</p>
-      <button v-if="confirmShow" class="modal-button" @click="confirm">Confirm</button>
-      <button class="modal-button" @click="cancel">Cancel</button>
+      <button
+        v-if="confirmShow"
+        class="modal-button"
+        @click="confirm"
+      >
+        Confirm
+      </button>
+      <button
+        class="modal-button"
+        @click="cancel"
+      >
+        Cancel
+      </button>
     </div>
   </div>
 </template>

@@ -1,30 +1,60 @@
 <template>
   <body class="login">
-  <div class="log-in-page">
-    <div class="logo">
-      <img src="../assets/logo.png" alt="logo" @click="goBack" />
-    </div>
-    <div class="log-in-box">
-      <h1>Login</h1>
-      <div class="log-in-form">
-        <form>
-          <div class="username-input">
-            <font-awesome-icon icon="user" id="user" />
-            <input type="text" id="username" v-model="username" placeholder="username" />
-          </div>
-          <div class="password-input">
-            <font-awesome-icon icon="lock" id="lockIcon" />
-            <input type="password" id="password" v-model="password" placeholder="password" />
-          </div>
-          <p class="sign-up-text">If you don't have a user, click <a @click="goToSignUp">here</a> to sign up</p>
-          <div class="error-message" v-if="showError">
-            <p> {{ errorMessage }}</p>
-          </div>
-          <button class="log-in-button" @click="login">Log in</button>
-        </form>
+    <div class="log-in-page">
+      <div class="logo">
+        <img
+          src="../assets/logo.png"
+          alt="logo"
+          @click="goBack"
+        >
+      </div>
+      <div class="log-in-box">
+        <h1>Login</h1>
+        <div class="log-in-form">
+          <form>
+            <div class="username-input">
+              <font-awesome-icon
+                id="user"
+                icon="user"
+              />
+              <input
+                id="username"
+                v-model="username"
+                type="text"
+                placeholder="username"
+              >
+            </div>
+            <div class="password-input">
+              <font-awesome-icon
+                id="lockIcon"
+                icon="lock"
+              />
+              <input
+                id="password"
+                v-model="password"
+                type="password"
+                placeholder="password"
+              >
+            </div>
+            <p class="sign-up-text">
+              If you don't have a user, click <a @click="goToSignUp">here</a> to sign up
+            </p>
+            <div
+              v-if="showError"
+              class="error-message"
+            >
+              <p> {{ errorMessage }}</p>
+            </div>
+            <button
+              class="log-in-button"
+              @click="login"
+            >
+              Log in
+            </button>
+          </form>
+        </div>
       </div>
     </div>
-  </div>
   </body>
 </template>
 

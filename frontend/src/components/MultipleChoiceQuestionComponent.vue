@@ -1,38 +1,57 @@
 <template>
-    <div class="multiple-choice-question" v-if="currentQuestion">
-        <div class="question-display">
-            <p class="question-text">{{ currentQuestion.questionText }}</p>
+  <div
+    v-if="currentQuestion"
+    class="multiple-choice-question"
+  >
+    <div class="question-display">
+      <p class="question-text">
+        {{ currentQuestion.questionText }}
+      </p>
+    </div>
+    <div class="options-container">
+      <div
+        v-for="(option, index) in options"
+        :key="index"
+        class="option"
+      >
+        <div class="option-choice">
+          <span>{{ index+1 }}.</span>
+          <p style="color:transparent">
+            __
+          </p>
+          <label :for="option">{{ option }}</label>
         </div>
-        <div class="options-container">
-        <div class="option" v-for="(option, index) in options" :key="index">
-          <div class="option-choice">
-            <span>{{ index+1 }}.</span>
-            <p style="color:transparent">__</p>
-            <label :for="option">{{ option }}</label>
-          </div>
-          <div
-            class="reject-checkbox"
-            :class="{'checked': selectedOption === index.toString()}"
-            @click="selectOption(index.toString())"
-          >
+        <div
+          class="reject-checkbox"
+          :class="{'checked': selectedOption === index.toString()}"
+          @click="selectOption(index.toString())"
+        >
           <div class="checkbox-wrapper">
-              <input
-                :id="'input-correct-' + (index + 1)"
-                type="checkbox"
-                :checked="selectedOption === index.toString()"
-              >
-              <label :for="'correct-' + (index + 1)">
-                <div class="tick_mark" />
-              </label>
-            </div>
+            <input
+              :id="'input-correct-' + (index + 1)"
+              type="checkbox"
+              :checked="selectedOption === index.toString()"
+            >
+            <label :for="'correct-' + (index + 1)">
+              <div class="tick_mark" />
+            </label>
           </div>
         </div>
       </div>
-        <div class="submit-container">
-            <button class="button submit-button" :disabled="selectedOption === null" @click="submitAnswer">SUBMIT ANSWER AND GO TO NEXT QUESTION</button>
-        </div>
     </div>
-    <div v-else>No question available.</div>
+    <div class="submit-container">
+      <button
+        class="button submit-button"
+        :disabled="selectedOption === null"
+        @click="submitAnswer"
+      >
+        SUBMIT ANSWER AND GO TO NEXT QUESTION
+      </button>
+    </div>
+  </div>
+  <div v-else>
+    No question available.
+  </div>
 </template>
 
 <script setup>

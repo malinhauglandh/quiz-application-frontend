@@ -85,7 +85,7 @@
     :visible="showModal"
     :title="modalTitle"
     :message="modalMessage"
-    :confirmShow="false"
+    :confirm-show="false"
     @cancel="handleCancel"
   />
 </template>

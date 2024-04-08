@@ -1,21 +1,50 @@
 <template>
   <div class="start-playing-quiz-component">
-    <div class="content-wrapper" v-if="!loading">
-      <div v-if="currentQuiz.multimedia" class="quiz-image" :style="{ backgroundImage: `url(${getPathToQuizImage(currentQuiz.multimedia)})` }"></div>
-      <div v-else class="quiz-image-placeholder"></div>
-      <h3 class="quiz-title">{{ currentQuiz.quizName }}</h3>
-      <p class="quiz-description">{{ currentQuiz.quizDescription }}</p>
-      <p class="quiz-description" v-if="currentQuiz.difficultyLevel">
+    <div
+      v-if="!loading"
+      class="content-wrapper"
+    >
+      <div
+        v-if="currentQuiz.multimedia"
+        class="quiz-image"
+        :style="{ backgroundImage: `url(${getPathToQuizImage(currentQuiz.multimedia)})` }"
+      />
+      <div
+        v-else
+        class="quiz-image-placeholder"
+      />
+      <h3 class="quiz-title">
+        {{ currentQuiz.quizName }}
+      </h3>
+      <p class="quiz-description">
+        {{ currentQuiz.quizDescription }}
+      </p>
+      <p
+        v-if="currentQuiz.difficultyLevel"
+        class="quiz-description"
+      >
         <span class="label">Difficulty level:</span> {{ currentQuiz.difficultyLevel }}
       </p>
-      <p class="quiz-description" v-if="currentQuiz.categoryId && !categoriesLoading">
+      <p
+        v-if="currentQuiz.categoryId && !categoriesLoading"
+        class="quiz-description"
+      >
         <span class="label">Category:</span> {{ categories.find(cat => cat.categoryId === currentQuiz.categoryId).categoryName }}
       </p>
-      <button class="play-quiz-button" @click="playQuiz(currentQuiz.quizId)">START</button>
+      <button
+        class="play-quiz-button"
+        @click="playQuiz(currentQuiz.quizId)"
+      >
+        START
+      </button>
       <div class="questions-wrapper">
         <h3>Questions:</h3>
         <ul>
-          <li v-for="question in currentQuiz.questions" :key="question.questionId" class="single-question">
+          <li
+            v-for="question in currentQuiz.questions"
+            :key="question.questionId"
+            class="single-question"
+          >
             {{ question.questionText }}
             {{ question.questionTypeId }}
           </li>

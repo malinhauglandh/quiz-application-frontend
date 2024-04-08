@@ -1,50 +1,88 @@
-    <template>
-        <div class="quiz-container">
-        <div class="layout-container">
-            <div class="add-questions">
-            <h1>Add Questions</h1>
-            <div class="button-container">
-                <div v-if="!showOptions" class="add-question-button" @click="toggleOptions">
-                <span>+ Add</span>
-                </div>
-                <div v-if="showOptions" class="options-container">
-                <button data-testid="multiple-choice-button" @click="chooseQuestionType('multiplechoice')">Multiple Choice</button>
-                <button data-testid="true-or-false-button" @click="chooseQuestionType('truefalse')">True or False</button>
-                <button data-testid="fill-in-the-blank-button" @click="chooseQuestionType('fillintheblank')">Fill in the Blank</button>
-                </div>
-            </div>
-            </div>
-            <div class="quiz-preview">
-            <h1>Quiz Preview</h1>
-            <div class="quiz-info" v-if="currentQuiz">
-                <h2>{{ currentQuiz.quizName }}</h2>
-                <p>{{ currentQuiz.quizDescription }}</p>
-                <p>Category: {{ categoryName }}</p>
-                <p>Difficulty Level: {{ currentQuiz.difficultyLevel }}</p>
-            </div>
-            <div class="question-list">
-                <ul v-if="currentQuiz && currentQuiz.questions">
-                <li v-for="question in currentQuiz.questions" :key="question.questionId">
-                    {{ question.questionText }}
-                </li>
-                </ul>
-            </div>
-            </div>
+<template>
+  <div class="quiz-container">
+    <div class="layout-container">
+      <div class="add-questions">
+        <h1>Add Questions</h1>
+        <div class="button-container">
+          <div
+            v-if="!showOptions"
+            class="add-question-button"
+            @click="toggleOptions"
+          >
+            <span>+ Add</span>
+          </div>
+          <div
+            v-if="showOptions"
+            class="options-container"
+          >
+            <button
+              data-testid="multiple-choice-button"
+              @click="chooseQuestionType('multiplechoice')"
+            >
+              Multiple Choice
+            </button>
+            <button
+              data-testid="true-or-false-button"
+              @click="chooseQuestionType('truefalse')"
+            >
+              True or False
+            </button>
+            <button
+              data-testid="fill-in-the-blank-button"
+              @click="chooseQuestionType('fillintheblank')"
+            >
+              Fill in the Blank
+            </button>
+          </div>
         </div>
-        <div class="nav-buttons">
-            <button class="nav-button back-button" @click="promptDelete">BACK</button>
-            <button class="nav-button next-button" @click="promptSave">NEXT</button>
+      </div>
+      <div class="quiz-preview">
+        <h1>Quiz Preview</h1>
+        <div
+          v-if="currentQuiz"
+          class="quiz-info"
+        >
+          <h2>{{ currentQuiz.quizName }}</h2>
+          <p>{{ currentQuiz.quizDescription }}</p>
+          <p>Category: {{ categoryName }}</p>
+          <p>Difficulty Level: {{ currentQuiz.difficultyLevel }}</p>
         </div>
-            <ConfirmModal
-            :visible="showModal"
-            :title="modalTitle"
-            :message="modalMessage"
-            :confirmShow="true"
-            @confirm="modalConfirm"
-            @cancel="handleCancel"
-        />
+        <div class="question-list">
+          <ul v-if="currentQuiz && currentQuiz.questions">
+            <li
+              v-for="question in currentQuiz.questions"
+              :key="question.questionId"
+            >
+              {{ question.questionText }}
+            </li>
+          </ul>
         </div>
-    </template>
+      </div>
+    </div>
+    <div class="nav-buttons">
+      <button
+        class="nav-button back-button"
+        @click="promptDelete"
+      >
+        BACK
+      </button>
+      <button
+        class="nav-button next-button"
+        @click="promptSave"
+      >
+        NEXT
+      </button>
+    </div>
+    <ConfirmModal
+      :visible="showModal"
+      :title="modalTitle"
+      :message="modalMessage"
+      :confirm-show="true"
+      @confirm="modalConfirm"
+      @cancel="handleCancel"
+    />
+  </div>
+</template>
     
     <script setup>
     import { ref, watch, onBeforeMount, computed } from 'vue';

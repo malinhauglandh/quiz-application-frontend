@@ -37,15 +37,41 @@
         </router-link>
       </li>
     </ul>
-    <div class="navbar-settings-container" v-if="!showMobileMenu">
-      <font-awesome-icon icon="cog" class="navbar-settings" @click="toggleSettingsDropdown" />
-      <div v-if="showSettingsDropdown" class="dropdown-menu" ref="dropdownMenu">
-        <button @click="handleLogout">Log out</button>
+    <div
+      v-if="!showMobileMenu"
+      class="navbar-settings-container"
+    >
+      <font-awesome-icon
+        icon="cog"
+        class="navbar-settings"
+        @click="toggleSettingsDropdown"
+      />
+      <div
+        v-if="showSettingsDropdown"
+        ref="dropdownMenu"
+        class="dropdown-menu"
+      >
+        <button @click="handleLogout">
+          Log out
+        </button>
       </div>
-      <div v-if="showProfileDropdown" class="dropdown-menu" ref="dropdownMenu">
-        <button @click="handleProfile">Profile</button>
-        <button @click="handleColorMode">Lightmode / darkmode</button>
-        <button @click="toggleSettings" class="back-button">Back</button>
+      <div
+        v-if="showProfileDropdown"
+        ref="dropdownMenu"
+        class="dropdown-menu"
+      >
+        <button @click="handleProfile">
+          Profile
+        </button>
+        <button @click="handleColorMode">
+          Lightmode / darkmode
+        </button>
+        <button
+          class="back-button"
+          @click="toggleSettings"
+        >
+          Back
+        </button>
       </div>
     </div>
     <div
@@ -58,9 +84,20 @@
         class="hamburger-menu"
       />
     </div>
-    <div v-if="isMobileMenuVisible" class="mobile-dropdown-menu" :style="mobileMenuStyle" ref="mobileDropdownMenu">
-      <router-link to="/home" @click="toggleMobileMenu">
-        <font-awesome-icon class="icon" icon="home" />HOME
+    <div
+      v-if="isMobileMenuVisible"
+      ref="mobileDropdownMenu"
+      class="mobile-dropdown-menu"
+      :style="mobileMenuStyle"
+    >
+      <router-link
+        to="/home"
+        @click="toggleMobileMenu"
+      >
+        <font-awesome-icon
+          class="icon"
+          icon="home"
+        />HOME
       </router-link>
       <router-link
         to="/createQuiz"
@@ -80,11 +117,23 @@
           icon="search"
         />SEARCH
       </router-link>
-      <button @click="toggleMobileSettingsDropdown" class="mobile-settings-button">
-        <font-awesome-icon icon="cog" class="icon" />SETTINGS
+      <button
+        class="mobile-settings-button"
+        @click="toggleMobileSettingsDropdown"
+      >
+        <font-awesome-icon
+          icon="cog"
+          class="icon"
+        />SETTINGS
       </button>
-      <div v-if="showMobileSettingsDropdown" class="dropdown-menu-mobile" ref="dropdownMenu">
-        <button @click="handleLogout">Log out</button>
+      <div
+        v-if="showMobileSettingsDropdown"
+        ref="dropdownMenu"
+        class="dropdown-menu-mobile"
+      >
+        <button @click="handleLogout">
+          Log out
+        </button>
       </div>
     </div>
   </nav>

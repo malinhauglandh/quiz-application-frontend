@@ -1,29 +1,42 @@
 <template>
-    <div class="true-or-false-question" v-if="currentQuestion">
-        <div class="question-display">
-            <p class="question-text">{{ currentQuestion.questionText }}</p>
-        </div>
-        <div class="alternatives-container">
-            <button
-                    class="alternative-button"
-                    :class="{ 'selected': selectedAnswer === true }"
-                    @click="selectAlternative(true)"
-            >
-                true
-            </button>
-            <button
-                    class="alternative-button"
-                    :class="{ 'selected': selectedAnswer === false }"
-                    @click="selectAlternative(false)"
-            >
-                false
-            </button>
-        </div>
-        <div class="submit-container">
-            <button class="button submit-button" :disabled="selectedAnswer === null" @click="submitAnswer">SUBMIT ANSWER AND GO TO NEXT QUESTION</button>
-        </div>
+  <div
+    v-if="currentQuestion"
+    class="true-or-false-question"
+  >
+    <div class="question-display">
+      <p class="question-text">
+        {{ currentQuestion.questionText }}
+      </p>
     </div>
-    <div v-else>No question available.</div>
+    <div class="alternatives-container">
+      <button
+        class="alternative-button"
+        :class="{ 'selected': selectedAnswer === true }"
+        @click="selectAlternative(true)"
+      >
+        true
+      </button>
+      <button
+        class="alternative-button"
+        :class="{ 'selected': selectedAnswer === false }"
+        @click="selectAlternative(false)"
+      >
+        false
+      </button>
+    </div>
+    <div class="submit-container">
+      <button
+        class="button submit-button"
+        :disabled="selectedAnswer === null"
+        @click="submitAnswer"
+      >
+        SUBMIT ANSWER AND GO TO NEXT QUESTION
+      </button>
+    </div>
+  </div>
+  <div v-else>
+    No question available.
+  </div>
 </template>
 
 <script setup>

@@ -1,19 +1,36 @@
 <template>
-    <div v-if="!loadingResults">
-        <div class="quiz-results">
-            <h1>Quiz Results</h1>
-            <p>Your score is: {{ quizResults.score }} / {{ quizResults.userAnswers.length }} points</p>
-            <div v-for="(answer, index) in quizResults.userAnswers" :key="'answer-' + index" class="result-item">
-                <h3>Question {{ index + 1 }}: {{ answer.questionText }}</h3>
-                <p>Your Answer: {{ answer.choice }} - <strong
-                        :class="{ 'correct': answer.correct, 'incorrect': !answer.correct }">{{
-                    answer.correct ? 'Correct' : 'Incorrect'
-                    }}</strong></p>
-                <p v-if="!answer.correct" style="color:#2ecc71 ">Correct answer: {{ answer.correctAnswer }}</p>
-            </div>
-        </div>
-        <button class="button" @click="$router.push('/home')">Go to Home</button>
+  <div v-if="!loadingResults">
+    <div class="quiz-results">
+      <h1>Quiz Results</h1>
+      <p>Your score is: {{ quizResults.score }} / {{ quizResults.userAnswers.length }} points</p>
+      <div
+        v-for="(answer, index) in quizResults.userAnswers"
+        :key="'answer-' + index"
+        class="result-item"
+      >
+        <h3>Question {{ index + 1 }}: {{ answer.questionText }}</h3>
+        <p>
+          Your Answer: {{ answer.choice }} - <strong
+            :class="{ 'correct': answer.correct, 'incorrect': !answer.correct }"
+          >{{
+            answer.correct ? 'Correct' : 'Incorrect'
+          }}</strong>
+        </p>
+        <p
+          v-if="!answer.correct"
+          style="color:#2ecc71 "
+        >
+          Correct answer: {{ answer.correctAnswer }}
+        </p>
+      </div>
     </div>
+    <button
+      class="button"
+      @click="$router.push('/home')"
+    >
+      Go to Home
+    </button>
+  </div>
 </template>
 
 <script setup>
