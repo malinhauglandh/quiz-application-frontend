@@ -63,9 +63,6 @@ const formattedQuestion = computed(() => {
   return string.replace("____", `<strong>${optionText}</strong>`);
 });
 
-onMounted(() => {
-  console.log('Current question:', currentQuestion.value)
-});
 const selectedOption = ref(null);
 const router = useRouter();
 const store = useStore();
@@ -96,7 +93,6 @@ const options = computed(() => {
 
 
 const submitAnswer = async () => {
-    console.log('Submitting answer...')
     const next = quizStore.nextQuestion()
     if(next !== null) {
         const route = quizStore.getQuestionRouteName(next.questionTypeId);
@@ -183,8 +179,6 @@ const submitAnswer = async () => {
 .button.submit-button:disabled:hover {
   background-color: #ccc;
 }
-
-
 
 .reject-checkbox {
   justify-self: flex-end;

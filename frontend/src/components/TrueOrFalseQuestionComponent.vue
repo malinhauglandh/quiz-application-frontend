@@ -54,8 +54,6 @@ const currentQuestion = computed(() => quizStore.currentQuestion);
 
 const selectAlternative = (answer) => {
     selectedAnswer.value = answer !== selectedAnswer.value ? answer : null;
-    console.log('Selected answer:', answer);
-    console.log(currentQuestion.value.choices)
     const trueChoice = currentQuestion.value.choices.find(c => c.choice === 'True');
     const falseChoice = currentQuestion.value.choices.find(c => c.choice === 'False');
 
@@ -74,12 +72,10 @@ const selectAlternative = (answer) => {
 };
 
 const submitAnswer = async () => {
-    console.log('Submitting answer...')
     const next = quizStore.nextQuestion()
     if(next !== null) {
         const route = quizStore.getQuestionRouteName(next.questionTypeId);
         quizStore.currentQuestion = next;
-        console.log(route)
         selectedAnswer.value = null;
         router.push({ name: route });
     }

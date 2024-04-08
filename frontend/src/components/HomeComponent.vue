@@ -111,9 +111,7 @@ const playQuiz = (quizId) => {
 onMounted(async () => {
   try {
     fetchQuizzes();
-    if(!quizStore.categories) {
-      await quizStore.fetchCategories();
-    }
+    await quizStore.fetchCategories();
   } catch (error) {
     console.error("Failed to fetch quizzes:", error);
   } finally {

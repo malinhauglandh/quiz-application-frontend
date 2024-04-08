@@ -55,24 +55,6 @@
           Log out
         </button>
       </div>
-      <div
-        v-if="showProfileDropdown"
-        ref="dropdownMenu"
-        class="dropdown-menu"
-      >
-        <button @click="handleProfile">
-          Profile
-        </button>
-        <button @click="handleColorMode">
-          Lightmode / darkmode
-        </button>
-        <button
-          class="back-button"
-          @click="toggleSettings"
-        >
-          Back
-        </button>
-      </div>
     </div>
     <div
       v-if="isMobileMenuVisible"
@@ -278,7 +260,8 @@ const mobileMenuStyle = computed(() => ({
   position: absolute;
   top: calc(100% + 5px);
   right: 0;
-  background-color: #ef8354;
+  background-color: white;
+  color: #6320EE;
   border: 1px solid #6320EE;
   z-index: 1;
   border-radius: 8px;
@@ -292,7 +275,8 @@ const mobileMenuStyle = computed(() => ({
   padding: 12px;
   margin: 0;
   font-size: 14px;
-  color: white;
+  font-weight: bold;
+  color: #6320EE;
   border: none;
   background-color: transparent;
   cursor: pointer;
@@ -300,8 +284,10 @@ const mobileMenuStyle = computed(() => ({
 }
 
 .dropdown-menu button:hover {
-  background-color: #EF9C76FF;
+  background-color: #6320EE;
+  color: white;
   border-radius: 8px;
+  font-weight: bold;
 }
 
 @media screen and (max-width: 800px) {
@@ -317,7 +303,7 @@ const mobileMenuStyle = computed(() => ({
     position: fixed;
     top: 250px;
     left: 10px;
-    background-color: #ef8354;
+    background-color: #6320EE;
     border: 1px solid #6320EE;
     z-index: 1;
     border-radius: 8px;
@@ -370,4 +356,4 @@ const mobileMenuStyle = computed(() => ({
   color: white;
   cursor: pointer;
 }
-</style>@/store/userStore
+</style>

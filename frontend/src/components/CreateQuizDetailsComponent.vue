@@ -147,7 +147,6 @@ const config = {
     
 onMounted(async () => {
   try {
-    console.log(categories.value)
     if(!categories.value) {
       await store.fetchCategories();
     }
@@ -159,10 +158,8 @@ onMounted(async () => {
   } 
 });
     
-// Inside your script setup
 const saveQuiz = async (event) => {
   try {
-    // Create an object with the quiz data
     const quizData = new FormData();
     quizData.append('quizName', quizName.value);
     quizData.append('quizDescription', quizDescription.value);
@@ -172,12 +169,9 @@ const saveQuiz = async (event) => {
       quizData.append('file', multimedia.value);
     }
 
-    // Call the store action to create the quiz
     const createdQuiz = await store.createQuiz(quizData);
-    console.log('Quiz created:', createdQuiz);
 
-    // If the quiz was created successfully, and there is multimedia,
-    // make another call to upload the multimedia file.
+
     if (createdQuiz && multimedia.value) {
       let fileFormData = new FormData();
       fileFormData.append('file', multimedia.value);
@@ -189,7 +183,6 @@ const saveQuiz = async (event) => {
         }
       });
     }
-  console.log('Quiz created:', createdQuiz);
   router.push({ path: '/addQuestions'});
     
   } catch (error) {
@@ -211,13 +204,13 @@ const removeMedia = () => {
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Karla:ital,wght@0,200..800;1,200..800&display=swap');
 .create-quiz-details {
-  max-width: 800px; /* Adjust based on your preference */
+  max-width: 800px; 
   margin: 50px auto;
   padding: 40px;
-  background: #fff; /* White background */
-  border-radius: 8px; /* Rounded corners */
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15); /* Soft shadow for depth */
-  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; /* Sleek font */
+  background: #fff; 
+  border-radius: 8px; 
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15); 
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; 
   position: relative;
   display: flex;
   flex-direction: column;
@@ -226,9 +219,9 @@ const removeMedia = () => {
 
 .create-quiz-details h1 {
   text-align: center;
-  color: #333; /* Dark text for the heading */
-  margin-bottom: 20px; /* Space after the heading */
-  font-family: "Karla", sans-serif; /* Use Karla font for the heading */
+  color: #333; 
+  margin-bottom: 20px; 
+  font-family: "Karla", sans-serif; 
   font-weight: 700;
   font-size: xxx-large;
   margin: 0;
@@ -236,25 +229,25 @@ const removeMedia = () => {
 }
 
 .input-field {
-  margin-bottom: 20px; /* Space between input fields */
-  display: flex; /* Align label and input side by side */
-  align-items: center; /* Center items vertically */
-  font-family: "Karla", sans-serif; /* Use Karla font for the input fields */
+  margin-bottom: 20px; 
+  display: flex; 
+  align-items: center;
+  font-family: "Karla", sans-serif;
   width: 100%;
 }
 
 .input-field input[type="text"] {
-  font-family: "Karla", sans-serif; /* Use Karla font for the input fields */
+  font-family: "Karla", sans-serif;
 }
 
 .input-field select {
-  font-family: "Karla", sans-serif; /* Use Karla font for the input fields */
+  font-family: "Karla", sans-serif;
 }
 
 .input-field label {
-  flex: 0 0 120px; /* Fixed width for labels */
-  margin-right: 20px; /* Space between label and input field */
-  color: #666; /* Medium gray color for text */
+  flex: 0 0 120px; 
+  margin-right: 20px;
+  color: #666; 
   font-weight: bold;
 }
 
@@ -271,50 +264,48 @@ const removeMedia = () => {
 .input-field select {
   width: 100%;
   padding: 15px 20px;
-  border: 1px solid transparent; /* Hide the border */
-  border-bottom: 2px solid #ddd; /* Subtle underline for the input */
-  border-radius: 4px; /* Slightly rounded corners for the input field */
-  background-color: #f8f8f8; /* Light background to distinguish the input */
+  border: 1px solid transparent; 
+  border-bottom: 2px solid #ddd;
+  border-radius: 4px;
+  background-color: #f8f8f8; 
   font-size: 16px;
   color: #333;
-  transition: all 0.3s ease-in-out; /* Smooth transition for focus */
+  transition: all 0.3s ease-in-out;
   box-sizing: border-box;
 }
 
 .input-field input:focus,
 .input-field select:focus {
-  outline: none; /* Remove the default focus outline */
-  border-bottom-color: #6320ee; /* Highlight the bottom border on focus */
-  box-shadow: 0 1px 6px -2px rgba(99, 32, 238, 0.5); /* Subtle shadow to "lift" the input */
-  background-color: #fff; /* Change to white background on focus */
+  outline: none; 
+  border-bottom-color: #6320ee; 
+  box-shadow: 0 1px 6px -2px rgba(99, 32, 238, 0.5);
+  background-color: #fff;
 }
 
-/* Style the file input to match */
 .input-field input[type="file"] {
-  background-color: #fff; /* White background for the file input */
+  background-color: #fff; 
   border: none;
   padding: 10px 20px;
 }
 
-/* Adjust the look of the placeholder to match */
 .input-field input::placeholder,
 .input-field select .placeholder-grey {
   color: #aaa;
-  font-style: italic; /* A touch of style for the placeholder */
+  font-style: italic; 
 }
 
-/* Modernize the button as well */
+
 button.next-button {
   padding: 15px 30px;
   background-color: #6320ee;
   color: #fff;
   border: none;
-  border-radius: 25px; /* More pronounced rounded corners for the button */
+  border-radius: 25px; 
   cursor: pointer;
   font-size: 16px;
   font-weight: bold;
-  text-transform: uppercase; /* Uppercase text for a bolder button */
-  letter-spacing: 1px; /* Spacing out the letters for a more modern feel */
+  text-transform: uppercase;
+  letter-spacing: 1px; 
   transition: background-color 0.2s ease-in-out;
   margin-top: 2rem;
 }
@@ -322,7 +313,7 @@ button.next-button {
 button.next-button:hover,
 button.next-button:focus {
   background-color: #7e41fd;
-  box-shadow: 0 4px 12px rgba(225, 219, 237, 0.5); /* Shadow effect for depth */
+  box-shadow: 0 4px 12px rgba(225, 219, 237, 0.5);
 }
 
 button.next-button:disabled {
@@ -331,22 +322,22 @@ button.next-button:disabled {
   cursor: not-allowed;
 }
 
-/* Additional styles for character count */
+
 .input-field span.character-count {
-  margin-left: auto; /* Push to the right side */
-  color: #999; /* Light gray color */
+  margin-left: auto; 
+  color: #999;
 }
 
-/* Responsive adjustments */
+
 @media (max-width: 768px) {
   .input-field {
-    flex-direction: column; /* Stack label and input on smaller screens */
+    flex-direction: column;
     align-items: stretch;
   }
 
   .input-field label {
     margin-bottom: 5px;
-    flex: 0 0 auto; /* Allow the label to shrink on smaller screens */
+    flex: 0 0 auto; 
   }
 
   .create-quiz-details {
@@ -354,7 +345,7 @@ button.next-button:disabled {
   }
 
   button.next-button {
-    padding: 10px; /* Smaller padding on smaller screens */
+    padding: 10px; 
   }
 }
 
@@ -455,4 +446,4 @@ button.next-button:disabled {
   color: #6320EE;
 }
 
-</style>@/store/userStore
+</style>

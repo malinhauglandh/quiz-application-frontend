@@ -18,7 +18,6 @@ export const useQuizStore = defineStore('quiz', () => {
     const store = useStore();
     const creatorId = store.jwtToken.userId;
     quizData.append('creator', creatorId);
-    console.log(quizData);
     try {
       const response = await axios.post('http://localhost:8080/api/quizzes/createQuiz', quizData, {
         headers: {
@@ -63,7 +62,6 @@ export const useQuizStore = defineStore('quiz', () => {
 
   async function fetchQuizDetails(quizId) {
     const store = useStore();
-    console.log("Fetching quiz details...");
     try {
       const res = await store.fetchData(`http://localhost:8080/api/quizzes/${quizId}/details`);
       currentQuiz.value = res.data;
@@ -120,7 +118,6 @@ export const useQuizStore = defineStore('quiz', () => {
 
 
   function updateAnswer(choiceId) {
-    const store = useStore();
     const questionIndex = currentQuiz.value.questions.findIndex(
       (question) => question.questionId === currentQuestion.value.questionId
     );
@@ -155,5 +152,17 @@ export const useQuizStore = defineStore('quiz', () => {
     }
   }
 
-  return { categories, fetchCategories, currentQuiz, quizzes, currentQuestion, userAnswers, getQuestionRouteName, getQuizById, createQuiz, addQuestionToQuiz, fetchQuizDetails, updateAnswer, clearAnswers, submitAnswers, nextQuestion };
+  async function fetchQuizzes() {
+    const store = useStore();
+    try {
+      const res = await store.fetchData('http://localhost:8080/api/quizzes/allQuizzes');
+      quizzes.value = res.data;
+      return res.data;
+    } catch (error) {
+      console.error('Error fetching quizzes:', error.response?.data || error);
+      throw error;
+    }
+  }
+
+  return { categories, fetchCategories, currentQuiz, quizzes, currentQuestion, userAnswers, getQuestionRouteName, getQuizById, createQuiz, addQuestionToQuiz, fetchQuizDetails, updateAnswer, clearAnswers, submitAnswers, nextQuestion, fetchQuizzes };
 });

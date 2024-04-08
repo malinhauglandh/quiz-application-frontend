@@ -79,8 +79,6 @@ onMounted(async () => {
             }
         });
         quizResults.value = tempQuizResults;
-        console.log('Quiz results:', quizResults.value)
-        console.log('Quiz answers:', quizResults.value.userAnswers)
         loadingResults.value = false;
     }
 });
