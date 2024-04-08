@@ -185,7 +185,7 @@ onMounted(async () => {
 
 .quiz-title {
   color: white;
-  background-color: rgba(0, 0, 0, 0.2);
+  background-color: rgba(0, 0, 0, 0.4);
   width: 100%;
   text-align: center;
   padding: 10px 0;
@@ -195,12 +195,12 @@ onMounted(async () => {
 
 .quiz-description {
   position: absolute;
-  top: 28px;
+  top: 24px;
   left: 0;
   right: 0;
   width: auto;
   text-align: center;
-  background-color: rgba(0, 0, 0, 0.2);
+  background-color: rgba(0, 0, 0, 0.4);
   color: white;
   visibility: hidden;
   opacity: 0;
@@ -254,6 +254,7 @@ h1 {
   .quiz-description {
     white-space: normal;
     font-size: smaller;
+    top: 27px;
   }
 
   .quiz-box {

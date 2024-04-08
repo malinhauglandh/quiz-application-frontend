@@ -37,44 +37,15 @@
         </router-link>
       </li>
     </ul>
-    <div
-      v-if="!showMobileMenu"
-      class="navbar-settings-container"
-    >
-      <font-awesome-icon
-        icon="cog"
-        class="navbar-settings"
-        @click="toggleSettingsDropdown"
-      />
-      <div
-        v-if="showSettingsDropdown"
-        ref="dropdownMenu"
-        class="dropdown-menu"
-      >
-        <button @click="toggleSettings">
-          Settings
-        </button>
-        <button @click="handleLogout">
-          Log out
-        </button>
+    <div class="navbar-settings-container" v-if="!showMobileMenu">
+      <font-awesome-icon icon="cog" class="navbar-settings" @click="toggleSettingsDropdown" />
+      <div v-if="showSettingsDropdown" class="dropdown-menu" ref="dropdownMenu">
+        <button @click="handleLogout">Log out</button>
       </div>
-      <div
-        v-if="showProfileDropdown"
-        ref="dropdownMenu"
-        class="dropdown-menu"
-      >
-        <button @click="handleProfile">
-          Profile
-        </button>
-        <button @click="handleColorMode">
-          Lightmode / darkmode
-        </button>
-        <button
-          class="back-button"
-          @click="toggleSettings"
-        >
-          Back
-        </button>
+      <div v-if="showProfileDropdown" class="dropdown-menu" ref="dropdownMenu">
+        <button @click="handleProfile">Profile</button>
+        <button @click="handleColorMode">Lightmode / darkmode</button>
+        <button @click="toggleSettings" class="back-button">Back</button>
       </div>
     </div>
     <div
@@ -87,19 +58,9 @@
         class="hamburger-menu"
       />
     </div>
-    <div
-      v-if="showMobileMenu"
-      ref="mobileDropdownMenu"
-      class="mobile-dropdown-menu"
-    >
-      <router-link
-        to="/home"
-        @click="toggleMobileMenu"
-      >
-        <font-awesome-icon
-          class="icon"
-          icon="home"
-        />HOME
+    <div v-if="isMobileMenuVisible" class="mobile-dropdown-menu" :style="mobileMenuStyle" ref="mobileDropdownMenu">
+      <router-link to="/home" @click="toggleMobileMenu">
+        <font-awesome-icon class="icon" icon="home" />HOME
       </router-link>
       <router-link
         to="/createQuiz"
@@ -119,38 +80,11 @@
           icon="search"
         />SEARCH
       </router-link>
-      <button
-        class="mobile-settings-button"
-        @click="toggleSettingsDropdown"
-      >
-        <font-awesome-icon
-          icon="cog"
-          class="icon"
-        />SETTINGS
+      <button @click="toggleMobileSettingsDropdown" class="mobile-settings-button">
+        <font-awesome-icon icon="cog" class="icon" />SETTINGS
       </button>
-      <div
-        v-if="showSettingsDropdown"
-        ref="dropdownMenu"
-        class="dropdown-menu-mobile"
-      >
-        <button @click="toggleSettings">
-          Settings
-        </button>
-        <button @click="handleLogout">
-          Log out
-        </button>
-        <div
-          v-if="showProfileDropdown"
-          ref="dropdownMenu"
-          class="dropdown-menu"
-        >
-          <button @click="handleProfile">
-            Profile
-          </button>
-          <button @click="handleColorMode">
-            Lightmode / darkmode
-          </button>
-        </div>
+      <div v-if="showMobileSettingsDropdown" class="dropdown-menu-mobile" ref="dropdownMenu">
+        <button @click="handleLogout">Log out</button>
       </div>
     </div>
   </nav>
@@ -158,35 +92,30 @@
 
 
 <script setup>
-import {onMounted, onUnmounted, ref} from 'vue';
+import {onMounted, onUnmounted, ref, computed} from 'vue';
 import { useRouter } from 'vue-router';
 import { useStore } from '@/store/userStore';
 
 const showMobileMenu = ref(false);
 const showSettingsDropdown = ref(false);
-const showProfileDropdown = ref(false);
 const router = useRouter();
 const store = useStore();
+const showMobileSettingsDropdown = ref(false);
+
 
 const toggleSettingsDropdown = () => {
   showSettingsDropdown.value = !showSettingsDropdown.value;
-  showProfileDropdown.value = false;
 };
 
-const toggleSettings = () => {
-  showProfileDropdown.value = !showProfileDropdown.value;
-};
+const toggleMobileSettingsDropdown = () => {
+  showMobileSettingsDropdown.value = !showMobileSettingsDropdown.value;
 
-const handleProfile = () => {
-  console.log('Profile clicked');
-};
-
-const handleColorMode = () => {
-  console.log('Color mode clicked');
+  if (!showMobileMenu.value || !isMobileMenuVisible.value) {
+    showMobileSettingsDropdown.value = false;
+  }
 };
 
 const handleLogout = () => {
-    console.log("Logging out...");
     store.clearToken();
     router.push('/login');
 };
@@ -199,17 +128,24 @@ const checkWidth = () => window.innerWidth >= 800;
 const isMobileMenuVisible = ref(checkWidth());
 
 const toggleMobileMenu = () => {
+  if (showMobileMenu.value) {
+    showMobileSettingsDropdown.value = false;
+  }
+
   showMobileMenu.value = !showMobileMenu.value;
 };
+
 
 const handleResize = () => {
   const currentWidthIsMobile = window.innerWidth < 800;
   isMobileMenuVisible.value = currentWidthIsMobile;
 
-  if (!currentWidthIsMobile && showMobileMenu.value) {
+  if (!currentWidthIsMobile) {
     showMobileMenu.value = false;
+    showMobileSettingsDropdown.value = false;
     showSettingsDropdown.value = false;
-    showProfileDropdown.value = false;
+  } else {
+    showSettingsDropdown.value = false;
   }
 };
 
@@ -220,6 +156,11 @@ onMounted(() => {
 onUnmounted(() => {
   window.removeEventListener('resize', handleResize)
 });
+
+const mobileMenuStyle = computed(() => ({
+  maxHeight: showMobileMenu.value ? '500px' : '0',
+}));
+
 
 </script>
 
@@ -314,11 +255,6 @@ onUnmounted(() => {
   border-radius: 8px;
 }
 
-.back-button {
-  font-weight: bolder;
-  color: #6320EE !important;
-}
-
 @media screen and (max-width: 800px) {
   .navbar-list, .navbar-settings-container {
     display: none;
@@ -329,9 +265,9 @@ onUnmounted(() => {
   }
 
   .dropdown-menu-mobile {
-    position: absolute;
-    top: calc(100% + 5px);
-    right: 10px;
+    position: fixed;
+    top: 250px;
+    left: 10px;
     background-color: #ef8354;
     border: 1px solid #6320EE;
     z-index: 1;
@@ -354,11 +290,14 @@ onUnmounted(() => {
   position: absolute;
   top: 60px;
   right: 0;
-  width: 45%;
+  width: 100%;
   background-color: #6320EE;
   z-index: 100;
   padding: 10px 0;
   border-radius: 20px;
+  overflow: hidden;
+  max-height: 0;
+  transition: max-height 0.5s ease-in-out;
 }
 
 .mobile-dropdown-menu a,

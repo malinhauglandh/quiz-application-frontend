@@ -75,7 +75,6 @@ async function fetchAllQuizzes() {
 onMounted(fetchAllQuizzes);
 
 const searchQuizzes = () => {
-  console.log("Searching quizzes...");
 };
 
 function getPathToQuizImage(fileName) {

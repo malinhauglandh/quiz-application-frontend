@@ -8,9 +8,9 @@
                 <span>+ Add</span>
                 </div>
                 <div v-if="showOptions" class="options-container">
-                <button @click="chooseQuestionType('multiplechoice')">Multiple Choice</button>
-                <button @click="chooseQuestionType('truefalse')">True or False</button>
-                <button @click="chooseQuestionType('fillintheblank')">Fill in the Blank</button>
+                <button data-testid="multiple-choice-button" @click="chooseQuestionType('multiplechoice')">Multiple Choice</button>
+                <button data-testid="true-or-false-button" @click="chooseQuestionType('truefalse')">True or False</button>
+                <button data-testid="fill-in-the-blank-button" @click="chooseQuestionType('fillintheblank')">Fill in the Blank</button>
                 </div>
             </div>
             </div>
