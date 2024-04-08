@@ -49,7 +49,7 @@
 import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import axios from 'axios';
-import  {useStore } from "@/store/store";
+import  {useStore } from "/src/store/store";
 import { computed } from 'vue';
 
 const quizName = ref('');
