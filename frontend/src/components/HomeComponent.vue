@@ -58,9 +58,9 @@
 
 <script setup>
 import { onMounted, ref } from 'vue';
-import { useStore } from "@/store/userStore";
-import router from "@/router/router";
-import { useQuizStore } from "@/store/quizStore";
+import { useStore } from "/src/store/userStore";
+import router from "/src/router/router";
+import { useQuizStore } from "/src/store/quizStore";
 
 const store = useStore();
 const quizStore = useQuizStore();

@@ -4,13 +4,11 @@ import {createPinia, setActivePinia} from 'pinia';
 import TrueOrFalseComponent from '/src/components/TrueOrFalseComponent.vue';
 import {createRouter, createWebHistory} from 'vue-router';
 
-// Define your routes
 const routes = [{path: '/addquestions', name: 'AddQuestions'}];
 const router = createRouter({history: createWebHistory(), routes});
 
 describe('TrueOrFalseComponent', () => {
     beforeEach(async () => {
-        // Reset and use a new Pinia store for each test
         const pinia = createPinia();
         setActivePinia(pinia);
         await router.push('/');
