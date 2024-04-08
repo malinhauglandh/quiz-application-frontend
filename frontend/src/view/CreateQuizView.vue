@@ -1,11 +1,11 @@
 <template>
-    <div class="create-quiz-view">
-        <navbar-component></navbar-component>
-        <div class="content">
-            <router-view v-if="!showAddQuestions"></router-view>
-            <router-view v-else></router-view>
-        </div>
+  <div class="create-quiz-view">
+    <navbar-component />
+    <div class="content">
+      <router-view v-if="!showAddQuestions" />
+      <router-view v-else />
     </div>
+  </div>
 </template>
 
 <script setup>

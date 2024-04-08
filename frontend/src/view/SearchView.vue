@@ -1,10 +1,10 @@
 <template>
-    <div class="search-view">
-        <navbar-component />
-        <div class="content">
-            <SearchComponent />
-        </div>
+  <div class="search-view">
+    <navbar-component />
+    <div class="content">
+      <SearchComponent />
     </div>
+  </div>
 </template>
 
 <script setup>

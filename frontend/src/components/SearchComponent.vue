@@ -1,17 +1,46 @@
 <template>
   <div class="search-component">
     <div class="search-bar-container">
-      <input type="text" v-model="searchQuery" placeholder="Search among all quizzes" class="search-bar">
-      <font-awesome-icon icon="magnifying-glass" class="search-image" @click="searchQuizzes" />
+      <input
+        v-model="searchQuery"
+        type="text"
+        placeholder="Search among all quizzes"
+        class="search-bar"
+      >
+      <font-awesome-icon
+        icon="magnifying-glass"
+        class="search-image"
+        @click="searchQuizzes"
+      />
     </div>
     <div class="quiz-box-container">
-      <div v-for="quiz in quizzes" :key="quiz.quizId" class="quiz-box">
-        <div v-if="quiz.multimedia" class="quiz-image" :style="{ backgroundImage: `url(${getPathToQuizImage(quiz.multimedia)})` }"></div>
-        <div v-else class="quiz-image-placeholder"></div>
+      <div
+        v-for="quiz in quizzes"
+        :key="quiz.quizId"
+        class="quiz-box"
+      >
+        <div
+          v-if="quiz.multimedia"
+          class="quiz-image"
+          :style="{ backgroundImage: `url(${getPathToQuizImage(quiz.multimedia)})` }"
+        />
+        <div
+          v-else
+          class="quiz-image-placeholder"
+        />
         <div class="quiz-details">
-          <h3 class="quiz-title">{{ quiz.quizName }}</h3>
-          <p class="quiz-description">{{ quiz.quizDescription }}</p>
-          <button class="play-quiz-button" @click="playQuiz(quiz.quizId)">Play Quiz</button>
+          <h3 class="quiz-title">
+            {{ quiz.quizName }}
+          </h3>
+          <p class="quiz-description">
+            {{ quiz.quizDescription }}
+          </p>
+          <button
+            class="play-quiz-button"
+            @click="playQuiz(quiz.quizId)"
+          >
+            Play Quiz
+          </button>
         </div>
       </div>
     </div>
@@ -22,13 +51,16 @@
 <script setup>
 import { onMounted, ref } from 'vue';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import router from "@/router/router";
+import { useStore } from "@/store/userStore";
 
 const searchQuery = ref('');
 const quizzes = ref([]);
+const userStore = useUserStore();
 
 async function fetchAllQuizzes() {
   try {
-    const response = await fetch('http://localhost:8080/api/quizzes/allQuizzes');
+    const response = await userStore.fetchData('http://localhost:8080/api/quizzes/allQuizzes');
 
     const fetchedQuizzes = await response.json();
 
@@ -49,8 +81,9 @@ function getPathToQuizImage(fileName) {
   return `http://localhost:8080/api/quizzes/files/${fileName}`;
 }
 
-function playQuiz() {
-}
+const playQuiz = (quizId) => {
+  router.push(`/playquiz/${quizId}`);
+};
 
 </script>
 

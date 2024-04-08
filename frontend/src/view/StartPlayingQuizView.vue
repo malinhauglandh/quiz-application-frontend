@@ -1,15 +1,14 @@
 <template>
-  <div class="home-view">
+  <div class="start-playing-quiz-view">
     <navbar-component />
     <div class="content">
-      <HomeComponent />
+      <router-view />
     </div>
   </div>
 </template>
 
 <script setup>
 import NavbarComponent from '@/components/NavBarComponent.vue';
-import HomeComponent from '@/components/HomeComponent.vue';
 
 </script>
 

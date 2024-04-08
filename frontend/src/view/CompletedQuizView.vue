@@ -1,6 +1,6 @@
 <template>
   <div class="completed-quiz-view">
-    <navbar-component></navbar-component>
+    <navbar-component />
     <div class="content">
       <CompletedQuizComponent />
     </div>

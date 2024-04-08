@@ -2,11 +2,24 @@
   <body class="start">
     <div class="start-page">
       <div class="logo">
-        <img src="../assets/logo.png" alt="logo" />
+        <img
+          src="../assets/logo.png"
+          alt="logo"
+        >
       </div>
       <div class="top-row-buttons">
-        <button class="login-button" @click="goToLogIn"><span>Log in</span></button>
-        <button class="sign-up-button" @click="goToSignUp"><span>Sign up</span></button>
+        <button
+          class="login-button"
+          @click="goToLogIn"
+        >
+          <span>Log in</span>
+        </button>
+        <button
+          class="sign-up-button"
+          @click="goToSignUp"
+        >
+          <span>Sign up</span>
+        </button>
       </div>
       <div class="text-and-sign-up">
         <div class="start-page-text">
@@ -18,11 +31,16 @@
           <p>If you don't have an account yet, sign up today and start exploring!</p>
         </div>
         <div class="sign-up-today-button">
-          <button @click="goToSignUp">Sign up today!</button>
+          <button @click="goToSignUp">
+            Sign up today!
+          </button>
         </div>
       </div>
       <div class="big-logo">
-        <img src="../assets/logo.png" alt="big-logo" />
+        <img
+          src="../assets/logo.png"
+          alt="big-logo"
+        >
       </div>
     </div>
     <div class="copyright">
