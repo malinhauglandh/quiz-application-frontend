@@ -56,8 +56,8 @@
 
 <script setup>
 import { onMounted, ref, computed } from 'vue';
-import { useStore } from "@/store/userStore";
-import { useQuizStore } from "@/store/quizStore";
+import { useStore } from "/src/store/userStore";
+import { useQuizStore } from "/src/store/quizStore";
 import { useRouter } from 'vue-router';
 
 const store = useStore();
