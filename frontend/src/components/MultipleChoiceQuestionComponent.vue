@@ -22,7 +22,7 @@
 <script setup>
 import { computed, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { useStore } from "@/store/store";
+import { useStore } from "@/store/userStore";
 
 
 const store = useStore();

@@ -61,24 +61,8 @@ onBeforeMount(async () => {
 
 onMounted(() => {
   fetchCategories();
-  setTimeout(() => {
-    const questionIds = currentQuiz.value.questions.map(q => getQuestionType(q));
-    console.log("Question IDs:", questionIds)
-  }, 1000);
 });
 
-const getQuestionType = (question) => {
-  switch (question.questionTypeId) {
-    case 1:
-      return 'multiplechoice';
-    case 2:
-      return 'blanks';
-    case 3:
-      return 'true/false';
-    default:
-      return null;
-  }
-};
 
 
 const getPathToQuizImage = (filename) => {
