@@ -108,7 +108,6 @@ export const useQuizStore = defineStore('quiz', () => {
     const questionIndex = currentQuiz.value.questions.findIndex(
       (question) => question.questionId === currentQuestion.value.questionId
     );
-    console.log('Current question index:', questionIndex);
     if (questionIndex < currentQuiz.value.questions.length - 1) {
       return currentQuiz.value.questions[questionIndex + 1];
     }
@@ -127,7 +126,6 @@ export const useQuizStore = defineStore('quiz', () => {
     }
     
     userAnswers.value[questionIndex] = { userAnswerId: 1, completedQuizId:1, questionChoiceId: choiceId };
-    console.log('User answers:', userAnswers.value);
   }
 
   function clearAnswers() {
@@ -138,14 +136,12 @@ export const useQuizStore = defineStore('quiz', () => {
     const store = useStore();
     const accessToken = store.jwtToken.accessToken;
     try {
-      console.log('Submitting quiz answers:', userAnswers.value);
       const response = await axios.post(`http://localhost:8080/api/completed-quizzes/${quizId}/submit`, userAnswers.value, {
         headers: {
           'Authorization': `Bearer ${accessToken}`,
           'Content-Type': 'application/json'
         },
       });
-      console.log('Quiz answers submitted:', response.data);
       clearAnswers();
     } catch (error) {
       console.error('Failed to submit quiz answers:', error);
