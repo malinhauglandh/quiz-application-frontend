@@ -9,7 +9,7 @@
 </template>
 
 <script setup>
-import NavbarComponent from '@/components/NavBarComponent.vue';
+import NavbarComponent from '/src/components/NavBarComponent.vue';
 import { ref } from 'vue';
 
 const showAddQuestions = ref(false);

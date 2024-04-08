@@ -20,7 +20,7 @@ export function useNextQuestionType(quiz, currentQuestionId) {
             case 3:
                 return 'fillInTheBlankQuestion';
             default:
-                return 'quizCompletion'; // route name where the quiz results is summarized
+                return 'quizCompletion';
         }
     });
 
