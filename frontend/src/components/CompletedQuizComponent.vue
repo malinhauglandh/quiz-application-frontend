@@ -64,11 +64,11 @@ onMounted(async () => {
                 },
             }
         );
-        tempQuizResults = response.data;        
+        tempQuizResults = response.data;     
+        console.log('Quiz results:', tempQuizResults);   
     } catch (error) {
         console.error('Error fetching quiz results:', error);
     } finally {
-        tempQuizResults = tempQuizResults.reduce((max, quiz) => max.completedQuizId > quiz.completedQuizId ? max : quiz);
         tempQuizResults.userAnswers = tempQuizResults.userAnswers.map((answer, index) => {
             return {
                 questionText: quizStore.currentQuiz.questions[index].questionText,
