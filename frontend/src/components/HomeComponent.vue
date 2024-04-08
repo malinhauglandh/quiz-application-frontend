@@ -1,5 +1,5 @@
 <template>
-  <div class="home-component">
+  <div class="home-component" v-if="!categoriesLoading">
     <div class="content-wrapper">
       <h1>Your recently made quizzes:</h1>
       <div
@@ -57,9 +57,11 @@
 import { onMounted, ref } from 'vue';
 import { useStore } from "@/store/userStore";
 import router from "@/router/router";
+import { useQuizStore } from "@/store/quizStore";
 
 const store = useStore();
-
+const quizStore = useQuizStore();
+const categoriesLoading = ref(true);
 const quizzes = ref([]);
 
 const getPathToQuizImage = (filename) => {
@@ -103,7 +105,20 @@ const playQuiz = (quizId) => {
   router.push(`/playquiz/${quizId}`);
 };
 
-onMounted(fetchQuizzes);
+onMounted(async () => {
+  try {
+    fetchQuizzes();
+    if(!quizStore.categories) {
+      await quizStore.fetchCategories();
+    }
+  } catch (error) {
+    console.error("Failed to fetch quizzes:", error);
+  } finally {
+    categoriesLoading.value = false;
+  }
+});
+
+
 </script>
 
 <style scoped>

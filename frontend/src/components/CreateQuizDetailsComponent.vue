@@ -128,8 +128,9 @@ const difficulty = ref('');
 const fileUploaded = ref(false);
 const router = useRouter();
 const userStore = useStore();
+const categoriesLoading = ref(true);
 
-const categories = ref([]);
+const categories = ref(store.categories);
 const selectedCategory = ref(null);
 const formData = new FormData();
 
@@ -144,18 +145,19 @@ const config = {
     'Authorization': 'Bearer ' + userStore.jwtToken.accessToken
   }
 };
-
+    
 onMounted(async () => {
   try {
-    const response = await userStore.fetchData('http://localhost:8080/api/categories/allCategories');
-    console.log(response); 
-    if(!response.status === 200) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+    console.log(categories.value)
+    if(!categories.value) {
+      await store.fetchCategories();
     }
-    categories.value = response.data;
   } catch (error) {
     console.error('Failed to fetch categories:', error);
-  }
+  } finally {
+    categories.value = store.categories;
+    categoriesLoading.value = false;
+  } 
 });
     
 // Inside your script setup
@@ -205,7 +207,6 @@ const removeMedia = () => {
     multimedia.value = null;
     fileUploaded.value = false;
 };
-
 </script>
 
 <style scoped>

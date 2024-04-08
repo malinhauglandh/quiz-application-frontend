@@ -8,6 +8,7 @@ export const useQuizStore = defineStore('quiz', () => {
   const quizzes = ref([]);
   const currentQuestion = ref(null);
   const userAnswers = ref([]);
+  const categories = ref([]);
 
   const getQuizById = (id) => {
     return quizzes.value.find(quiz => quiz.quizId === id);
@@ -92,6 +93,19 @@ export const useQuizStore = defineStore('quiz', () => {
     return routeName;
   }
 
+  async function fetchCategories() {
+    const store = useStore();
+    try {
+      const catResponse = await store.fetchData('http://localhost:8080/api/categories/allCategories');
+      if (catResponse.status !== 200) {
+        throw new Error(`HTTP error! status: ${catResponse.status}`);
+      }
+      this.categories = await catResponse.data;
+    } catch (error) {
+      console.error("Failed to fetch categories:", error);
+    }
+  }
+
   function nextQuestion() {
     const questionIndex = currentQuiz.value.questions.findIndex(
       (question) => question.questionId === currentQuestion.value.questionId
@@ -134,5 +148,5 @@ export const useQuizStore = defineStore('quiz', () => {
     }
   }
 
-  return { currentQuiz, quizzes, currentQuestion, userAnswers, getQuestionRouteName, getQuizById, createQuiz, addQuestionToQuiz, fetchQuizDetails, updateAnswer, clearAnswers, submitAnswers, nextQuestion };
+  return { fetchCategories, currentQuiz, quizzes, currentQuestion, userAnswers, getQuestionRouteName, getQuizById, createQuiz, addQuestionToQuiz, fetchQuizDetails, updateAnswer, clearAnswers, submitAnswers, nextQuestion };
 });

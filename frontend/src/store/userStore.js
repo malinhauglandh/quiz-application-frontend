@@ -41,7 +41,6 @@ export const useStore = defineStore("token", () => {
 
   async function fetchData(path) {
     const res = await fetch(path);
-    console.log(res)
     if(res.status === 200){
       return res;
     }

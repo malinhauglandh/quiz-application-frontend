@@ -1,5 +1,5 @@
 <template>
-  <div class="quiz-play-component" v-if="quizId">
+  <div class="quiz-play-component" v-if="options">
     <h2>Quiz Question</h2>
     <p v-html="formattedQuestion"></p>
     <div class="options-container">
@@ -13,13 +13,12 @@
 </template>
 
 <script setup>
-import { computed, ref } from 'vue';
+import { computed, ref, onBeforeMount } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useStore } from "@/store/userStore";
 import { useQuizStore } from "@/store/quizStore";
 
 const question = "";
-const options = ['', '', ''];
 const selectedOption = ref();
 const formattedQuestion = computed(() => question.replace("____", `<strong>${selectedOption.value}</strong>`));
 
@@ -27,11 +26,17 @@ const router = useRouter();
 const store = useStore();
 const quizStore = useQuizStore();
 const userAnswer = ref('');
+const loading = ref(true);
 
 const quizId = quizStore.currentQuiz.quizId;
 
 const currentQuestion = computed(() => {
   return quizStore.currentQuestion;
+});
+
+const options = computed(() => {
+  console.log("choices: ", currentQuestion.value.choices);
+  return currentQuestion.value.choices.map(choice => choice.choice);
 });
 
 const updateUserAnswerForFillInTheBlank = () => {

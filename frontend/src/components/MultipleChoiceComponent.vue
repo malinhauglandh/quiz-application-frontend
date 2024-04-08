@@ -114,11 +114,12 @@ const saveQuestion = async () => {
   formData.append('quizId', store.currentQuiz.quizId);
   formData.append('questionTypeId', 1)
   let choices = [
-    {"choice": "True", "explanation": "N/A", "isCorrectChoice": true},
-    {"choice": "False", "explanation": "N/A", "isCorrectChoice": false},
-    {"choice": "False", "explanation": "N/A", "isCorrectChoice": false},
-    {"choice": "False", "explanation": "N/A", "isCorrectChoice": false}
+    {"choice": alternatives.value[0], "explanation": "N/A", "isCorrectChoice": false},
+    {"choice": alternatives.value[1], "explanation": "N/A", "isCorrectChoice": false},
+    {"choice": alternatives.value[2], "explanation": "N/A", "isCorrectChoice": false},
+    {"choice": alternatives.value[3], "explanation": "N/A", "isCorrectChoice": false}
   ];
+  console.log(choices);
   choices[selectedOption.value].isCorrectChoice = true;
   let choicesString = JSON.stringify(choices);
   formData.append('choices', choicesString);
