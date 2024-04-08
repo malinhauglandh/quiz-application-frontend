@@ -121,7 +121,6 @@ const saveQuestion = async () => {
     showModal.value = true;
     return;
   }
-  console.log(userStore.jwtToken)
   const path = "http://localhost:8080/api/questions/create";
   const formData = new FormData();
   formData.append('questionText', question.value);

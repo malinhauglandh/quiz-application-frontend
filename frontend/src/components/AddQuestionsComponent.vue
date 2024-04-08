@@ -54,6 +54,7 @@
     import { computed } from 'vue';
     import axios from 'axios';
     import ConfirmModal from '@/components/ConfirmModal.vue';
+    import confetti from 'canvas-confetti';
     
     const quizStore = useQuizStore();
     const userStore = useStore();
@@ -69,40 +70,12 @@
     const modalMessage = ref('');
     const modalConfirm = ref(() => {});
 
-    const fetchQuizDetailsAlternatively = async () => {
-        try {
-            const quizId = quizStore.currentQuiz.quizId;
-            const data = await userStore.fetchData(`http://localhost:8080/api/quizzes/${quizId}/details`)
-            console.log("this data wats fetched alternatively:", data)
-        } catch (error) {
-            console.error('Failed to fetch quiz details:', error);
-        }
-    }
-
-    const fetchQuizDetails = async (quizId) => {
-    try {
-        const response = await axios.get(`http://localhost:8080/api/quizzes/${quizId}/details`, {
-        headers: {
-            Authorization: `Bearer ${userStore.jwtToken.accessToken}`
-        }
-        
-        });
-        if (response.data) {
-        currentQuiz.value = response.data;
-        console.log('Quiz details:', currentQuiz.value);
-        } else {
-        console.error('No quiz details were returned for quiz ID:', quizId);
-        }
-    } catch (error) {
-        console.error('Failed to fetch quiz details:', error);
-    }
-};
-
-    onBeforeMount(() => {
+    onBeforeMount(async () => {
     if(quizStore.currentQuiz && quizStore.currentQuiz.quizId) {
-        const quizId = useQuizStore().currentQuiz.quizId;
-        fetchQuizDetails(quizId);
-        fetchQuizDetailsAlternatively();
+        const quizId = quizStore.currentQuiz.quizId;
+        const data = await quizStore.fetchQuizDetails(quizId);
+        console.log("this data was fetched:", data);
+        currentQuiz.value = data;
     } else {
         router.push('/createQuiz');
     }
@@ -141,10 +114,10 @@
     };
 
     const promptDelete = () => {
-    modalTitle.value = "Confirm Delete";
-    modalMessage.value = "You are about to delete the quiz! Are you sure you want to proceed?";
-    modalConfirm.value = handleDelete;
-    showModal.value = true;
+        modalTitle.value = "Confirm Delete";
+        modalMessage.value = "You are about to delete the quiz! Are you sure you want to proceed?";
+        modalConfirm.value = handleDelete;
+        showModal.value = true;
     };
 
     const promptSave = () => {
@@ -184,22 +157,22 @@
     };
 
     const handleAddQuestion = async () => {
-    const questionData = {
-    quizId: currentQuiz.value.quizId,
-    questionText: currentQuiz.value.questionText,
-    tag: currentQuiz.value.tag,
-    questionTypeId: currentQuiz.value.questionTypeId,
-    choices: currentQuiz.value.choices,
-    file: selectedFile.value
-    };
+        const questionData = {
+            quizId: currentQuiz.value.quizId,
+            questionText: currentQuiz.value.questionText,
+            tag: currentQuiz.value.tag,
+            questionTypeId: currentQuiz.value.questionTypeId,
+            choices: currentQuiz.value.choices,
+            file: selectedFile.value
+        };
 
-    try {
-        await quizStore.addQuestionToQuiz(questionData);
-        console.log('Question added successfully');
-    } catch (error) {
-        console.error('Failed to add question', error);
-    }
-};
+        try {
+            await quizStore.addQuestionToQuiz(questionData);
+            console.log('Question added successfully');
+        } catch (error) {
+            console.error('Failed to add question', error);
+        }
+    };
 
     </script>
     

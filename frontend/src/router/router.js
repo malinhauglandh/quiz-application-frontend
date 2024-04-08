@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import { useStore } from '@/store/store'
+import { useStore } from '@/store/userStore'
 
 import HomeView from '@/view/HomeView.vue'
 import CreateQuizView from '@/view/CreateQuizView.vue'
@@ -12,11 +12,6 @@ import FillInTheBlankComponent from "@/components/FillInTheBlankComponent.vue";
 import StartPageView from "@/view/StartPageView.vue";
 import LogInPageView from "@/view/LogInPageView.vue";
 import SignUpPageView from "@/view/SignUpPageView.vue";
-import StartPlayingQuizComponent from "@/components/StartPlayingQuizComponent.vue";
-import StartPlayingQuizView from "@/view/StartPlayingQuizView.vue";
-import TrueOrFalseQuestionComponent from "@/components/TrueOrFalseQuestionComponent.vue";
-import MultipleChoiceQuestionComponent from "@/components/MultipleChoiceQuestionComponent.vue";
-import FillInTheBlankQuestionComponent from "@/components/FillInTheBlankQuestionComponent.vue";
 import CompletedQuizView from "@/view/CompletedQuizView.vue";
 import StartPlayingQuizComponent from "@/components/StartPlayingQuizComponent.vue";
 import StartPlayingQuizView from "@/view/StartPlayingQuizView.vue";

@@ -1,129 +1,124 @@
 <template>
   <div class="start-playing-quiz-component">
-    <div class="content-wrapper">
-      <div v-for="quizItem in quiz" :key="quizItem.quizId" class="quiz-box">
-        <div v-if="quizItem.multimedia" class="quiz-image" :style="{ backgroundImage: `url(${getPathToQuizImage(quizItem.multimedia)})` }"></div>
-        <div v-else class="quiz-image-placeholder"></div>
-        <h3 class="quiz-title">{{ quizItem.quizName }}</h3>
-        <p class="quiz-description">{{ quizItem.quizDescription }}</p>
-        <p class="quiz-description" v-if="quizItem.difficultyLevel">
-          <span class="label">Difficulty level:</span> {{ quizItem.difficultyLevel }}
-        </p>
-        <p class="quiz-description" v-if="quizItem.categoryName">
-          <span class="label">Category:</span> {{ quizItem.categoryName }}
-        </p>
-        <button class="play-quiz-button" @click="playQuiz(quizItem.quizId)">START</button>
+    <div class="content-wrapper" v-if="!loading">
+      <div v-if="currentQuiz.multimedia" class="quiz-image" :style="{ backgroundImage: `url(${getPathToQuizImage(currentQuiz.multimedia)})` }"></div>
+      <div v-else class="quiz-image-placeholder"></div>
+      <h3 class="quiz-title">{{ currentQuiz.quizName }}</h3>
+      <p class="quiz-description">{{ currentQuiz.quizDescription }}</p>
+      <p class="quiz-description" v-if="currentQuiz.difficultyLevel">
+        <span class="label">Difficulty level:</span> {{ currentQuiz.difficultyLevel }}
+      </p>
+      <p class="quiz-description" v-if="currentQuiz.categoryId && !categoriesLoading">
+        <span class="label">Category:</span> {{ categories.find(cat => cat.categoryId === currentQuiz.categoryId).categoryName }}
+      </p>
+      <button class="play-quiz-button" @click="playQuiz(currentQuiz.quizId)">START</button>
+      <div class="questions-wrapper">
+        <h3>Questions:</h3>
+        <ul>
+          <li v-for="question in currentQuiz.questions" :key="question.questionId" class="single-question">
+            {{ question.questionText }}
+            {{ question.questionTypeId }}
+          </li>
+        </ul>
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue';
-import { useStore } from "@/store/store";
+import { onMounted, ref, onBeforeMount } from 'vue';
+import { useStore } from "@/store/userStore";
+import { useQuizStore } from "@/store/quizStore";
 import router from "@/router/router";
+import axios from 'axios';
 
-const store = useStore();
+const userStore = useStore();
+const quizStore = useQuizStore();
 const quiz = ref([]);
 const categories = ref([]);
-
+const currentQuiz = ref(null);
 const quizId = router.currentRoute.value.params.quizId;
+const multimedia = ref(null);
+const loading = ref(true);
+const categoriesLoading = ref(true);
 
-onMounted(async () => {
-  await fetchCategories();
-  await fetchQuiz();
+
+onBeforeMount(async () => {
+  try{
+    const data = await quizStore.fetchQuizDetails(quizId);
+    currentQuiz.value = data;
+    console.log("this data was fetched:", data);
+    if(data.multimedia){
+      multimedia.value = data.multimedia;
+    }
+  } catch(error) {
+    console.error('Failed to fetch quizzes:', error);
+    router.push({ path: '/home' })
+  } finally {
+    loading.value = false;
+  }
 });
+
+onMounted(() => {
+  fetchCategories();
+  setTimeout(() => {
+    const questionIds = currentQuiz.value.questions.map(q => getQuestionType(q));
+    console.log("Question IDs:", questionIds)
+  }, 1000);
+});
+
+const getQuestionType = (question) => {
+  switch (question.questionTypeId) {
+    case 1:
+      return 'multiplechoice';
+    case 2:
+      return 'blanks';
+    case 3:
+      return 'true/false';
+    default:
+      return null;
+  }
+};
+
+
+const getPathToQuizImage = (filename) => {
+  return `http://localhost:8080/api/quizzes/files/${filename}`;
+};
 
 async function fetchCategories() {
     try {
-        const catResponse = await store.fetchData('http://localhost:8080/api/categories/allCategories');
+        const catResponse = await userStore.fetchData('http://localhost:8080/api/categories/allCategories');
         if (catResponse.status !== 200) {
             throw new Error(`HTTP error! status: ${catResponse.status}`);
         }
         categories.value = await catResponse.data;
     } catch (error) {
         console.error("Failed to fetch categories:", error);
+    } finally {
+        categoriesLoading.value = false;
     }
 }
-
-async function fetchQuiz() {
-  const token = store.jwtToken;
-  const creatorId = token.userId;
-  const accessToken = token.accessToken;
-
-  try {
-    const response = await fetch(`http://localhost:8080/api/quizzes/user/${creatorId}/${quizId}`, {
-      headers: {
-        'Authorization': `Bearer ${accessToken}`
-      }
-    });
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-
-    const fetchedQuiz = await response.json();
-
-    quiz.value = fetchedQuiz.map(q => {
-      const categoryName = categories.value.find(c => c.categoryId === q.categoryId)?.categoryName;
-      return { ...q, categoryName };
-    });
-  } catch (error) {
-    console.error("Failed to fetch quiz:", error);
-  }
-}
-
-const getPathToQuizImage = (filename) => {
-  return `http://localhost:8080/api/quizzes/files/${filename}`;
-};
-
-const determineFirstQuestionRoute = (questionTypeId) => {
-  switch(questionTypeId) {
-    case 1: return 'MultipleChoiceQuestion';
-    case 2: return 'TrueOrFalseQuestion';
-    case 3: return 'FillInTheBlankQuestion';
-    default: return null;
-  }
-};
-
 
 const playQuiz = async (quizId) => {
-  try {
-    const response = await fetch(`http://localhost:8080/api/quizzes/${quizId}/details`, {
-      headers: {
-        'Authorization': `Bearer ${store.jwtToken.accessToken}`
-      }
-    });
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-
-    const quizDetails = await response.json();
-
-    if (quizDetails.questions && quizDetails.questions.length > 0) {
-      const firstQuestion = quizDetails.questions[0];
-      const routeName = determineFirstQuestionRoute(firstQuestion.questionTypeId);
-
-      if (routeName) {
-        await router.push({
-          name: routeName,
-          params: {
-            quizId: quizId.toString(),
-            questionId: firstQuestion.questionId.toString(),
-          }
-        });
-      } else {
-        console.error("Invalid question type ID or route name not found.");
-      }
+    if (currentQuiz.value.questions.length > 0){
+        const firstQuestion = currentQuiz.value.questions[0];
+        quizStore.currentQuestion = firstQuestion;
+        const routeName = quizStore.getQuestionRouteName(firstQuestion.questionTypeId);
+        if (routeName) {
+            await router.push({
+                name: routeName,
+                params: {
+                    quizId: quizId.toString(),
+                    questionId: firstQuestion.questionId.toString(),
+                }
+            });
+        } else {
+            console.error("Invalid question type ID or route name not found.");
+        }
     } else {
-      console.error("Quiz has no questions.");
+        console.error("Quiz has no questions.");
     }
-  } catch (error) {
-    console.error("Failed to fetch quiz details:", error);
-  }
 };
-
 </script>
 
 <style scoped>
