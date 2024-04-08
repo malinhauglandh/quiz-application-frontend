@@ -20,10 +20,9 @@
 </template>
 
 <script setup>
-import { computed, ref } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
+import { onMounted, ref } from 'vue';
+import { useRoute } from 'vue-router';
 import { useStore } from "@/store/userStore";
-
 
 const store = useStore();
 const router = useRouter();
@@ -36,34 +35,6 @@ const currentQuestion = computed(() => {
     return store.quizDetails.questions[store.quizDetails.currentQuestionIndex];
 });
 
-
-const selectAlternative = (index, choiceId) => {
-    selectedAnswer.value = index;
-    store.updateAnswer(currentQuestion.value.questionId, choiceId);
-};
-
-const submitAnswer = async () => {
-    if (store.quizDetails.currentQuestionIndex < store.quizDetails.questions.length - 1) {
-        store.incrementQuestionIndex();
-        router.push({
-            name: getRouteNameByQuestionTypeId(currentQuestion.value.questionTypeId),
-            params: { quizId, questionId: currentQuestion.value.questionId }
-        });
-    } else {
-        await store.submitAnswers(quizId);
-        router.push({ name: 'QuizCompletion', params: { quizId } });
-        store.clearQuizDetails();
-    }
-};
-
-function getRouteNameByQuestionTypeId(questionTypeId) {
-    switch (questionTypeId) {
-        case 1: return 'MultipleChoiceQuestion';
-        case 2: return 'TrueOrFalseQuestion';
-        case 3: return 'FillInTheBlankQuestion';
-        default: return null;
-    }
-}
 </script>
 
 

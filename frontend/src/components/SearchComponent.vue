@@ -52,13 +52,15 @@
 import { onMounted, ref } from 'vue';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import router from "@/router/router";
+import { useStore } from "@/store/userStore";
 
 const searchQuery = ref('');
 const quizzes = ref([]);
+const userStore = useUserStore();
 
 async function fetchAllQuizzes() {
   try {
-    const response = await fetch('http://localhost:8080/api/quizzes/allQuizzes');
+    const response = await userStore.fetchData('http://localhost:8080/api/quizzes/allQuizzes');
 
     const fetchedQuizzes = await response.json();
 

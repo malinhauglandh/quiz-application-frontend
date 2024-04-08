@@ -1,19 +1,12 @@
 <template>
-    <div class="fill-in-the-blank-question" v-if="currentQuestion">
-        <div class="question-display">
-            <p class="question-text">{{ currentQuestion.questionText }}</p>
-        </div>
-        <div class="input-container">
-            <input
-                type="text"
-                class="answer-input"
-                placeholder="Type your answer here..."
-                v-model="userAnswer"
-            />
-        </div>
-        <div class="submit-container">
-            <button class="button submit-button" @click="submitAnswer">SUBMIT ANSWER AND GO TO NEXT QUESTION</button>
-        </div>
+  <div class="quiz-play-component">
+    <h2>Quiz Question</h2>
+    <p v-html="formattedQuestion"></p>
+    <div class="options-container">
+      <div class="option" v-for="(option, index) in options" :key="index">
+        <input type="checkbox" :id="option" v-model="selectedOption" :value="option" @change="updateQuestion">
+        <label :for="option">{{ option }}</label>
+      </div>
     </div>
     <div v-else>No question available.</div>
 </template>
@@ -22,106 +15,99 @@
 import { computed, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useStore } from "@/store/userStore";
+import { useQuizStore } from "@/store/quizStore";
+
+const question = "";
+const options = ['', '', ''];
+const selectedOption = ref();
+const formattedQuestion = computed(() => question.replace("____", `<strong>${selectedOption.value}</strong>`));
 
 const router = useRouter();
-const route = useRoute();
 const store = useStore();
+const quizStore = useQuizStore();
 const userAnswer = ref('');
 
-const quizId = route.params.quizId;
+const quizId = quizStore.currentQuiz.quizId;
 
 const currentQuestion = computed(() => {
-    return store.quizDetails.questions[store.quizDetails.currentQuestionIndex];
+  return quizStore.currentQuestion;
 });
 
 const updateUserAnswerForFillInTheBlank = () => {
-    const answer = {
-        questionId: currentQuestion.value.questionId,
-        answerText: userAnswer.value, // Directly using the user's input
-        // Optionally use a dummy choiceId if needed
-        choiceId: 'dummy-choice-id'
-    };
-    // Update the store with this answer
-    store.updateAnswer(answer.questionId, answer.choiceId, answer.answerText);
+  const answer = {
+      questionId: currentQuestion.value.questionId,
+      answerText: userAnswer.value, // Directly using the user's input
+      // Optionally use a dummy choiceId if needed
+      choiceId: 'dummy-choice-id'
+  };
+  // Update the store with this answer
+  quizStore.updateAnswer(answer.choiceId);
 };
+
 const submitAnswer = async () => {
-    updateUserAnswerForFillInTheBlank();
-
-    if (store.quizDetails.currentQuestionIndex < store.quizDetails.questions.length - 1) {
-        store.incrementQuestionIndex();
-        const nextQuestion = store.quizDetails.questions[store.quizDetails.currentQuestionIndex];
-        router.push({
-            name: getRouteNameByQuestionTypeId(nextQuestion.questionTypeId),
-            params: { quizId, questionId: nextQuestion.questionId }
-        });
-    } else {
-        await store.submitAnswers(quizId);
-        router.push({ name: 'QuizCompletion', params: { quizId } });
-    }
+  updateUserAnswerForFillInTheBlank();
+  if(quizStore.nextQuestion !== null) {
+    console.log('Next question is:');
+  } else {
+      router.push({ name: 'QuizCompletion', params: { quizId } });
+  }
+  if (quizStore.currentQuestion) {
+      userAnswer.value = '';
+      quizStore.nextQuestion();
+      await userStore.submitAnswers(quizId);
+  } else {
+      router.push({ name: 'QuizCompletion', params: { quizId } });
+  }
 };
 
 
-const getRouteNameByQuestionTypeId = (questionTypeId) => {
-    switch(questionTypeId) {
-        case 1: return 'MultipleChoiceQuestion';
-        case 2: return 'TrueOrFalseQuestion';
-        case 3: return 'FillInTheBlankQuestion';
-        default: return null;
-    }
-};
 </script>
 
 
 <style scoped>
-.question-display {
-    text-align: center;
-    margin-bottom: 20px;
+.quiz-play-component {
+  max-width: 800px;
+  margin: 50px auto;
+  padding: 40px;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+  font-family: 'Karla', sans-serif;
 }
 
-.question-text {
-    font-size: 28px;
-    font-weight: bold;
+.options-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-.input-container {
-    display: flex;
-    justify-content: center;
+.option {
+  margin: 10px;
 }
 
-.answer-input {
-    width: 250px;
-    padding: 10px;
-    margin-bottom: 30px;
-    background-color: #f0f0f0;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    font-size: 18px;
-    text-align: center;
+input[type="checkbox"] {
+  margin-right: 10px;
 }
 
-.answer-input:focus {
-    outline: none;
-    border-color: #6320EE;
-    box-shadow: 0 0 5px #6320EE;
+input[type="checkbox"]:checked + label {
+  font-weight: bold;
 }
 
-.submit-container {
-    display: flex;
-    justify-content: center;
-    margin-top: 20px;
+h2 {
+  color: #333;
+  text-align: center;
+  margin-bottom: 20px;
+  font-weight: 700;
+  font-size: 2rem;
 }
 
-.button.submit-button {
-    padding: 15px 30px;
-    background-color: #6320EE;
-    color: white;
-    border: none;
-    border-radius: 20px;
-    cursor: pointer;
-    font-size: 16px;
+p {
+  font-size: 1.2rem;
+  text-align: center;
+  margin-bottom: 2rem;
 }
 
-.button.submit-button:hover {
-    background-color: #7E41FDFF;
+label {
+  font-size: 1rem;
 }
 </style>
