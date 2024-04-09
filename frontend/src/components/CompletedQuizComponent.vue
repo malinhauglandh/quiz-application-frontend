@@ -41,7 +41,6 @@ import { useRoute } from 'vue-router';
 import { useQuizStore } from "@/store/quizStore";
 import confetti from 'canvas-confetti'; 
 
-const route = useRoute();
 const store = useStore();
 const quizResults = ref([]);
 const loadingResults = ref(true);
@@ -53,7 +52,7 @@ onMounted(async () => {
         spread: 150,
         origin: { y: 0.5 }
     })
-    const quizId = route.params.quizId;
+    const quizId = quizStore.currentQuiz.quizId;
     let tempQuizResults = [];
     try {
         const response = await axios.get(

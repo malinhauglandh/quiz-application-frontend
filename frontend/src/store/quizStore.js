@@ -161,4 +161,9 @@ export const useQuizStore = defineStore('quiz', () => {
   }
 
   return { categories, fetchCategories, currentQuiz, quizzes, currentQuestion, userAnswers, getQuestionRouteName, getQuizById, createQuiz, addQuestionToQuiz, fetchQuizDetails, updateAnswer, clearAnswers, submitAnswers, nextQuestion, fetchQuizzes };
+}, {
+  persist: {
+    storage: sessionStorage,
+    enabled: true
+  }
 });

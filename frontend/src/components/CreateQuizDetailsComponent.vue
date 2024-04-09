@@ -131,19 +131,12 @@ const categoriesLoading = ref(true);
 
 const categories = ref(null);
 const selectedCategory = ref(null);
-const formData = new FormData();
 
 const isFormValid = computed(() => {
   return quizName.value.trim() !== '' &&
          selectedCategory.value !== null &&
          difficulty.value.trim() !== '';
 });
-
-const config = {
-  headers: {
-    'Authorization': 'Bearer ' + userStore.jwtToken.accessToken
-  }
-};
     
 onMounted(async () => {
   try {

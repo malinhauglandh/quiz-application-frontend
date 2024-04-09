@@ -226,9 +226,10 @@ const playQuiz = async (quizId) => {
 }
 
 .quiz-details {
-  justify-content: space-around;
-  align-content: space-between;
-  padding: 100px;
+    display: flex;
+    flex-direction: column;
+    padding: 100px;
+    align-items: center;
 }
 
 @media (max-width: 768px) {

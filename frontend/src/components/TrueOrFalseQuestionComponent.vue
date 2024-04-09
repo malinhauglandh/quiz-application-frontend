@@ -54,8 +54,8 @@ const currentQuestion = computed(() => quizStore.currentQuestion);
 
 const selectAlternative = (answer) => {
     selectedAnswer.value = answer !== selectedAnswer.value ? answer : null;
-    const trueChoice = currentQuestion.value.choices.find(c => c.choice === 'True');
-    const falseChoice = currentQuestion.value.choices.find(c => c.choice === 'False');
+    const trueChoice = currentQuestion.value.choices.find(c => c.choice.toLowerCase() === 'True'.toLowerCase());
+    const falseChoice = currentQuestion.value.choices.find(c => c.choice.toLowerCase() === 'False'.toLowerCase());
 
     let choiceId = null;
     if (answer && trueChoice) {

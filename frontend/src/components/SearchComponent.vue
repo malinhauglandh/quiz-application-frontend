@@ -13,6 +13,21 @@
         class="search-image"
         @click="searchQuizzes"
       />
+      <select v-model="selectedCategory">
+        <option
+          value="null"
+          selected
+        >
+          Select Category
+        </option>
+        <option
+          v-for="category in categories"
+          :key="category.categoryId"
+          :value="category.categoryId"
+        >
+          {{ category.categoryName }}
+        </option>
+      </select>
     </div>
     <div class="quiz-box-container">
       <div
@@ -45,22 +60,43 @@
         </div>
       </div>
     </div>
+    <ConfirmModal 
+        :visible=showModal
+        message="No quizzes found with that search / category"
+        title="No results found."
+        @cancel="noQuizzesFound"
+      />
   </div>
 </template>
 
 
 <script setup>
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import router from "@/router/router";
 import { useStore } from "@/store/userStore";
 import { useQuizStore } from "@/store/quizStore"
+import ConfirmModal from './ConfirmModal.vue';
 
 const searchQuery = ref('');
 const quizzes = ref([]);
 const userStore = useStore();
 const filteredQuizzes = ref([]);
 const quizStore = useQuizStore();
+const categories = ref(quizStore.categories);
+const selectedCategory = ref('null');
+const showModal = ref(false);
+
+watch(() => selectedCategory.value, () => {
+  searchQuizzes();
+});
+
+function noQuizzesFound() {
+  showModal.value = false;
+  filteredQuizzes.value = quizzes.value;
+  selectedCategory.value = 'null';
+  searchQuery.value = '';
+}
 
 async function fetchAllQuizzes() {
   try {
@@ -81,10 +117,25 @@ onMounted(fetchAllQuizzes);
 const searchQuizzes = () => {
   if(searchQuery.value == ''){
     filteredQuizzes.value = quizzes.value
+    if(selectedCategory.value != 'null'){
+      const categoryIds = quizStore.categories.filter(c => c.categoryId === selectedCategory.value).map(c => c.categoryId)
+      filteredQuizzes.value = filteredQuizzes.value.filter(q => categoryIds.includes(q.categoryId))
+    }
+    if(filteredQuizzes.value.length == 0)
+      showModal.value = true;
+
     return;
   }
-  const categoryIds = quizStore.categories.filter(c => c.categoryName.toLowerCase().includes(searchQuery.value.trim()))
-  filteredQuizzes.value = quizzes.value.filter(q => q.quizName.toLowerCase().includes(searchQuery.value))
+  filteredQuizzes.value = quizzes.value.filter(q => q.quizName.toLowerCase().includes(searchQuery.value.toLowerCase()) || q.quizDescription.toLowerCase().includes(searchQuery.value.toLowerCase()))
+  if(selectedCategory.value != 'null'){
+    const categoryIds = quizStore.categories.filter(c => c.categoryId === selectedCategory.value).map(c => c.categoryId)
+    filteredQuizzes.value = filteredQuizzes.value.filter(q => categoryIds.includes(q.categoryId))
+  }
+  if(filteredQuizzes.value.length == 0)
+    showModal.value = true;
+
+  return;
+  
 };
 
 function getPathToQuizImage(fileName) {
@@ -116,6 +167,7 @@ const playQuiz = (quizId) => {
     border: 1px solid #ccc;
     margin-right: 10px;
     font-size: 16px;
+    font-family: "Karla", sans-serif;
 }
 
 .search-image {
@@ -131,6 +183,15 @@ const playQuiz = (quizId) => {
   gap: 20px;
   padding: 0 60px;
   margin: 20px 0;
+}
+
+select {
+  font-family: "Karla", sans-serif;
+  font-size: 16px;
+  padding: 8px;
+  border-radius: 4px;
+  border: none;
+  margin-left: 1rem;
 }
 
 .quiz-box {
